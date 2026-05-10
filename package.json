@@ -1,0 +1,22 @@
+{
+  "name": "gribo-digital",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "C:\\Progra~1\\nodejs\\node.exe node_modules/nuxt/bin/nuxt.mjs dev",
+    "build": "C:\\Progra~1\\nodejs\\node.exe node_modules/nuxt/bin/nuxt.mjs build",
+    "generate": "C:\\Progra~1\\nodejs\\node.exe node_modules/nuxt/bin/nuxt.mjs generate",
+    "preview": "C:\\Progra~1\\nodejs\\node.exe node_modules/nuxt/bin/nuxt.mjs preview",
+    "postinstall": "C:\\Progra~1\\nodejs\\node.exe node_modules/nuxt/bin/nuxt.mjs prepare"
+  },
+  "dependencies": {
+    "@nuxt/content": "latest",
+    "nuxt": "latest",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "zod": "latest"
+  }
+}

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gribo Studio — New Project Composer Mockup</title>
+  <style>
+    :root {
+      --bg:#f8f4ef; --paper:#fffaf4; --paper-soft:rgba(255,250,244,.68); --paper-muted:#f0e8df;
+      --ink:#191714; --muted:#756f68; --line:#ded4c8; --coral:#ff6f61; --rose:#f5b8c5;
+      --lavender:#cfc3ff; --mint:#d8f3dc; --blue:#b8d8ff; --yellow:#ffe8a3; --green:#73d48b;
+      --nav-bg:rgba(248,244,239,.9); --code-bg:#201d1a; --code-ink:#fff7ee; --shadow:0 24px 80px rgba(25,23,20,.08);
+      --radius:24px; --sidebar:286px; --topbar:72px; --inspector:360px;
+    }
+    html[data-theme="dark"] {
+      --bg:#11100f; --paper:#1b1917; --paper-soft:rgba(255,247,238,.052); --paper-muted:#25211e;
+      --ink:#fff7ee; --muted:#a89f95; --line:#38332e; --coral:#ff796d; --rose:#8f5262;
+      --lavender:#7767c9; --mint:#6ca47a; --blue:#5e86b7; --yellow:#c9a84d; --green:#7ed991;
+      --nav-bg:rgba(17,16,15,.9); --code-bg:#0d0c0b; --code-ink:#fff7ee; --shadow:0 24px 80px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;overflow-x:hidden}
+    button,input,textarea,select{font:inherit} a{color:inherit;text-decoration:none} code,pre{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    .app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+
+    .sidebar{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:color-mix(in srgb,var(--bg),var(--paper) 18%);padding:20px 16px;overflow:auto;z-index:40}
+    .brand{display:flex;align-items:center;gap:12px;padding:6px 8px 22px;font-weight:900;letter-spacing:-.055em;font-size:22px}
+    .brand-mark{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 25%,var(--yellow),var(--coral) 45%,var(--ink) 46%);box-shadow:0 6px 18px rgba(255,111,97,.28);flex:0 0 auto}
+    .studio-label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:850;margin-top:-4px}
+    .side-section-title{color:var(--muted);text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:850;margin:22px 10px 9px}
+    .nav-item{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:9px 10px;border-radius:14px;color:var(--muted);border:0;background:transparent;cursor:pointer;text-align:left;transition:.18s}
+    .nav-item:hover,.nav-item.active{color:var(--ink);background:var(--paper-soft)} .nav-item:hover{transform:translateX(2px)}
+    .nav-icon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--coral),transparent 82%);color:var(--coral);font-weight:900;font-size:13px;flex:0 0 auto}
+    .side-card{margin-top:24px;padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,var(--paper-soft),color-mix(in srgb,var(--lavender),transparent 88%))}
+    .side-card strong{display:block;letter-spacing:-.035em;line-height:1.1}.side-card p{margin-top:7px;color:var(--muted);font-size:13px}
+
+    .main{min-width:0}.topbar{position:sticky;top:0;z-index:30;height:var(--topbar);display:flex;justify-content:space-between;align-items:center;gap:20px;padding:0 28px;border-bottom:1px solid var(--line);background:var(--nav-bg);backdrop-filter:blur(18px)}
+    .crumbs{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;min-width:0}.crumbs strong{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .top-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+    .search{width:min(400px,38vw);height:42px;border:1px solid var(--line);border-radius:999px;background:var(--paper-soft);color:var(--muted);display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;font-size:14px}
+    .kbd{display:inline-flex;align-items:center;min-width:28px;height:24px;justify-content:center;padding:0 8px;border-radius:8px;border:1px solid var(--line);color:var(--muted);background:var(--paper);font-size:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper-soft);color:var(--ink);font-weight:780;cursor:pointer;transition:.18s}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.16)}.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}.btn.coral{background:var(--coral);color:#191714;border-color:var(--coral)}.btn.icon-only{width:42px;padding:0}
+    .theme-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 5px rgba(255,121,109,.14)}
+
+    .composer{display:grid;grid-template-columns:minmax(0,1fr) var(--inspector);gap:22px;padding:28px;align-items:start}
+    .content-area{min-width:0}.inspector{position:sticky;top:calc(var(--topbar) + 20px);display:grid;gap:16px}
+
+    .hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:34px;padding:clamp(30px,5vw,54px);background:linear-gradient(145deg,var(--paper),var(--paper-muted));box-shadow:var(--shadow);margin-bottom:20px}
+    .hero:after{content:"";position:absolute;right:-170px;top:-190px;width:470px;height:470px;border-radius:50%;background:radial-gradient(circle,rgba(255,121,109,.5),rgba(119,103,201,.22) 52%,transparent 72%);pointer-events:none}
+    .hero>*{position:relative;z-index:1}.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--paper-soft);font-size:13px;font-weight:760;width:max-content}
+    .pulse{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 6px rgba(255,121,109,.15)}
+    h1{margin-top:16px;font-size:clamp(42px,5vw,76px);line-height:.9;letter-spacing:-.08em;max-width:920px}.subtitle{margin-top:18px;color:var(--muted);font-size:18px;max-width:780px;letter-spacing:-.02em}
+
+    .panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-soft);padding:20px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px}.panel h2{font-size:26px;line-height:1;letter-spacing:-.06em}.muted{color:var(--muted)}
+    .status-badge{display:inline-flex;align-items:center;gap:7px;min-height:28px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:850;border:1px solid var(--line);background:var(--paper-soft);white-space:nowrap}.status-badge:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}.published:before{background:var(--green)}.draft:before{background:var(--yellow)}.review:before{background:var(--lavender)}.friction:before{background:var(--coral)}.scheduled:before{background:var(--blue)}
+
+    .tabs{display:inline-flex;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--paper-soft);gap:3px;margin:2px 0 18px}
+    .tabs button{min-height:34px;padding:0 13px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-weight:760;cursor:pointer;font-size:13px}.tabs button.active{background:var(--ink);color:var(--bg)}
+
+    .setup-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-bottom:18px}
+    .field{display:grid;gap:7px;margin-bottom:14px}.field label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
+    .input,.textarea,.select{width:100%;border:1px solid var(--line);border-radius:16px;background:var(--paper-soft);color:var(--ink);padding:12px 14px;outline:none}.textarea{min-height:110px;resize:vertical}
+    .slug-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+
+    .builder-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start}
+    .block-library{position:sticky;top:calc(var(--topbar) + 20px);display:grid;gap:10px}
+    .block-button{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:center;width:100%;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--paper-soft);color:var(--ink);cursor:pointer;text-align:left;transition:.18s}
+    .block-button:hover{transform:translateY(-2px);background:color-mix(in srgb,var(--paper-soft),var(--paper) 16%)}
+    .block-icon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--coral),transparent 82%);color:var(--coral);font-weight:900}.block-button strong{display:block;font-size:13px;line-height:1.1}.block-button span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+
+    .canvas{display:grid;gap:14px}
+    .project-form-top{display:grid;grid-template-columns:1fr 230px;gap:14px}
+    .cover-upload{min-height:250px;border:1px dashed color-mix(in srgb,var(--coral),var(--line) 45%);border-radius:28px;background:linear-gradient(135deg,rgba(255,121,109,.24),rgba(119,103,201,.14));display:grid;place-items:center;padding:24px;text-align:center;position:relative;overflow:hidden}
+    .cover-upload:before{content:"";position:absolute;inset:18px;border-radius:22px;border:1px solid rgba(255,247,238,.08);pointer-events:none}.upload-inner{position:relative;z-index:1}.upload-icon{width:58px;height:58px;border-radius:20px;background:var(--coral);color:#191714;display:grid;place-items:center;font-size:26px;font-weight:900;margin:0 auto 14px}
+    .upload-inner strong{display:block;font-size:22px;letter-spacing:-.05em}.upload-inner p{color:var(--muted);margin:8px auto 14px;max-width:420px;font-size:14px}
+
+    .visual-options{display:grid;gap:10px}.swatches{display:flex;gap:8px;flex-wrap:wrap}.swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:var(--coral);cursor:pointer}.swatch:nth-child(2){background:var(--lavender)}.swatch:nth-child(3){background:var(--mint)}.swatch:nth-child(4){background:var(--blue)}.swatch:nth-child(5){background:var(--yellow)}.swatch.selected{outline:3px solid color-mix(in srgb,var(--coral),transparent 50%)}
+
+    .content-block{border:1px solid var(--line);border-radius:22px;background:var(--paper-soft);overflow:hidden}
+    .block-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line)}
+    .block-toolbar-left{display:flex;align-items:center;gap:10px}.drag{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--coral),transparent 84%);color:var(--coral);font-weight:900}
+    .block-title strong{display:block;letter-spacing:-.035em}.block-title span{display:block;color:var(--muted);font-size:12px}
+    .block-actions{display:flex;gap:8px;flex-wrap:wrap}.mini-btn{min-height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper-soft);color:var(--muted);cursor:pointer;font-size:12px;font-weight:780}.mini-btn:hover{color:var(--ink)}
+    .block-body{padding:18px}.rich-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.format-btn{min-height:30px;padding:0 9px;border-radius:10px;border:1px solid var(--line);background:var(--paper-soft);color:var(--muted);font-weight:760;cursor:pointer;font-size:12px}
+    .rich-editor{min-height:130px;width:100%;border:1px solid var(--line);border-radius:18px;background:var(--paper);color:var(--ink);padding:16px;outline:none;line-height:1.65}.rich-editor p{color:var(--muted);margin-top:8px}
+    .image-block-grid{display:grid;grid-template-columns:1fr 250px;gap:14px}.image-drop{min-height:210px;border:1px dashed var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(255,121,109,.18),rgba(119,103,201,.12));display:grid;place-items:center;text-align:center;padding:18px}.image-settings{display:grid;gap:12px}
+    .position-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pos{min-height:38px;border-radius:12px;border:1px solid var(--line);background:var(--paper-soft);color:var(--muted);cursor:pointer;font-size:12px;font-weight:760}.pos.active{background:var(--ink);color:var(--bg)}
+    .code-editor{border-radius:20px;overflow:hidden;background:var(--code-bg);color:var(--code-ink);border:1px solid rgba(255,247,238,.12)}.code-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(255,247,238,.1);color:rgba(255,247,238,.6);font-size:13px}.code-body{padding:16px;min-height:190px;white-space:pre;overflow:auto;font-size:13px;line-height:1.75}
+    .callout-preview{display:grid;grid-template-columns:42px 1fr;gap:14px;padding:18px;border-radius:18px;border:1px solid color-mix(in srgb,var(--blue),var(--line) 40%);background:color-mix(in srgb,var(--blue),transparent 86%)}.callout-icon{width:42px;height:42px;border-radius:14px;background:var(--blue);display:grid;place-items:center;color:#191714;font-weight:900}.callout-preview p{color:var(--muted);margin-top:5px}
+    .table-editor{border:1px solid var(--line);border-radius:18px;overflow:hidden}.table-editor table{width:100%;border-collapse:collapse;font-size:14px}.table-editor th,.table-editor td{padding:12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);text-align:left}.table-editor th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em}.table-editor tr:last-child td{border-bottom:0}.table-editor td:last-child,.table-editor th:last-child{border-right:0}
+    .banner-block{padding:24px;border-radius:22px;background:linear-gradient(135deg,rgba(255,121,109,.48),rgba(119,103,201,.25));border:1px solid var(--line)}.banner-block h3{font-size:34px;line-height:.95;letter-spacing:-.065em}.banner-block p{margin-top:10px;color:var(--muted)}
+
+    .inspector-card{border:1px solid var(--line);border-radius:22px;background:var(--paper-soft);padding:18px}.inspector-card h3{font-size:21px;line-height:1;letter-spacing:-.055em;margin-bottom:14px}.inspector-card p{color:var(--muted);font-size:13px}
+    .preview-card{border:1px solid var(--line);border-radius:24px;background:var(--paper-soft);overflow:hidden}.preview-header{height:36px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 12px}.dot{width:9px;height:9px;border-radius:50%;background:var(--coral)}.dot:nth-child(2){background:var(--yellow)}.dot:nth-child(3){background:var(--green)}
+    .frontend-preview{padding:18px;background:var(--paper)}.front-hero{min-height:160px;border-radius:20px;background:linear-gradient(135deg,rgba(255,121,109,.48),rgba(119,103,201,.25));padding:20px;display:flex;flex-direction:column;justify-content:flex-end}.front-hero h3{font-size:30px;line-height:.92;letter-spacing:-.065em}.front-section{margin-top:14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--paper-soft)}.front-section strong{display:block;font-size:13px;letter-spacing:-.035em}.front-section p{color:var(--muted);font-size:12px;margin-top:5px}
+    .outline-list{display:grid;gap:8px}.outline-item{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--paper-soft);font-size:13px}.outline-item span{color:var(--muted)}
+    .media-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.media-mini{aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,var(--coral),var(--lavender));border:1px solid var(--line)}.media-mini:nth-child(2){background:linear-gradient(135deg,var(--mint),var(--yellow))}.media-mini:nth-child(3){background:linear-gradient(135deg,var(--blue),var(--rose))}
+    .component-note{border:1px solid color-mix(in srgb,var(--coral),var(--line) 52%);border-radius:18px;background:color-mix(in srgb,var(--coral),transparent 88%);padding:14px;color:var(--muted);font-size:13px}
+
+    @media(max-width:1320px){.composer{grid-template-columns:1fr}.inspector{position:static;grid-template-columns:repeat(2,1fr)}.builder-layout{grid-template-columns:1fr}.block-library{position:static;grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:980px){:root{--sidebar:0px}.app{grid-template-columns:1fr}.sidebar{display:none}.search{display:none}.composer{padding:20px}.setup-grid,.project-form-top,.image-block-grid{grid-template-columns:1fr}.inspector{grid-template-columns:1fr}.block-library{grid-template-columns:1fr 1fr}.topbar{padding:0 18px}}
+    @media(max-width:680px){h1{font-size:42px}.top-actions .btn:not(.coral){display:none}.block-library{grid-template-columns:1fr}.content-block{border-radius:18px}.block-toolbar{align-items:flex-start;flex-direction:column}.block-actions{justify-content:flex-start}.position-grid{grid-template-columns:1fr 1fr}.hero{border-radius:26px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark"></span><span>Gribo<br><span class="studio-label">Studio</span></span></div>
+      <div class="side-section-title">Create</div>
+      <button class="nav-item active"><span class="nav-icon">+</span><span>New Project</span></button>
+      <button class="nav-item"><span class="nav-icon">B</span><span>New Blog Entry</span></button>
+      <button class="nav-item"><span class="nav-icon">D</span><span>New Docs Page</span></button>
+      <div class="side-section-title">Composer</div>
+      <button class="nav-item"><span class="nav-icon">▣</span><span>Content Blocks</span></button>
+      <button class="nav-item"><span class="nav-icon">M</span><span>Media Upload</span></button>
+      <button class="nav-item"><span class="nav-icon">◐</span><span>Preview</span></button>
+      <button class="nav-item"><span class="nav-icon">↗</span><span>Publish Settings</span></button>
+      <div class="side-card"><strong>ProjectComposer.vue</strong><p>Designed as the editing surface for <code>content/projects/*.md</code> plus block-based rich sections.</p></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="crumbs"><span>Gribo Studio</span><span>/</span><strong>New Project Composer</strong></div>
+        <div class="top-actions">
+          <div class="search"><span>Search blocks, media, snippets...</span><span class="kbd">⌘K</span></div>
+          <button class="btn" onclick="toggleTheme()"><span class="theme-dot"></span><span id="theme-label">Dark</span></button>
+          <button class="btn">Save draft</button>
+          <button class="btn coral">Create project</button>
+        </div>
+      </header>
+
+      <div class="composer">
+        <section class="content-area">
+          <div class="hero">
+            <div class="eyebrow"><span class="pulse"></span> Project creation surface · CMS block composer</div>
+            <h1>Create a living project repository.</h1>
+            <p class="subtitle">This mockup focuses on the actual editing experience: uploading images, writing text, adding code blocks, tables, callouts, banners, sections and arranging them visually before publishing to the Gribo frontend.</p>
+          </div>
+
+          <div class="tabs">
+            <button class="active">Content</button>
+            <button>Metadata</button>
+            <button>SEO</button>
+            <button>Media</button>
+            <button>Preview</button>
+          </div>
+
+          <div class="setup-grid">
+            <div class="panel">
+              <div class="panel-head"><h2>Project basics</h2><span class="status-badge draft">Draft</span></div>
+              <div class="field">
+                <label>Project title</label>
+                <input class="input" value="OpenClaw Friction Test" />
+              </div>
+              <div class="field">
+                <label>Short description</label>
+                <textarea class="textarea">A practical friction audit about OpenClaw, local gateways, agent setup and the gap between agentic product promises and real first-run experience.</textarea>
+              </div>
+              <div class="slug-row">
+                <div class="field" style="margin-bottom:0">
+                  <label>Slug</label>
+                  <input class="input" value="openclaw-friction-test" />
+                </div>
+                <button class="btn" style="align-self:end">Generate</button>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h2>Taxonomy</h2><span class="status-badge friction">Active research</span></div>
+              <div class="field">
+                <label>Project status</label>
+                <select class="select"><option>Active research</option><option>Prototype</option><option>Documented</option><option>Published</option><option>Archived</option></select>
+              </div>
+              <div class="field">
+                <label>Track</label>
+                <select class="select"><option>AI Agents</option><option>Product Systems</option><option>Music Tech</option><option>Infrastructure</option><option>Creative Tech</option></select>
+              </div>
+              <div class="field">
+                <label>Tags</label>
+                <input class="input" value="OpenClaw, Codex, DX, Agent Setup, Friction" />
+              </div>
+            </div>
+          </div>
+
+          <div class="builder-layout">
+            <aside class="block-library">
+              <button class="block-button"><span class="block-icon">T</span><span><strong>Text Section</strong><span>Heading + rich text</span></span></button>
+              <button class="block-button"><span class="block-icon">I</span><span><strong>Image Block</strong><span>Upload + layout</span></span></button>
+              <button class="block-button"><span class="block-icon">C</span><span><strong>Code Block</strong><span>Language + title</span></span></button>
+              <button class="block-button"><span class="block-icon">!</span><span><strong>Callout</strong><span>Info, warning, note</span></span></button>
+              <button class="block-button"><span class="block-icon">#</span><span><strong>Table</strong><span>Rows + columns</span></span></button>
+              <button class="block-button"><span class="block-icon">B</span><span><strong>Banner</strong><span>Color + message</span></span></button>
+              <button class="block-button"><span class="block-icon">S</span><span><strong>Steps</strong><span>Session flow</span></span></button>
+              <button class="block-button"><span class="block-icon">G</span><span><strong>Gallery</strong><span>Multiple media</span></span></button>
+              <button class="block-button"><span class="block-icon">↔</span><span><strong>Split Layout</strong><span>Text + image/code</span></span></button>
+            </aside>
+
+            <div class="canvas">
+              <div class="project-form-top">
+                <div class="cover-upload">
+                  <div class="upload-inner">
+                    <div class="upload-icon">↑</div>
+                    <strong>Upload project cover</strong>
+                    <p>Drag a terminal screenshot, mockup, concept render or generated image. After upload, choose crop, alignment, gradient overlay and public caption.</p>
+                    <button class="btn primary">Choose image</button>
+                  </div>
+                </div>
+
+                <div class="panel visual-options">
+                  <h2>Cover design</h2>
+                  <div class="field">
+                    <label>Visual style</label>
+                    <select class="select"><option>Editorial gradient</option><option>Terminal dark</option><option>Soft image overlay</option><option>Minimal documentation</option></select>
+                  </div>
+                  <div class="field">
+                    <label>Accent color</label>
+                    <div class="swatches"><span class="swatch selected"></span><span class="swatch"></span><span class="swatch"></span><span class="swatch"></span><span class="swatch"></span></div>
+                  </div>
+                  <div class="field">
+                    <label>Image position</label>
+                    <div class="position-grid"><button class="pos">Left</button><button class="pos active">Center</button><button class="pos">Right</button><button class="pos">Top</button><button class="pos">Middle</button><button class="pos">Bottom</button></div>
+                  </div>
+                </div>
+              </div>
+
+              <article class="content-block">
+                <div class="block-toolbar">
+                  <div class="block-toolbar-left"><div class="drag">⋮⋮</div><div class="block-title"><strong>Text Section</strong><span>Intro narrative block</span></div></div>
+                  <div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Hide</button><button class="mini-btn">Delete</button></div>
+                </div>
+                <div class="block-body">
+                  <div class="rich-row">
+                    <button class="format-btn">H2</button><button class="format-btn">Bold</button><button class="format-btn">Italic</button><button class="format-btn">Link</button><button class="format-btn">Quote</button><button class="format-btn">Inline code</button>
+                  </div>
+                  <div class="rich-editor" contenteditable="true">
+                    <strong>The promise was autonomy. The first blocker was the gateway.</strong>
+                    <p>OpenClaw looked configured: the OpenAI key was found, the default model was visible, and the default agent existed. But the local gateway was not reachable, so the project became a friction audit instead of a simple agent demo.</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="content-block">
+                <div class="block-toolbar">
+                  <div class="block-toolbar-left"><div class="drag">⋮⋮</div><div class="block-title"><strong>Image Block</strong><span>Upload, caption and layout positioning</span></div></div>
+                  <div class="block-actions"><button class="mini-btn">Crop</button><button class="mini-btn">Replace</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div>
+                </div>
+                <div class="block-body">
+                  <div class="image-block-grid">
+                    <div class="image-drop">
+                      <div>
+                        <div class="upload-icon">+</div>
+                        <strong>Drop image or choose from library</strong>
+                        <p class="muted">Recommended: 1600×900. Supports PNG, JPG, WebP, SVG.</p>
+                        <button class="btn">Open Media Library</button>
+                      </div>
+                    </div>
+                    <div class="image-settings">
+                      <div class="field"><label>Caption</label><textarea class="textarea">Gateway errors are not just bugs; they reveal the invisible runtime assumptions behind agent frameworks.</textarea></div>
+                      <div class="field"><label>Layout</label><select class="select"><option>Full width</option><option>Left aligned</option><option>Right aligned</option><option>Inline small</option><option>Bleed editorial</option></select></div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="content-block">
+                <div class="block-toolbar">
+                  <div class="block-toolbar-left"><div class="drag">⋮⋮</div><div class="block-title"><strong>Code Snippet Block</strong><span>Terminal / YAML / JS / Vue / Markdown</span></div></div>
+                  <div class="block-actions"><button class="mini-btn">Format</button><button class="mini-btn">Copy toggle</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div>
+                </div>
+                <div class="block-body">
+                  <div class="field"><label>Block title</label><input class="input" value="minimum-viable-agent-test.yaml"></div>
+                  <div class="field"><label>Language</label><select class="select"><option>YAML</option><option>Bash</option><option>JavaScript</option><option>TypeScript</option><option>Markdown</option><option>Vue</option></select></div>
+                  <div class="code-editor">
+                    <div class="code-header"><span>YAML · Copyable code block</span><span>Copy enabled</span></div>
+                    <pre class="code-body">goal: verify agent framework path
+
+success_criteria:
+  - gateway responds locally
+  - default agent loads successfully
+  - model responds through agent runtime
+  - agent can read a test repository
+  - agent returns one useful architecture observation</pre>
+                  </div>
+                </div>
+              </article>
+
+              <article class="content-block">
+                <div class="block-toolbar">
+                  <div class="block-toolbar-left"><div class="drag">⋮⋮</div><div class="block-title"><strong>Callout Block</strong><span>Info, warning, success or editorial note</span></div></div>
+                  <div class="block-actions"><button class="mini-btn">Change color</button><button class="mini-btn">Icon</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div>
+                </div>
+                <div class="block-body">
+                  <div class="field"><label>Callout type</label><select class="select"><option>Info / Blue</option><option>Warning / Yellow</option><option>Friction / Coral</option><option>Success / Green</option><option>Editorial / Lavender</option></select></div>
+                  <div class="callout-preview"><div class="callout-icon">i</div><div><strong>Configuration is not activation.</strong><p>A key in a file is not an agent in motion. The runtime path must answer before the product promise can be trusted.</p></div></div>
+                </div>
+              </article>
+
+              <article class="content-block">
+                <div class="block-toolbar">
+                  <div class="block-toolbar-left"><div class="drag">⋮⋮</div><div class="block-title"><strong>Table Block</strong><span>Structured comparison, specs or friction score</span></div></div>
+                  <div class="block-actions"><button class="mini-btn">+ Row</button><button class="mini-btn">+ Column</button><button class="mini-btn">Import CSV</button><button class="mini-btn">Delete</button></div>
+                </div>
+                <div class="block-body">
+                  <div class="table-editor">
+                    <table>
+                      <thead><tr><th>Friction point</th><th>Observed state</th><th>Next action</th></tr></thead>
+                      <tbody>
+                        <tr><td>Gateway</td><td>Not reachable at localhost port</td><td>Find start command and logs</td></tr>
+                        <tr><td>Model config</td><td>OpenAI key found</td><td>Test response through agent runtime</td></tr>
+                        <tr><td>Docs alignment</td><td>Local docs installed</td><td>Compare installed version with docs</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </article>
+
+              <article class="content-block">
+                <div class="block-toolbar">
+                  <div class="block-toolbar-left"><div class="drag">⋮⋮</div><div class="block-title"><strong>Banner Block</strong><span>Visual editorial section separator</span></div></div>
+                  <div class="block-actions"><button class="mini-btn">Color</button><button class="mini-btn">Layout</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div>
+                </div>
+                <div class="block-body">
+                  <div class="banner-block">
+                    <h3>The boring task must work twice.</h3>
+                    <p>Before claiming autonomy, the system must run a simple loop reliably: start, answer, inspect, modify, and explain what happened.</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <aside class="inspector">
+          <div class="inspector-card">
+            <h3>Block inspector</h3>
+            <p>Select any block to edit its properties: visibility, layout, width, spacing, color, icon, caption, frontend display rules and Nuxt Content fields.</p>
+          </div>
+
+          <div class="inspector-card">
+            <h3>Frontend preview</h3>
+            <div class="preview-card">
+              <div class="preview-header"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+              <div class="frontend-preview">
+                <div class="front-hero"><span class="status-badge friction">Active research</span><h3>OpenClaw Friction Test</h3></div>
+                <div class="front-section"><strong>The promise was autonomy.</strong><p>OpenClaw looked configured, but the local gateway was not reachable.</p></div>
+                <div class="front-section"><strong>minimum-viable-agent-test.yaml</strong><p>Code block rendered with title, language and copy action.</p></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="inspector-card">
+            <h3>Page outline</h3>
+            <div class="outline-list">
+              <div class="outline-item"><strong>Cover</strong><span>Hero</span></div>
+              <div class="outline-item"><strong>Intro</strong><span>Text</span></div>
+              <div class="outline-item"><strong>Gateway screenshot</strong><span>Image</span></div>
+              <div class="outline-item"><strong>Agent test</strong><span>Code</span></div>
+              <div class="outline-item"><strong>Friction warning</strong><span>Callout</span></div>
+              <div class="outline-item"><strong>Friction table</strong><span>Table</span></div>
+            </div>
+          </div>
+
+          <div class="inspector-card">
+            <h3>Media uploaded</h3>
+            <div class="media-mini-grid">
+              <div class="media-mini"></div>
+              <div class="media-mini"></div>
+              <div class="media-mini"></div>
+            </div>
+            <p style="margin-top:10px">Attach images to blocks, set captions, choose alignment and reuse assets from the Media Library.</p>
+          </div>
+
+          <div class="inspector-card">
+            <h3>Output mapping</h3>
+            <div class="component-note">
+              This composer can later save a Markdown file with frontmatter plus a block array:
+              <br><br>
+              <code>content/projects/openclaw-friction-test.md</code>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function setThemeLabel(theme){const label=document.getElementById('theme-label');if(label)label.textContent=theme==='dark'?'Dark':'Light'}
+    function toggleTheme(){const root=document.documentElement;const current=root.getAttribute('data-theme')||'dark';const next=current==='dark'?'light':'dark';root.setAttribute('data-theme',next);localStorage.setItem('gribo-project-composer-theme',next);setThemeLabel(next)}
+    const savedTheme=localStorage.getItem('gribo-project-composer-theme');
+    const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme=savedTheme||(prefersDark?'dark':'light');
+    document.documentElement.setAttribute('data-theme',initialTheme);
+    setThemeLabel(initialTheme);
+  </script>
+</body>
+</html>

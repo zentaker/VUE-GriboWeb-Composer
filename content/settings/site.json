@@ -1,0 +1,14 @@
+{
+  "name": "Gribo Digital",
+  "tagline": "An editorial laboratory for digital systems, cultural infrastructure, and living research.",
+  "language": "en",
+  "futureLanguages": [
+    "es"
+  ],
+  "description": "A place for the traces systems leave behind: notes, prototypes, failures, decisions, architectures, datasets, and questions that keep moving after the first version is built.",
+  "shortDescription": "Technology read as memory, interface, language, and cultural infrastructure.",
+  "defaultOgImage": "/og/gribo-digital.png",
+  "siteUrl": "https://gribo.digital",
+  "defaultTheme": "dark",
+  "studioName": "Gribo Studio"
+}

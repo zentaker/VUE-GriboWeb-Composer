@@ -1,0 +1,370 @@
+
+> dev
+> C:\Progra~1\nodejs\node.exe node_modules/nuxt/bin/nuxt.mjs dev --host 127.0.0.1 --port 3000
+
+|
+•  [32mNuxt [1m4.4.4[22m[39m[90m (with [39m[90mNitro [1m2.13.4[22m[39m[90m, Vite [1m7.3.3[22m[39m[90m and Vue [1m3.5.34[22m[39m[90m)[39m
+
+[32m  ➜ Local:   [39m [36m[4mhttp://127.0.0.1:[1m3000[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.2.4)[22m
+
+[90m[[90m@nuxt/content[90m][39m [32m√[39m Processed 6 collections and 9 files in 188.08ms (9 cached, 0 parsed)
+[32m√[39m Vite client built in 64ms
+[32m√[39m Vite server built in 30ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3192ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 4ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 660ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 657ms
+[36mi[39m [32mhmr update [39m[2m/assets/css/main.css?direct, /assets/css/main.css[22m
+[36mi[39m [32mpage reload [39m[2massets/css/main.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/HeroIntroBlock.vue?direct&vue&type=style&index=0&scoped=1bdc867c&lang.css, /components/blocks/HeroIntroBlock.vue?vue&type=style&index=0&scoped=1bdc867c&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/FeaturedProjectBlock.vue?direct&vue&type=style&index=0&scoped=a8d524d2&lang.css, /components/blocks/FeaturedProjectBlock.vue?vue&type=style&index=0&scoped=a8d524d2&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/BuildLogBlock.vue?direct&vue&type=style&index=0&scoped=4279100a&lang.css, /components/blocks/BuildLogBlock.vue?vue&type=style&index=0&scoped=4279100a&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/LabsTracksBlock.vue?direct&vue&type=style&index=0&scoped=48aaee31&lang.css, /components/blocks/LabsTracksBlock.vue?vue&type=style&index=0&scoped=48aaee31&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ActiveProjectsBlock.vue?direct&vue&type=style&index=0&scoped=1da4b89d&lang.css, /components/blocks/ActiveProjectsBlock.vue?vue&type=style&index=0&scoped=1da4b89d&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ThinkingArticlesBlock.vue?direct&vue&type=style&index=0&scoped=e0fc2adf&lang.css, /components/blocks/ThinkingArticlesBlock.vue?vue&type=style&index=0&scoped=e0fc2adf&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ManifestoBlock.vue?direct&vue&type=style&index=0&scoped=d2de93d0&lang.css, /components/blocks/ManifestoBlock.vue?vue&type=style&index=0&scoped=d2de93d0&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/NewsletterBlock.vue?direct&vue&type=style&index=0&scoped=ca06ae1c&lang.css, /components/blocks/NewsletterBlock.vue?vue&type=style&index=0&scoped=ca06ae1c&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[32m√[39m Vite server hmr 58 files in 1.448ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 637ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 962ms
+[36mi[39m [32mhmr update [39m[2m/assets/css/main.css?direct, /assets/css/main.css[22m
+[36mi[39m [32mpage reload [39m[2massets/css/main.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/HeroIntroBlock.vue?direct&vue&type=style&index=0&scoped=1bdc867c&lang.css, /components/blocks/HeroIntroBlock.vue?vue&type=style&index=0&scoped=1bdc867c&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/FeaturedProjectBlock.vue?direct&vue&type=style&index=0&scoped=a8d524d2&lang.css, /components/blocks/FeaturedProjectBlock.vue?vue&type=style&index=0&scoped=a8d524d2&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/BuildLogBlock.vue?direct&vue&type=style&index=0&scoped=4279100a&lang.css, /components/blocks/BuildLogBlock.vue?vue&type=style&index=0&scoped=4279100a&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/LabsTracksBlock.vue?direct&vue&type=style&index=0&scoped=48aaee31&lang.css, /components/blocks/LabsTracksBlock.vue?vue&type=style&index=0&scoped=48aaee31&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ActiveProjectsBlock.vue?direct&vue&type=style&index=0&scoped=1da4b89d&lang.css, /components/blocks/ActiveProjectsBlock.vue?vue&type=style&index=0&scoped=1da4b89d&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ThinkingArticlesBlock.vue?direct&vue&type=style&index=0&scoped=e0fc2adf&lang.css, /components/blocks/ThinkingArticlesBlock.vue?vue&type=style&index=0&scoped=e0fc2adf&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/ManifestoBlock.vue?direct&vue&type=style&index=0&scoped=d2de93d0&lang.css, /components/blocks/ManifestoBlock.vue?vue&type=style&index=0&scoped=d2de93d0&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/blocks/NewsletterBlock.vue?direct&vue&type=style&index=0&scoped=ca06ae1c&lang.css, /components/blocks/NewsletterBlock.vue?vue&type=style&index=0&scoped=ca06ae1c&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 453ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 720ms
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Fmiddleware.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Fmiddleware.mjs[22m[2m (x2)[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Fplugins.server.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Fmiddleware.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Fmiddleware.mjs[22m[2m (x2)[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Fplugins.server.mjs[22m
+[32m√[39m Vite server hmr 41 files in 2.399ms
+[36mi[39m [32mhmr update [39m[2m/layouts/admin.vue?direct&vue&type=style&index=0&scoped=c80892e0&lang.css, /layouts/admin.vue?vue&type=style&index=0&scoped=c80892e0&lang.css[22m
+[36mi[39m [32mpage reload [39m[2mlayouts/admin.vue[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/admin/AdminSidebar.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/admin/AdminSidebar.vue?direct&vue&type=style&index=0&scoped=a8044c57&lang.css, /components/admin/AdminSidebar.vue, /components/admin/AdminSidebar.vue?vue&type=style&index=0&scoped=a8044c57&lang.css[22m
+[36mi[39m [32mhmr update [39m[2m/components/admin/AdminTopbar.vue?direct&vue&type=style&index=0&scoped=ce1a3b21&lang.css, /components/admin/AdminTopbar.vue, /components/admin/AdminTopbar.vue?vue&type=style&index=0&scoped=ce1a3b21&lang.css[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/admin/AdminTopbar.vue[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/index.vue, /pages/admin/index.vue?direct&vue&type=style&index=0&scoped=9a704506&lang.css, /pages/admin/index.vue?vue&type=style&index=0&scoped=9a704506&lang.css, /pages/admin/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs, /pages/admin/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/home.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/home.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/projects/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/projects/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m[2m (x3)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m[2m (x4)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x3)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x4)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/docs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/docs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/media.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/media.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/queue.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/queue.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[32m√[39m Vite server hmr 43 files in 0.586ms
+[36mi[39m [32mhmr update [39m[2m/assets/css/main.css?direct, /assets/css/main.css[22m
+[36mi[39m [32mpage reload [39m[2massets/css/main.css[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 434ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 544ms
+[32m√[39m Vite server hmr 5 files in 1.984ms
+[36mi[39m [32mhmr update [39m[2m/assets/css/main.css?direct, /assets/css/main.css[22m
+[36mi[39m [32mpage reload [39m[2massets/css/main.css[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true[22m[2m (x3)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true[22m[2m (x4)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x3)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x4)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 392ms
+[36mi[39m [32mhmr update [39m[2m/components/layout/PublicNav.vue[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/layout/PublicNav.vue[22m
+[90m[[90m@nuxt/content[90m][39m [36mi[39m content.config.ts updated, restarting the Nuxt server...
+
+[32m  ➜ Local:   [39m [36m[4mhttp://127.0.0.1:[1m3000[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.2.4)[22m
+
+[90m[[90m@nuxt/content[90m][39m [32m√[39m Processed 7 collections and 9 files in 309.17ms (2 cached, 7 parsed)
+[32m√[39m Vite client built in 52ms
+[32m√[39m Vite server built in 25ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2629ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 3ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/openclaw-friction.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/internet-proximity.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/tennis-image-analysis.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/gribo-park.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/index.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/setup.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/architecture.md[39m changed on [36mdocs[39m collection
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m[2m (x2)[22m
+[32m√[39m Vite server hmr 31 files in 0.84ms
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 757ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 641ms
+[32m√[39m Vite server hmr 12 files in 1.791ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 451ms
+[36mi[39m [32mhmr update [39m[2m/layouts/docs.vue, /layouts/docs.vue?direct&vue&type=style&index=0&scoped=82f24495&lang.css, /layouts/docs.vue?vue&type=style&index=0&scoped=82f24495&lang.css[22m
+[36mi[39m [32mpage reload [39m[2mlayouts/docs.vue[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue, /pages/docs/[...slug].vue?direct&vue&type=style&index=0&scoped=33996fb2&lang.css, /pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs, /pages/docs/[...slug].vue?macro=true[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 432ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 505ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m content.config.ts updated, restarting the Nuxt server...
+
+[32m  ➜ Local:   [39m [36m[4mhttp://127.0.0.1:[1m3000[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.2.4)[22m
+
+|
+•  Restarting Nuxt due to error: [36mError: database is locked[39m
+
+[32m  ➜ Local:   [39m [36m[4mhttp://127.0.0.1:[1m3000[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.2.4)[22m
+
+[90m[[90m@nuxt/content[90m][39m [32m√[39m Processed 7 collections and 14 files in 269.74ms (14 cached, 0 parsed)
+[32m√[39m Vite client built in 58ms
+[32m√[39m Vite server built in 19ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3453ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 2ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/openclaw-friction.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/internet-proximity.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/tennis-image-analysis.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/gribo-park.md[39m changed on [36mprojects[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 511ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 745ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/index.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/setup.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/architecture.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/sys-security.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/ai.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/physics.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/sys-architecture.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/data-science.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36msettings/site.json[39m changed on [36msettings[39m collection
+[36mi[39m [32mhmr update [39m[2m/pages/index.vue?direct&vue&type=style&index=0&scoped=02281a80&lang.css, /pages/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs, /pages/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/app.vue[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[32m√[39m Vite server hmr 24 files in 1.383ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36msettings/site.json[39m changed on [36msettings[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mhome/layout.json[39m changed on [36mhome[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/sys-security.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/ai.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/physics.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/sys-architecture.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/data-science.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/openclaw-friction.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/internet-proximity.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/tennis-image-analysis.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/gribo-park.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/index.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/setup.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/architecture.md[39m changed on [36mdocs[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 2436ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1378ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1330ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1368ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 443ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 1331ms
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?macro=true[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/projects/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/projects/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/docs/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/docs/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x3)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x4)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x5)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x6)[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 465ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/stage-4-draft-note.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/stage-4-draft-note.md[39m changed on [36mblog[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 489ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 629ms
+[32m√[39m Vite server hmr 11 files in 2.354ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/stage-4-draft-note.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/stage-4-project-draft.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/stage-4-project-draft.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/stage-4-docs-draft.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/tennis-ai-friction/stage-4-docs-draft.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/stage-4-lab-draft.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/stage-4-lab-draft.md[39m changed on [36mlabs[39m collection
+[36mi[39m [32mpage reload [39m[2mcomponents/admin/AdminTopbar.vue[22m
+[36mi[39m [32mhmr update [39m[2m/components/admin/AdminTopbar.vue?direct&vue&type=style&index=0&scoped=ce1a3b21&lang.css, /components/admin/AdminTopbar.vue[22m
+[32m√[39m Vite server hmr 27 files in 1.352ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/stage-4-lab-draft.md[39m changed on [36mlabs[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 424ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 489ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/test.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/test.md[39m changed on [36mblog[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 659ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 793ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/test.md[39m changed on [36mblog[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 508ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 645ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/test.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/prpyect-texte.md[39m changed on [36mprojects[39m collection
+|
+•  Restarting Nuxt due to error: [36mError: database is locked[39m
+
+[32m  ➜ Local:   [39m [36m[4mhttp://127.0.0.1:[1m3000[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.2.4)[22m
+
+|
+•  Restarting Nuxt due to error: [36mError: database is locked[39m
+
+[32m  ➜ Local:   [39m [36m[4mhttp://127.0.0.1:[1m3000[22m/[24m[39m
+[90m  ➜ Network:  use [37m--host[90m to expose[39m
+
+[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.2.4)[22m
+
+[90m[[90m@nuxt/content[90m][39m [32m√[39m Processed 7 collections and 20 files in 235.25ms (20 cached, 0 parsed)
+[32m√[39m Vite client built in 57ms
+[32m√[39m Vite server built in 22ms
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 3356ms
+[36mi[39m Vite server warmed up in 1ms
+[36mi[39m Vite client warmed up in 3ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/prpyect-texte.md[39m changed on [36mprojects[39m collection
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m
+[36mi[39m [32mpage reload [39m[2mvirtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froute-rules.mjs[22m[2m (x2)[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 861ms
+[32m√[39m Vite server hmr 29 files in 363.187ms
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 515ms
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/new.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/new.vue?macro=true[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/new.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/new.vue?macro=true[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/components/admin/AdminTopbar.vue?direct&vue&type=style&index=0&scoped=ce1a3b21&lang.css, /components/admin/AdminTopbar.vue[22m
+[36mi[39m [32mpage reload [39m[2mcomponents/admin/AdminTopbar.vue[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/blog/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs, /pages/admin/blog/index.vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/blog/index.vue?direct&vue&type=style&index=0&scoped=c3955129&lang.css, /pages/admin/blog/index.vue, /pages/admin/blog/index.vue?vue&type=style&index=0&scoped=c3955129&lang.css, /pages/admin/blog/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/projects/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/projects/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/docs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/docs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/labs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/labs/index.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/edit.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/edit.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 525ms
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/new.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/new.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/edit.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/admin/content/edit.vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[32m√[39m Vite server hmr 36 files in 1.709ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/test-stage-4-blog.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mblog/test-stage-4-blog.md[39m changed on [36mblog[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/test-stage-4-project.md[39m changed on [36mprojects[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mprojects/test-stage-4-project.md[39m changed on [36mprojects[39m collection
+[36mi[39m [32mhmr update [39m[2m/pages/repository/[slug].vue, /pages/repository/[slug].vue?direct&vue&type=style&index=0&scoped=c7acf772&lang.css, /pages/repository/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs, /pages/repository/[slug].vue?macro=true[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/docs/[...slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m
+[36mi[39m [32mhmr update [39m[2m/pages/labs/[slug].vue?macro=true, /@id/virtual:nuxt:C%3A%2FUsers%2FMSI%2FDesktop%2FGriboWeb%2F.nuxt%2Froutes.mjs[22m[2m (x2)[22m
+[32m√[39m Vite server hmr 16 files in 0.627ms
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/test-stage-4-project/test-stage-4-docs-two.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mdocs/test-stage-4-project/test-stage-4-docs-two.md[39m changed on [36mdocs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/test-stage-4-lab.md[39m changed on [36mlabs[39m collection
+[90m[[90m@nuxt/content[90m][39m [36mi[39m File [36mlabs/test-stage-4-lab.md[39m changed on [36mlabs[39m collection
+[90m[[90mnitro[90m][39m [32m√[39m Nuxt Nitro server built in 686ms

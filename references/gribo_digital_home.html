@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gribo Digital — Home Mockup</title>
+  <style>
+    :root {
+      --bg: #f8f4ef;
+      --paper: #fffaf4;
+      --paper-soft: rgba(255, 250, 244, 0.58);
+      --ink: #191714;
+      --muted: #756f68;
+      --line: #ded4c8;
+      --coral: #ff6f61;
+      --rose: #f5b8c5;
+      --lavender: #cfc3ff;
+      --mint: #d8f3dc;
+      --blue: #b8d8ff;
+      --yellow: #ffe8a3;
+      --nav-bg: rgba(248, 244, 239, 0.82);
+      --input-bg: rgba(255, 250, 244, 0.62);
+      --tag-bg: rgba(255, 250, 244, 0.12);
+      --tag-line: rgba(255, 250, 244, 0.2);
+      --hero-glow: rgba(245, 184, 197, 0.85);
+      --progress-bg: #eadfd3;
+      --radius: 28px;
+      --shadow: 0 24px 70px rgba(25, 23, 20, 0.08);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #11100f;
+      --paper: #1b1917;
+      --paper-soft: rgba(255, 250, 244, 0.045);
+      --ink: #fff7ee;
+      --muted: #a89f95;
+      --line: #38332e;
+      --coral: #ff796d;
+      --rose: #8f5262;
+      --lavender: #7767c9;
+      --mint: #6ca47a;
+      --blue: #5e86b7;
+      --yellow: #c9a84d;
+      --nav-bg: rgba(17, 16, 15, 0.82);
+      --input-bg: rgba(255, 247, 238, 0.08);
+      --tag-bg: rgba(255, 247, 238, 0.1);
+      --tag-line: rgba(255, 247, 238, 0.14);
+      --hero-glow: rgba(255, 121, 109, 0.35);
+      --progress-bg: #332e2a;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 36px;
+      border-bottom: 1px solid color-mix(in srgb, var(--line), transparent 30%);
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      font-size: 22px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 25%, var(--yellow), var(--coral) 45%, var(--ink) 46%);
+      box-shadow: 0 6px 18px rgba(255, 111, 97, 0.28);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover,
+    .theme-toggle:hover {
+      color: var(--ink);
+    }
+
+    .nav-cta,
+    .theme-toggle {
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 5px rgba(255, 111, 97, 0.14);
+    }
+
+    .hero {
+      padding: 74px 36px 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 36px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+
+    .hero-copy {
+      min-height: 610px;
+      border-radius: var(--radius);
+      padding: clamp(32px, 5vw, 68px);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--line), transparent 40%);
+    }
+
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      right: -140px;
+      top: -180px;
+      width: 460px;
+      height: 460px;
+      background: radial-gradient(circle, var(--hero-glow), rgba(207, 195, 255, 0.18) 58%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: max-content;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      background: color-mix(in srgb, var(--paper), transparent 20%);
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 6px rgba(255, 111, 97, 0.15);
+    }
+
+    h1 {
+      max-width: 950px;
+      margin-top: 64px;
+      font-size: clamp(54px, 8vw, 128px);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
+      font-weight: 900;
+    }
+
+    .hero-subtitle {
+      max-width: 720px;
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: clamp(18px, 1.8vw, 26px);
+      letter-spacing: -0.025em;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 44px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      font-weight: 700;
+      font-size: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(25, 23, 20, 0.12);
+    }
+
+    html[data-theme="dark"] .button:hover {
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+    }
+
+    .button.primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .button.secondary {
+      background: transparent;
+    }
+
+    .hero-panel {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .spotlight-card,
+    .build-card {
+      border-radius: var(--radius);
+      padding: 28px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      min-height: 292px;
+      border: 1px solid color-mix(in srgb, var(--line), transparent 40%);
+    }
+
+    .spotlight-card {
+      background: linear-gradient(145deg, #191714, #332b26);
+      color: #fffaf4;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    html[data-theme="dark"] .spotlight-card {
+      background: linear-gradient(145deg, #fff7ee, #d9c7b2);
+      color: #191714;
+    }
+
+    .spotlight-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -80px -140px auto;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 111, 97, 0.95), rgba(207, 195, 255, 0.52) 48%, transparent 72%);
+    }
+
+    .card-label {
+      color: rgba(255, 250, 244, 0.68);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    html[data-theme="dark"] .card-label,
+    html[data-theme="dark"] .spotlight-card p {
+      color: rgba(25, 23, 20, 0.68);
+    }
+
+    .spotlight-card h2 {
+      position: relative;
+      max-width: 360px;
+      margin-top: 22px;
+      font-size: 38px;
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .spotlight-card p {
+      position: relative;
+      max-width: 420px;
+      color: rgba(255, 250, 244, 0.78);
+      margin-top: 18px;
+    }
+
+    .status-row {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-line);
+    }
+
+    html[data-theme="dark"] .spotlight-card .tag {
+      background: rgba(25, 23, 20, 0.08);
+      border-color: rgba(25, 23, 20, 0.12);
+    }
+
+    .build-card h3,
+    .section-title h2 {
+      font-size: 28px;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .build-list {
+      margin-top: 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .build-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .build-date {
+      color: var(--coral);
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .build-title {
+      font-weight: 760;
+      letter-spacing: -0.02em;
+    }
+
+    .build-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 48px 36px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .section-title p {
+      max-width: 620px;
+      color: var(--muted);
+    }
+
+    .tracks {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+
+    .track {
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      background: var(--paper-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .track:hover {
+      transform: translateY(-4px);
+      background: var(--paper);
+    }
+
+    .track-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: var(--rose);
+    }
+
+    .track:nth-child(2) .track-icon { background: var(--lavender); }
+    .track:nth-child(3) .track-icon { background: var(--mint); }
+    .track:nth-child(4) .track-icon { background: var(--blue); }
+    .track:nth-child(5) .track-icon { background: var(--yellow); }
+    .track:nth-child(6) .track-icon { background: var(--coral); }
+
+    .track h3 {
+      margin-top: 34px;
+      font-size: 21px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .track p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      grid-auto-rows: minmax(320px, auto);
+      gap: 18px;
+    }
+
+    .project-card {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .project-card.large {
+      grid-row: span 2;
+      min-height: 660px;
+    }
+
+    .visual {
+      height: 48%;
+      min-height: 170px;
+      background:
+        linear-gradient(135deg, rgba(255, 111, 97, 0.82), rgba(207, 195, 255, 0.65)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.18) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.16) 0 1px, transparent 1px 42px);
+    }
+
+    .project-card:nth-child(2) .visual { background: linear-gradient(135deg, #cfc3ff, #b8d8ff); }
+    .project-card:nth-child(3) .visual { background: linear-gradient(135deg, #d8f3dc, #ffe8a3); }
+    .project-card:nth-child(4) .visual { background: linear-gradient(135deg, #191714, #ff6f61); }
+    .project-card:nth-child(5) .visual { background: linear-gradient(135deg, #f5b8c5, #fffaf4); }
+
+    html[data-theme="dark"] .visual {
+      filter: saturate(0.82) brightness(0.82);
+    }
+
+    .project-body {
+      padding: 24px;
+    }
+
+    .project-type {
+      color: var(--coral);
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .project-body h3 {
+      margin-top: 14px;
+      font-size: clamp(26px, 2.8vw, 44px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .project-body p {
+      margin-top: 16px;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .project-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .progress {
+      width: 140px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--progress-bg);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: var(--value);
+      background: var(--coral);
+      border-radius: inherit;
+    }
+
+    .thinking {
+      display: grid;
+      grid-template-columns: 0.72fr 1.28fr;
+      gap: 20px;
+    }
+
+    .manifesto {
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--bg);
+      padding: 36px;
+      min-height: 430px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .manifesto h2 {
+      font-size: clamp(40px, 5vw, 74px);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+    }
+
+    .manifesto p {
+      color: color-mix(in srgb, var(--bg), transparent 28%);
+      font-size: 18px;
+      max-width: 520px;
+    }
+
+    .articles {
+      display: grid;
+      gap: 14px;
+    }
+
+    .article {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      align-items: center;
+      gap: 20px;
+      padding: 22px;
+      min-height: 125px;
+      border-radius: 24px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
+
+    .article-kicker {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .article h3 {
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .article-arrow {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      font-weight: 900;
+    }
+
+    .newsletter {
+      max-width: 1480px;
+      margin: 48px auto 0;
+      padding: 0 36px 56px;
+    }
+
+    .newsletter-inner {
+      border-radius: 36px;
+      background: linear-gradient(135deg, var(--rose), var(--lavender));
+      padding: clamp(32px, 5vw, 68px);
+      display: grid;
+      grid-template-columns: 1fr 0.8fr;
+      gap: 32px;
+      align-items: end;
+      color: #191714;
+    }
+
+    .newsletter h2 {
+      font-size: clamp(42px, 6vw, 92px);
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+    }
+
+    .newsletter p {
+      max-width: 580px;
+      margin-top: 20px;
+      font-size: 18px;
+      color: rgba(25, 23, 20, 0.72);
+    }
+
+    .signup {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      background: rgba(255, 250, 244, 0.62);
+      border-radius: 999px;
+      border: 1px solid rgba(25, 23, 20, 0.12);
+    }
+
+    .signup input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      padding: 0 14px;
+      font: inherit;
+      outline: 0;
+      color: #191714;
+    }
+
+    .signup input::placeholder {
+      color: rgba(25, 23, 20, 0.52);
+    }
+
+    .signup button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 20px;
+      background: #191714;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px 36px 44px;
+      max-width: 1480px;
+      margin: 0 auto;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .thinking,
+      .newsletter-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy {
+        min-height: auto;
+      }
+
+      .tracks {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .project-card.large {
+        grid-row: span 1;
+        grid-column: span 2;
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 740px) {
+      .nav {
+        padding: 18px 20px;
+      }
+
+      .nav-links a:not(.nav-cta),
+      .theme-toggle {
+        display: none;
+      }
+
+      .hero,
+      .section,
+      .newsletter {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .hero-copy,
+      .spotlight-card,
+      .build-card,
+      .manifesto,
+      .newsletter-inner {
+        border-radius: 24px;
+      }
+
+      .tracks,
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card.large {
+        grid-column: auto;
+        min-height: 480px;
+      }
+
+      .section-title {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .article {
+        grid-template-columns: 1fr;
+      }
+
+      .signup {
+        border-radius: 24px;
+        flex-direction: column;
+      }
+
+      .signup input {
+        min-height: 48px;
+      }
+
+      .footer {
+        flex-direction: column;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="nav">
+      <a href="#" class="brand" aria-label="Gribo Digital home">
+        <span class="brand-mark"></span>
+        <span>Gribo Digital</span>
+      </a>
+      <div class="nav-links">
+        <a href="#projects">Projects</a>
+        <a href="#tracks">Tracks</a>
+        <a href="#thinking">Thinking</a>
+        <a href="#log">Build Log</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="toggleTheme()">
+          <span class="theme-dot"></span>
+          <span id="theme-label">Dark</span>
+        </button>
+        <a class="nav-cta" href="#newsletter">Subscribe</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span> Digital systems magazine-lab</div>
+          <h1>Ideas that become systems.</h1>
+          <p class="hero-subtitle">
+            Gribo Digital documents projects, prototypes, research notes and build logs around AI agents, interfaces, infrastructure, computational music and digital culture.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">Explore projects</a>
+            <a class="button secondary" href="#log">See recent progress</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-panel">
+        <article class="spotlight-card">
+          <div>
+            <div class="card-label">Featured project</div>
+            <h2>AI Agent Sandbox</h2>
+            <p>A research track focused on reducing the friction of testing agents with Codex, OpenClaw and local environments before scaling to cloud infrastructure.</p>
+          </div>
+          <div class="status-row">
+            <span class="tag">Active research</span>
+            <span class="tag">Codex</span>
+            <span class="tag">Developer Experience</span>
+          </div>
+        </article>
+
+        <article id="log" class="build-card">
+          <h3>Latest build log</h3>
+          <div class="build-list">
+            <div class="build-item">
+              <div class="build-date">May 07</div>
+              <div>
+                <div class="build-title">Codex as an initial sandbox</div>
+                <div class="build-meta">Testing feasibility without starting from a cloud VM.</div>
+              </div>
+            </div>
+            <div class="build-item">
+              <div class="build-date">May 05</div>
+              <div>
+                <div class="build-title">Friction in autonomous agents</div>
+                <div class="build-meta">Editorial notes for a Gribo Digital post.</div>
+              </div>
+            </div>
+            <div class="build-item">
+              <div class="build-date">Apr 25</div>
+              <div>
+                <div class="build-title">Internet and server proximity</div>
+                <div class="build-meta">An essay about regional infrastructure and latency.</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </aside>
+    </section>
+
+    <section id="tracks" class="section">
+      <div class="section-title">
+        <h2>Project tracks</h2>
+        <p>Living lines of research and development. Each track groups projects, notes, technical decisions, progress updates and editorial pieces.</p>
+      </div>
+      <div class="tracks">
+        <a class="track" href="#">
+          <div class="track-icon"></div>
+          <div>
+            <h3>AI Agents</h3>
+            <p>Codex, OpenClaw, sandboxes, workflows and multi-agent systems.</p>
+          </div>
+        </a>
+        <a class="track" href="#">
+          <div class="track-icon"></div>
+          <div>
+            <h3>Product Systems</h3>
+            <p>E-commerce, dashboards, MAYU, UX flows and product architecture.</p>
+          </div>
+        </a>
+        <a class="track" href="#">
+          <div class="track-icon"></div>
+          <div>
+            <h3>Music Tech</h3>
+            <p>AudioToolkit, Demucs, REAPER, stems, MIDI and editable AI music.</p>
+          </div>
+        </a>
+        <a class="track" href="#">
+          <div class="track-icon"></div>
+          <div>
+            <h3>Infrastructure</h3>
+            <p>Servers, latency, regions, platforms and digital proximity.</p>
+          </div>
+        </a>
+        <a class="track" href="#">
+          <div class="track-icon"></div>
+          <div>
+            <h3>Culture OS</h3>
+            <p>Communities, Discord, XP, participation and teal organizations.</p>
+          </div>
+        </a>
+        <a class="track" href="#">
+          <div class="track-icon"></div>
+          <div>
+            <h3>Creative Tech</h3>
+            <p>Interfaces, fashion, aesthetics, visual content and narrative systems.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="section-title">
+        <h2>Active projects</h2>
+        <p>These are not portfolio cards. They are living dossiers: each project has a status, progress, decisions, links and a build log.</p>
+      </div>
+      <div class="project-grid">
+        <article class="project-card large">
+          <div class="visual"></div>
+          <div class="project-body">
+            <div class="project-type">Research / Developer tools</div>
+            <h3>AI Agent Sandbox</h3>
+            <p>An exploration of how to test autonomous agents quickly, measurably and cheaply before spending time on cloud infrastructure.</p>
+            <div class="project-footer">
+              <span>Status: active research</span>
+              <div class="progress" aria-label="35% progress"><span style="--value:35%"></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="visual"></div>
+          <div class="project-body">
+            <div class="project-type">Product system</div>
+            <h3>Vue E-commerce Events</h3>
+            <p>DDD + event sourcing architecture on top of Firebase to capture intent, cart behavior, purchases and product signals.</p>
+            <div class="project-footer">
+              <span>Prototype</span>
+              <div class="progress"><span style="--value:48%"></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="visual"></div>
+          <div class="project-body">
+            <div class="project-type">Music tech</div>
+            <h3>AudioToolkit</h3>
+            <p>A self-contained system for separating stems with Demucs, cleaning audio and connecting workflows with REAPER.</p>
+            <div class="project-footer">
+              <span>In development</span>
+              <div class="progress"><span style="--value:57%"></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="visual"></div>
+          <div class="project-body">
+            <div class="project-type">UX / App design</div>
+            <h3>MAYU Redesign</h3>
+            <p>A mobile-first redesign for a visual social app with upload flows, permissions, feed logic, profile surfaces and product-like navigation.</p>
+            <div class="project-footer">
+              <span>Documented</span>
+              <div class="progress"><span style="--value:68%"></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="visual"></div>
+          <div class="project-body">
+            <div class="project-type">Editorial system</div>
+            <h3>Gribo Docs System</h3>
+            <p>An AI-native documentation system for turning prompts, tests, repositories and essays into navigable knowledge.</p>
+            <div class="project-footer">
+              <span>Exploration</span>
+              <div class="progress"><span style="--value:31%"></span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="thinking" class="section thinking">
+      <div class="manifesto">
+        <h2>Build, reflect, archive, evolve.</h2>
+        <p>Gribo does not work like a finished showcase. It works like external memory: it records what is being built, what breaks, what changes and what eventually becomes a system.</p>
+      </div>
+      <div class="articles">
+        <a class="article" href="#">
+          <div class="article-kicker">Deep dive · AI Agents</div>
+          <h3>The friction problem behind autonomous agent implementation</h3>
+          <div class="article-arrow">→</div>
+        </a>
+        <a class="article" href="#">
+          <div class="article-kicker">Essay · Infrastructure</div>
+          <h3>Internet is not speed. It is server proximity.</h3>
+          <div class="article-arrow">→</div>
+        </a>
+        <a class="article" href="#">
+          <div class="article-kicker">Case study · Product</div>
+          <h3>Turning an e-commerce prototype into an event-driven system</h3>
+          <div class="article-arrow">→</div>
+        </a>
+        <a class="article" href="#">
+          <div class="article-kicker">Notes · Documentation</div>
+          <h3>Why AI-native documentation is no longer a wiki</h3>
+          <div class="article-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <section id="newsletter" class="newsletter">
+      <div class="newsletter-inner">
+        <div>
+          <h2>Follow the build.</h2>
+          <p>Get progress notes, prototypes, essays and technical decisions from the Gribo Digital magazine-lab.</p>
+        </div>
+        <form class="signup">
+          <input type="email" placeholder="you@email.com" aria-label="Email" />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2026 Gribo Digital</p>
+      <p>Projects · Build Log · Essays · Systems · Contact</p>
+    </footer>
+  </main>
+
+  <script>
+    function setThemeLabel(theme) {
+      const label = document.getElementById('theme-label');
+      if (!label) return;
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('gribo-theme', next);
+      setThemeLabel(next);
+    }
+
+    const savedTheme = localStorage.getItem('gribo-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+    setThemeLabel(initialTheme);
+  </script>
+</body>
+</html>

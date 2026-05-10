@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gribo Studio — Admin Mockup</title>
+  <style>
+    :root {
+      --bg:#f8f4ef; --paper:#fffaf4; --paper-soft:rgba(255,250,244,.68); --paper-muted:#f0e8df;
+      --ink:#191714; --muted:#756f68; --line:#ded4c8; --coral:#ff6f61; --rose:#f5b8c5;
+      --lavender:#cfc3ff; --mint:#d8f3dc; --blue:#b8d8ff; --yellow:#ffe8a3; --green:#73d48b;
+      --nav-bg:rgba(248,244,239,.9); --code-bg:#201d1a; --code-ink:#fff7ee;
+      --shadow:0 24px 80px rgba(25,23,20,.08); --radius:24px; --sidebar:286px; --topbar:72px;
+    }
+    html[data-theme="dark"] {
+      --bg:#11100f; --paper:#1b1917; --paper-soft:rgba(255,247,238,.052); --paper-muted:#25211e;
+      --ink:#fff7ee; --muted:#a89f95; --line:#38332e; --coral:#ff796d; --rose:#8f5262;
+      --lavender:#7767c9; --mint:#6ca47a; --blue:#5e86b7; --yellow:#c9a84d; --green:#7ed991;
+      --nav-bg:rgba(17,16,15,.9); --code-bg:#0d0c0b; --code-ink:#fff7ee;
+      --shadow:0 24px 80px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;overflow-x:hidden}
+    button,input,textarea,select{font:inherit} a{color:inherit;text-decoration:none} code,pre{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    .app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+    .sidebar{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:color-mix(in srgb,var(--bg),var(--paper) 18%);padding:20px 16px;overflow:auto;z-index:40}
+    .brand{display:flex;align-items:center;gap:12px;padding:6px 8px 22px;font-weight:900;letter-spacing:-.055em;font-size:22px}
+    .brand-mark{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 25%,var(--yellow),var(--coral) 45%,var(--ink) 46%);box-shadow:0 6px 18px rgba(255,111,97,.28);flex:0 0 auto}
+    .studio-label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:850;margin-top:-4px}
+    .side-section-title{color:var(--muted);text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:850;margin:22px 10px 9px}
+    .nav-item{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:9px 10px;border-radius:14px;color:var(--muted);border:0;background:transparent;cursor:pointer;text-align:left;transition:.18s}
+    .nav-item:hover,.nav-item.active{color:var(--ink);background:var(--paper-soft)} .nav-item:hover{transform:translateX(2px)}
+    .nav-icon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--coral),transparent 82%);color:var(--coral);font-weight:900;font-size:13px;flex:0 0 auto}
+    .side-card{margin-top:24px;padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,var(--paper-soft),color-mix(in srgb,var(--lavender),transparent 88%))}
+    .side-card strong{display:block;letter-spacing:-.035em;line-height:1.1}.side-card p{margin-top:7px;color:var(--muted);font-size:13px}
+    .main{min-width:0}.topbar{position:sticky;top:0;z-index:30;height:var(--topbar);display:flex;justify-content:space-between;align-items:center;gap:20px;padding:0 28px;border-bottom:1px solid var(--line);background:var(--nav-bg);backdrop-filter:blur(18px)}
+    .crumbs{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;min-width:0}.crumbs strong{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .top-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}.search{width:min(400px,38vw);height:42px;border:1px solid var(--line);border-radius:999px;background:var(--paper-soft);color:var(--muted);display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;font-size:14px}
+    .kbd{display:inline-flex;align-items:center;min-width:28px;height:24px;justify-content:center;padding:0 8px;border-radius:8px;border:1px solid var(--line);color:var(--muted);background:var(--paper);font-size:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper-soft);color:var(--ink);font-weight:780;cursor:pointer;transition:.18s}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.16)}.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}.btn.coral{background:var(--coral);color:#191714;border-color:var(--coral)}.btn.icon-only{width:42px;padding:0}
+    .theme-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 5px rgba(255,121,109,.14)}
+    .view{display:none;padding:32px}.view.active{display:block}
+    .page-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:24px}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--paper-soft);font-size:13px;font-weight:760;width:max-content}
+    .pulse{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 6px rgba(255,121,109,.15)}
+    h1{margin-top:16px;font-size:clamp(42px,5vw,76px);line-height:.9;letter-spacing:-.08em;max-width:920px}.page-subtitle{margin-top:18px;color:var(--muted);font-size:18px;max-width:760px;letter-spacing:-.02em}
+    .hero-admin{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:34px;padding:clamp(30px,5vw,54px);background:linear-gradient(145deg,var(--paper),var(--paper-muted));box-shadow:var(--shadow);margin-bottom:24px}
+    .hero-admin:after{content:"";position:absolute;right:-170px;top:-190px;width:470px;height:470px;border-radius:50%;background:radial-gradient(circle,rgba(255,121,109,.5),rgba(119,103,201,.22) 52%,transparent 72%);pointer-events:none}.hero-admin>*{position:relative;z-index:1}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.stat-card,.panel,.table-card,.editor-card,.preview-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-soft);box-shadow:none}.stat-card{padding:20px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}.stat-card span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.11em;font-weight:850}.stat-card strong{display:block;margin-top:12px;font-size:44px;line-height:1;letter-spacing:-.07em}.stat-card p{color:var(--muted);font-size:13px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.panel{padding:22px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}.panel h2,.table-card h2,.editor-card h2,.preview-card h2{font-size:28px;line-height:1;letter-spacing:-.06em}.panel p,.muted{color:var(--muted)}
+    .status-badge{display:inline-flex;align-items:center;gap:7px;min-height:28px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:850;border:1px solid var(--line);background:var(--paper-soft);white-space:nowrap}.status-badge:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}.published:before{background:var(--green)}.draft:before{background:var(--yellow)}.review:before{background:var(--lavender)}.scheduled:before{background:var(--blue)}.friction:before{background:var(--coral)}
+    .content-table{width:100%;border-collapse:collapse;font-size:14px}.table-card{overflow:hidden}.table-title{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line)}.content-table th,.content-table td{padding:15px 22px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}.content-table tr:last-child td{border-bottom:0}.content-table th{color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase}.content-title{display:flex;flex-direction:column;gap:3px}.content-title strong{letter-spacing:-.025em}.content-title span{color:var(--muted);font-size:12px}
+    .composer-layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px;align-items:start}.block-list{display:grid;gap:14px}.home-block-card{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:16px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--paper-soft);transition:.18s}.home-block-card:hover{transform:translateY(-2px);background:color-mix(in srgb,var(--paper-soft),var(--paper) 18%)}.drag-handle{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:color-mix(in srgb,var(--coral),transparent 84%);color:var(--coral);font-weight:900;cursor:grab}.block-info h3{font-size:20px;letter-spacing:-.045em;line-height:1.05}.block-info p{margin-top:5px;color:var(--muted);font-size:14px}.block-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.mini-btn{min-height:32px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper-soft);color:var(--muted);cursor:pointer;font-size:12px;font-weight:780}.mini-btn:hover{color:var(--ink)}
+    .block-preview-panel{position:sticky;top:calc(var(--topbar) + 22px);border:1px solid var(--line);border-radius:28px;background:var(--paper-soft);overflow:hidden}.preview-top{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.mini-browser{margin:18px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--paper);box-shadow:var(--shadow)}.browser-bar{height:38px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 13px}.browser-dot{width:9px;height:9px;border-radius:50%;background:var(--coral)}.browser-dot:nth-child(2){background:var(--yellow)}.browser-dot:nth-child(3){background:var(--green)}.browser-preview{padding:18px}.preview-hero{min-height:180px;border-radius:22px;padding:22px;background:linear-gradient(135deg,rgba(255,121,109,.55),rgba(119,103,201,.28));display:flex;flex-direction:column;justify-content:flex-end}.preview-hero h3{font-size:30px;line-height:.92;letter-spacing:-.07em;max-width:250px}.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.preview-tile{min-height:92px;border-radius:16px;border:1px solid var(--line);background:var(--paper-soft);padding:12px}.preview-tile strong{display:block;font-size:13px;line-height:1.05;letter-spacing:-.03em}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:7px;margin-bottom:14px}.field label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:850}.input,.textarea,.select{width:100%;border:1px solid var(--line);border-radius:16px;background:var(--paper-soft);color:var(--ink);padding:12px 14px;outline:none}.textarea{min-height:126px;resize:vertical}
+    .editor-shell{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}.editor-card,.preview-card{overflow:hidden}.editor-card-head,.preview-card-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.markdown-editor{background:var(--code-bg);color:var(--code-ink);min-height:460px;padding:22px;font-size:14px;line-height:1.75;white-space:pre-wrap;overflow:auto}.metadata-panel{display:grid;gap:16px;position:sticky;top:calc(var(--topbar) + 22px)}.preview-pane{padding:24px}.preview-pane h1{font-size:42px;margin:0}.preview-pane p{color:var(--muted);margin-top:16px;font-size:16px;line-height:1.65}
+    .media-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.media-item{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--paper-soft)}.media-thumb{aspect-ratio:1/.78;background:linear-gradient(135deg,var(--coral),var(--lavender));filter:saturate(.9)}.media-item:nth-child(2n) .media-thumb{background:linear-gradient(135deg,var(--mint),var(--yellow))}.media-item:nth-child(3n) .media-thumb{background:linear-gradient(135deg,var(--blue),var(--rose))}.media-meta{padding:12px}.media-meta strong{display:block;font-size:13px;letter-spacing:-.025em;line-height:1.1}.media-meta span{color:var(--muted);font-size:12px}
+    .doc-tree,.checklist{display:grid;gap:10px}.tree-item,.check-item{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--paper-soft)}.check-item{grid-template-columns:32px 1fr auto;border-radius:18px;padding:14px}.tree-icon,.check-dot{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--lavender),transparent 78%);color:var(--lavender);font-weight:900}.check-dot{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--green),transparent 74%);color:var(--green)}
+    .segment{display:inline-flex;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--paper-soft);gap:3px}.segment button{min-height:32px;padding:0 12px;border:0;border-radius:999px;color:var(--muted);background:transparent;font-weight:760;cursor:pointer;font-size:13px}.segment button.active{background:var(--ink);color:var(--bg)}
+    .path-card{border:1px solid var(--line);border-radius:20px;background:var(--code-bg);color:var(--code-ink);padding:18px;overflow:auto;font-size:13px;line-height:1.75;white-space:pre-wrap}.mobile-menu{display:none}
+    @media(max-width:1280px){.composer-layout,.editor-shell{grid-template-columns:1fr}.block-preview-panel,.metadata-panel{position:static}.media-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:980px){:root{--sidebar:0px}.app{grid-template-columns:1fr}.sidebar{display:none}.mobile-menu{display:inline-flex}.search{display:none}.view{padding:22px}.stats-grid,.grid-2,.grid-3,.form-grid{grid-template-columns:1fr}.page-head{flex-direction:column;align-items:flex-start}.topbar{padding:0 18px}.content-table{min-width:760px}.table-card{overflow-x:auto}}
+    @media(max-width:680px){.top-actions .btn:not(.icon-only):not(.coral){display:none}h1{font-size:42px}.hero-admin{border-radius:26px}.home-block-card{grid-template-columns:1fr}.block-actions{justify-content:flex-start}.media-grid{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="AdminSidebar">
+      <div class="brand"><span class="brand-mark"></span><span>Gribo<br><span class="studio-label">Studio</span></span></div>
+      <div class="side-section-title">Cockpit</div>
+      <button class="nav-item active" data-target="overview"><span class="nav-icon">⌂</span><span>Admin Overview</span></button>
+      <button class="nav-item" data-target="home"><span class="nav-icon">✦</span><span>Home Composer</span></button>
+      <button class="nav-item" data-target="queue"><span class="nav-icon">↗</span><span>Publish Queue</span></button>
+      <div class="side-section-title">Content</div>
+      <button class="nav-item" data-target="blog"><span class="nav-icon">B</span><span>Blog Entries</span></button>
+      <button class="nav-item" data-target="blog-editor"><span class="nav-icon">✎</span><span>Blog Editor</span></button>
+      <button class="nav-item" data-target="projects"><span class="nav-icon">P</span><span>Repository Projects</span></button>
+      <button class="nav-item" data-target="project-editor"><span class="nav-icon">◇</span><span>Project Editor</span></button>
+      <button class="nav-item" data-target="docs"><span class="nav-icon">D</span><span>Documentation Manager</span></button>
+      <button class="nav-item" data-target="media"><span class="nav-icon">M</span><span>Media Library</span></button>
+      <div class="side-card"><strong>Nuxt Content map</strong><p>Designed to connect with <code>content/blog</code>, <code>projects</code>, <code>docs</code>, <code>home</code> and <code>settings</code>.</p></div>
+    </aside>
+    <main class="main">
+      <header class="topbar" aria-label="AdminTopbar">
+        <div class="crumbs"><button class="btn icon-only mobile-menu">☰</button><span>Gribo Studio</span><span>/</span><strong id="current-title">Admin Overview</strong></div>
+        <div class="top-actions"><div class="search"><span>Search content, blocks, media...</span><span class="kbd">⌘K</span></div><button class="btn" onclick="toggleTheme()"><span class="theme-dot"></span><span id="theme-label">Dark</span></button><button class="btn">Preview site</button><button class="btn coral">Publish</button></div>
+      </header>
+
+      <section id="overview" class="view active" data-title="Admin Overview">
+        <div class="hero-admin"><div class="eyebrow"><span class="pulse"></span> Internal editorial cockpit</div><h1>Welcome back to Gribo Studio.</h1><p class="page-subtitle">A premium CMS cockpit for editing the public home, publishing essays, managing living repositories and shaping documentation as a product interface.</p></div>
+        <div class="stats-grid"><div class="stat-card"><div><span>Published posts</span><strong>18</strong></div><p>4 updated this month</p></div><div class="stat-card"><div><span>Active projects</span><strong>07</strong></div><p>2 marked as active research</p></div><div class="stat-card"><div><span>Docs pages</span><strong>42</strong></div><p>AI agents docs need review</p></div><div class="stat-card"><div><span>Queued items</span><strong>05</strong></div><p>3 ready, 2 blocked by SEO</p></div></div>
+        <div class="grid-2">
+          <div class="table-card"><div class="table-title"><h2>Recently edited</h2><button class="mini-btn">View all</button></div><table class="content-table"><thead><tr><th>Title</th><th>Type</th><th>Status</th></tr></thead><tbody><tr><td><div class="content-title"><strong>When Agents Promise Autonomy but Deliver Friction</strong><span>content/blog/agents-friction.md</span></div></td><td>Blog</td><td><span class="status-badge review">Review</span></td></tr><tr><td><div class="content-title"><strong>OpenClaw Friction Test</strong><span>content/projects/openclaw-friction.md</span></div></td><td>Project</td><td><span class="status-badge friction">Active</span></td></tr><tr><td><div class="content-title"><strong>Tennis Image Analysis Pipeline</strong><span>content/docs/vision/tennis-pipeline.md</span></div></td><td>Docs</td><td><span class="status-badge published">Published</span></td></tr></tbody></table></div>
+          <div class="panel"><div class="panel-head"><h2>Content structure</h2><span class="status-badge published">Ready</span></div><div class="path-card">content/
+  blog/
+    agents-friction.md
+    internet-proximity.md
+  projects/
+    openclaw-friction.md
+    gribo-park-concept.md
+  docs/
+    ai/
+    vision/
+    nuxt-content/
+  home/
+    blocks.json
+  settings/
+    navigation.json</div></div>
+        </div>
+      </section>
+
+      <section id="home" class="view" data-title="Home Composer">
+        <div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Home Composer · Mini editorial page builder</div><h1>Compose the public home like a magazine issue.</h1><p class="page-subtitle">Select featured posts, reorder blocks, change feed logic and preview the public homepage before publishing.</p></div><div class="segment"><button>Manual</button><button>Latest</button><button>Most viewed</button><button class="active">Mixed</button></div></div>
+        <div class="composer-layout">
+          <div><div class="panel" style="margin-bottom:16px;"><div class="panel-head"><h2>Home blocks</h2><button class="btn primary">+ Add block</button></div><p class="muted">Drag visually to reorder. Every block can be edited, hidden, duplicated, removed and previewed against the public Gribo theme.</p></div>
+            <div class="block-list">
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Hero Block</h3><p>Ideas that become systems · magazine-lab intro · CTA to projects and build log.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Featured Article</h3><p>When Agents Promise Autonomy but Deliver Friction · AI Agents / Field Note.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Featured Project</h3><p>OpenClaw Friction Test · active research dossier with build log and setup notes.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Editorial Note</h3><p>A short reflection about building public memory for unfinished digital projects.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Blog Grid</h3><p>Mixed feed: Internet Is Not Speed, It Is Proximity · AI Documentation as Product Interface.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Repository Grid</h3><p>Tennis Image Analysis Pipeline · Gribo Park Concept Repository · AudioToolkit.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Documentation Highlight</h3><p>AI Documentation as Product Interface · docs as an onboarding and reasoning surface.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Code Snippet Block</h3><p>Minimum viable agent test YAML · success criteria and failure notes.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Newsletter Block</h3><p>Follow the build · progress notes, prototypes, essays and technical decisions.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+              <article class="home-block-card"><div class="drag-handle">⋮⋮</div><div class="block-info"><h3>Custom Message</h3><p>Experimental banner for new Gribo Studio updates and active research announcements.</p></div><div class="block-actions"><button class="mini-btn">Edit</button><button class="mini-btn">Hide</button><button class="mini-btn">Duplicate</button><button class="mini-btn">Delete</button></div></article>
+            </div>
+          </div>
+          <aside class="block-preview-panel"><div class="preview-top"><h2>Public preview</h2><span class="status-badge scheduled">Mixed feed</span></div><div class="mini-browser"><div class="browser-bar"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div><div class="browser-preview"><div class="preview-hero"><span class="status-badge friction">Featured</span><h3>Ideas that become systems.</h3></div><div class="preview-grid"><div class="preview-tile"><strong>When Agents Promise Autonomy but Deliver Friction</strong></div><div class="preview-tile"><strong>OpenClaw Friction Test</strong></div><div class="preview-tile"><strong>Tennis Image Analysis Pipeline</strong></div><div class="preview-tile"><strong>AI Documentation as Product Interface</strong></div></div></div></div><div style="padding:0 18px 18px;display:grid;gap:12px;"><button class="btn primary">Preview frontend</button><button class="btn">Save as draft</button></div></aside>
+        </div>
+      </section>
+
+      <section id="blog" class="view" data-title="Blog Entries"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Blog Entries</div><h1>Editorial essays and field notes.</h1><p class="page-subtitle">Manage long-form Gribo posts, drafts, tags, SEO and public preview states.</p></div><button class="btn primary">+ New entry</button></div><div class="table-card"><div class="table-title"><h2>All blog entries</h2><div class="segment"><button class="active">All</button><button>Draft</button><button>Review</button><button>Published</button></div></div><table class="content-table"><thead><tr><th>Title</th><th>Tags</th><th>Status</th><th>Publish date</th></tr></thead><tbody><tr><td><div class="content-title"><strong>When Agents Promise Autonomy but Deliver Friction</strong><span>content/blog/agents-friction.md</span></div></td><td>AI Agents, DX</td><td><span class="status-badge review">Review</span></td><td>May 12, 2026</td></tr><tr><td><div class="content-title"><strong>Internet Is Not Speed, It Is Proximity</strong><span>content/blog/internet-proximity.md</span></div></td><td>Infrastructure</td><td><span class="status-badge published">Published</span></td><td>Apr 25, 2026</td></tr><tr><td><div class="content-title"><strong>AI Documentation as Product Interface</strong><span>content/blog/ai-docs-interface.md</span></div></td><td>Documentation, AI</td><td><span class="status-badge draft">Draft</span></td><td>Unscheduled</td></tr></tbody></table></div></section>
+
+      <section id="blog-editor" class="view" data-title="Blog Editor"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Blog Editor</div><h1>When Agents Promise Autonomy but Deliver Friction</h1><p class="page-subtitle">Markdown-first editor with metadata, SEO, tags and frontend preview.</p></div><div class="top-actions"><button class="btn">Preview</button><button class="btn primary">Save draft</button></div></div><div class="editor-shell"><div class="editor-card"><div class="editor-card-head"><h2>MarkdownEditorMock</h2><span class="status-badge review">Review</span></div><pre class="markdown-editor">---
+title: "When Agents Promise Autonomy but Deliver Friction"
+slug: "agents-promise-autonomy-deliver-friction"
+description: "A practical field note about OpenClaw, local gateways and the hidden work behind agentic tooling."
+tags: ["AI Agents", "OpenClaw", "Developer Experience"]
+status: "review"
+publishedAt: "2026-05-12"
+---
+
+# High hopes, gateway errors, and an agent story waiting inside OpenClaw
+
+There are tools that arrive with the aura of a shortcut...
+
+## The first signal looked good
+
+The configuration existed. The OpenAI key was found. The default model was visible.
+
+> Configuration is not activation. A key in a file is not an agent in motion.</pre></div><aside class="metadata-panel"><div class="panel"><h2>MetadataPanel</h2><div class="field"><label>Status</label><select class="select"><option>Review</option><option>Draft</option><option>Published</option></select></div><div class="field"><label>SEO title</label><input class="input" value="OpenClaw and the Friction Behind AI Agents"></div><div class="field"><label>Tags</label><input class="input" value="AI Agents, OpenClaw, DX"></div><div class="field"><label>Publish date</label><input class="input" value="2026-05-12"></div></div><div class="preview-card"><div class="preview-card-head"><h2>PreviewPane</h2></div><div class="preview-pane"><h1>High hopes, gateway errors...</h1><p>A practical friction story about testing an AI agent framework that promised a shortcut — and instead revealed the hidden work behind autonomy.</p></div></div></aside></div></section>
+
+      <section id="projects" class="view" data-title="Repository Projects"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Repository Projects</div><h1>Living dossiers for unfinished systems.</h1><p class="page-subtitle">Projects are not portfolio cards. They are evolving repositories with build logs, docs, media, status and related essays.</p></div><button class="btn primary">+ New project</button></div><div class="grid-3"><div class="panel"><div class="panel-head"><h2>OpenClaw Friction Test</h2><span class="status-badge friction">Active</span></div><p>Setup friction, local gateway diagnosis, Codex workflows and minimum viable agent test.</p></div><div class="panel"><div class="panel-head"><h2>Tennis Image Analysis Pipeline</h2><span class="status-badge published">Published</span></div><p>Vision analysis for tennis practice images, prompt schema and friction scoring.</p></div><div class="panel"><div class="panel-head"><h2>Gribo Park Concept Repository</h2><span class="status-badge draft">Draft</span></div><p>Urban sport-arts complex research, visual references, stadium/mall layouts and concept notes.</p></div></div></section>
+
+      <section id="project-editor" class="view" data-title="Project Editor"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Project Editor</div><h1>OpenClaw Friction Test</h1><p class="page-subtitle">Edit a repository-style project dossier with overview, build logs, related docs, media and next actions.</p></div><button class="btn primary">Save project</button></div><div class="editor-shell"><div class="panel"><h2>Project overview</h2><div class="form-grid"><div class="field"><label>Project title</label><input class="input" value="OpenClaw Friction Test"></div><div class="field"><label>Project status</label><select class="select"><option>Active research</option><option>Prototype</option><option>Archived</option></select></div></div><div class="field"><label>Summary</label><textarea class="textarea">A Gribo research dossier about the gap between agent framework promises and real first-run configuration friction.</textarea></div><div class="field"><label>Build log notes</label><textarea class="textarea">- Gateway not reachable at ws://127.0.0.1:18789
+- OpenAI key found
+- Default model configured
+- Need first successful agent response through runtime path</textarea></div></div><aside class="metadata-panel"><div class="panel"><h2>Linked content</h2><div class="checklist"><div class="check-item"><div class="check-dot">✓</div><div><strong>Blog essay linked</strong><p class="muted">When Agents Promise Autonomy...</p></div><span class="status-badge review">Review</span></div><div class="check-item"><div class="check-dot">✓</div><div><strong>Docs page linked</strong><p class="muted">Agent setup reference</p></div><span class="status-badge draft">Draft</span></div></div></div></aside></div></section>
+
+      <section id="docs" class="view" data-title="Documentation Manager"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Documentation Manager</div><h1>Framework-style docs for Gribo systems.</h1><p class="page-subtitle">Manage documentation trees, sections, API-like references and AI-native guidance pages.</p></div><button class="btn primary">+ New doc page</button></div><div class="grid-2"><div class="panel"><div class="panel-head"><h2>DocumentationTree</h2><span class="status-badge published">42 pages</span></div><div class="doc-tree"><div class="tree-item"><div class="tree-icon">▸</div><div><strong>AI Agents</strong><p class="muted">OpenClaw, Codex, sandbox tests</p></div><span class="status-badge review">Review</span></div><div class="tree-item"><div class="tree-icon">▸</div><div><strong>Vision Pipelines</strong><p class="muted">Tennis image analysis, schema, prompts</p></div><span class="status-badge published">Live</span></div><div class="tree-item"><div class="tree-icon">▸</div><div><strong>Nuxt Content System</strong><p class="muted">Content collections, home blocks, editor fields</p></div><span class="status-badge draft">Draft</span></div></div></div><div class="panel"><h2>Selected doc preview</h2><p class="muted">Tennis Image Analysis Pipeline</p><div class="path-card" style="margin-top:16px;">content/docs/vision/tennis-image-analysis.md
+
+sections:
+  - Quickstart
+  - Analysis pipeline
+  - Analysis schema
+  - Friction metrics
+  - Prompt template</div></div></div></section>
+
+      <section id="media" class="view" data-title="Media Library"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Media Library</div><h1>Images, mockups and visual references.</h1><p class="page-subtitle">Upload and organize visual assets for posts, projects, documentation and public home blocks.</p></div><button class="btn primary">Upload media</button></div><div class="media-grid"><div class="media-item"><div class="media-thumb"></div><div class="media-meta"><strong>openclaw-terminal.png</strong><span>Blog hero · 1.2 MB</span></div></div><div class="media-item"><div class="media-thumb"></div><div class="media-meta"><strong>tennis-analysis-card.jpg</strong><span>Docs figure · 890 KB</span></div></div><div class="media-item"><div class="media-thumb"></div><div class="media-meta"><strong>gribo-park-night.png</strong><span>Project visual · 2.4 MB</span></div></div><div class="media-item"><div class="media-thumb"></div><div class="media-meta"><strong>ai-docs-interface.png</strong><span>Blog cover · 1.6 MB</span></div></div><div class="media-item"><div class="media-thumb"></div><div class="media-meta"><strong>home-feed-preview.png</strong><span>Home block · 740 KB</span></div></div><div class="media-item"><div class="media-thumb"></div><div class="media-meta"><strong>internet-map-latency.png</strong><span>Essay figure · 1.9 MB</span></div></div></div></section>
+
+      <section id="queue" class="view" data-title="Publish Queue"><div class="page-head"><div><div class="eyebrow"><span class="pulse"></span> Publish Queue</div><h1>Final checks before content goes live.</h1><p class="page-subtitle">Review SEO, metadata, linked media, tags, publish dates and frontend previews.</p></div><button class="btn coral">Publish ready items</button></div><div class="grid-2"><div class="panel"><div class="panel-head"><h2>Ready to publish</h2><span class="status-badge scheduled">3 items</span></div><div class="checklist"><div class="check-item"><div class="check-dot">✓</div><div><strong>Tennis Image Analysis Pipeline</strong><p class="muted">SEO, tags, slug and preview checked.</p></div><span class="status-badge published">Ready</span></div><div class="check-item"><div class="check-dot">✓</div><div><strong>Internet Is Not Speed, It Is Proximity</strong><p class="muted">Scheduled for next editorial slot.</p></div><span class="status-badge scheduled">Scheduled</span></div><div class="check-item"><div class="check-dot">✓</div><div><strong>AI Documentation as Product Interface</strong><p class="muted">Needs final image crop, content ready.</p></div><span class="status-badge review">Review</span></div></div></div><div class="panel"><div class="panel-head"><h2>Blocked</h2><span class="status-badge draft">2 items</span></div><div class="checklist"><div class="check-item"><div class="check-dot">!</div><div><strong>When Agents Promise Autonomy but Deliver Friction</strong><p class="muted">Missing final excerpt and social image.</p></div><span class="status-badge draft">Blocked</span></div><div class="check-item"><div class="check-dot">!</div><div><strong>Gribo Park Concept Repository</strong><p class="muted">Needs project status and related media.</p></div><span class="status-badge draft">Blocked</span></div></div></div></div></section>
+    </main>
+  </div>
+  <script>
+    const navItems=document.querySelectorAll('.nav-item');
+    const views=document.querySelectorAll('.view');
+    const currentTitle=document.getElementById('current-title');
+    function showView(id){
+      views.forEach(view=>view.classList.toggle('active',view.id===id));
+      navItems.forEach(item=>item.classList.toggle('active',item.dataset.target===id));
+      const view=document.getElementById(id);
+      currentTitle.textContent=view?.dataset.title||'Admin';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    navItems.forEach(item=>item.addEventListener('click',()=>showView(item.dataset.target)));
+    function setThemeLabel(theme){const label=document.getElementById('theme-label');if(label)label.textContent=theme==='dark'?'Dark':'Light'}
+    function toggleTheme(){const root=document.documentElement;const current=root.getAttribute('data-theme')||'dark';const next=current==='dark'?'light':'dark';root.setAttribute('data-theme',next);localStorage.setItem('gribo-studio-theme',next);setThemeLabel(next)}
+    const savedTheme=localStorage.getItem('gribo-studio-theme');
+    const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme=savedTheme||(prefersDark?'dark':'light');
+    document.documentElement.setAttribute('data-theme',initialTheme);
+    setThemeLabel(initialTheme);
+  </script>
+</body>
+</html>
