@@ -243,6 +243,13 @@ watch(() => route.fullPath, () => {
 onMounted(() => {
   resetForRoute()
   maybeStartDirectCreate()
+  window.addEventListener('gribo:composer-save', createDraft)
+  window.addEventListener('gribo:composer-primary', createDraft)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('gribo:composer-save', createDraft)
+  window.removeEventListener('gribo:composer-primary', createDraft)
 })
 </script>
 

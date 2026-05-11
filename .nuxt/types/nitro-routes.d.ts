@@ -3,6 +3,45 @@ import type { Serialize, Simplify } from "nitropack/types";
 declare module "nitropack/types" {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/admin/analytics/clear': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/analytics/clear.post').default>>>>
+    }
+    '/api/admin/analytics/content': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/analytics/content.get').default>>>>
+    }
+    '/api/admin/analytics/events': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/analytics/events.get').default>>>>
+    }
+    '/api/admin/analytics/export': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/analytics/export.get').default>>>>
+    }
+    '/api/admin/analytics/labs': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/analytics/labs.get').default>>>>
+    }
+    '/api/admin/analytics/summary': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/analytics/summary.get').default>>>>
+    }
+    '/api/admin/backups/export-blog': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/export-blog.get').default>>>>
+    }
+    '/api/admin/backups/export-full': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/export-full.get').default>>>>
+    }
+    '/api/admin/backups/export-project': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/export-project.get').default>>>>
+    }
+    '/api/admin/backups/import': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/import.post').default>>>>
+    }
+    '/api/admin/backups/latest-snapshot': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/latest-snapshot.get').default>>>>
+    }
+    '/api/admin/backups/preview': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/preview.post').default>>>>
+    }
+    '/api/admin/backups/snapshots': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/backups/snapshots.get').default>>>>
+    }
     '/api/admin/content/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/content/create.post').default>>>>
     }
@@ -18,8 +57,56 @@ declare module "nitropack/types" {
     '/api/admin/content/save': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/content/save.post').default>>>>
     }
+    '/api/admin/home-layout': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/home-layout.get').default>>>>
+    }
+    '/api/admin/home-layout/save': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/home-layout/save.post').default>>>>
+    }
+    '/api/admin/media/list': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/media/list.get').default>>>>
+    }
+    '/api/admin/media/upload': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/media/upload.post').default>>>>
+    }
+    '/api/admin/users/create': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/users/create.post').default>>>>
+    }
+    '/api/admin/users/list': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/users/list.get').default>>>>
+    }
+    '/api/admin/users/password': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/users/password.post').default>>>>
+    }
+    '/api/admin/users/status': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/users/status.post').default>>>>
+    }
+    '/api/admin/users/update': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/users/update.post').default>>>>
+    }
+    '/api/analytics/event': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/analytics/event.post').default>>>>
+    }
+    '/api/auth/google': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/google.get').default>>>>
+    }
+    '/api/auth/google/callback': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/google/callback.get').default>>>>
+    }
+    '/api/auth/login': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/login.post').default>>>>
+    }
+    '/api/auth/logout': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/logout.post').default>>>>
+    }
+    '/api/auth/session': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/session.get').default>>>>
+    }
     '/api/health': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/health.get').default>>>>
+    }
+    '/api/home-layout': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/home-layout.get').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>

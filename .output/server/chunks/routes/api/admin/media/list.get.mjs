@@ -1,0 +1,59 @@
+import { c as defineEventHandler } from '../../../../_/nitro.mjs';
+import { mkdir, readdir, stat } from 'node:fs/promises';
+import { resolve, join, extname, relative, sep } from 'node:path';
+import 'node:crypto';
+import 'node:http';
+import 'node:https';
+import 'node:events';
+import 'node:buffer';
+import 'node:fs';
+import 'node:url';
+import 'anymatch';
+
+const allowedImageExtensions = /* @__PURE__ */ new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"]);
+function titleFromFilename(filename) {
+  return filename.replace(/\.[a-z0-9]+$/i, "").replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+const list_get = defineEventHandler(async () => {
+  const uploadsRoot = resolve(process.cwd(), "public/uploads");
+  const assets = [];
+  async function walk(current) {
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = join(current, entry.name);
+      if (entry.isDirectory()) {
+        await walk(absolutePath);
+        continue;
+      }
+      if (!entry.isFile()) continue;
+      const extension = extname(entry.name).toLowerCase();
+      if (!allowedImageExtensions.has(extension)) continue;
+      const relativePath = relative(uploadsRoot, absolutePath).split(sep).join("/");
+      const info = await stat(absolutePath);
+      const filename = relativePath.split("/").pop() || relativePath;
+      assets.push({
+        id: relativePath.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase(),
+        title: titleFromFilename(filename),
+        filename,
+        url: `/uploads/${relativePath}`,
+        type: extension.replace(".", "").toUpperCase(),
+        usage: "Media Library",
+        description: "Image available from public/uploads.",
+        size: info.size,
+        updatedAt: info.mtime.toISOString()
+      });
+    }
+  }
+  try {
+    await mkdir(uploadsRoot, { recursive: true });
+    await walk(uploadsRoot);
+  } catch {
+    return { assets: [] };
+  }
+  return {
+    assets: assets.sort((a, b) => a.title.localeCompare(b.title))
+  };
+});
+
+export { list_get as default };
+//# sourceMappingURL=list.get.mjs.map

@@ -55,6 +55,41 @@ Production safety rule:
 
 This stage does not add roles, OAuth, password reset, account management, audit logs, or rate limiting.
 
+## Stage 5.1 - Admin Users + Google Login
+
+Stage 5.1 keeps the Stage 5 cookie-session model and adds a minimal admin user registry.
+
+Storage:
+
+- Admin users live in `server/data/admin-users.json`.
+- The file is server-internal, not Nuxt Content.
+- Password hashes are stored only in this file and are stripped from API responses.
+
+Authentication:
+
+- Password login first checks active file-based admin users.
+- If no file-based users exist, the environment bootstrap remains available.
+- Google login uses OAuth only as an admin login method for pre-authorized emails.
+- Google does not create public accounts or self-register new admins.
+
+Password hashing:
+
+- Passwords use Node `crypto.scryptSync` with a random per-user salt.
+- Plain text passwords are never written to disk.
+
+Session:
+
+- Existing signed HTTP-only cookies are reused.
+- Session payload now includes admin user identity.
+- Expiration can be configured with `ADMIN_SESSION_MAX_AGE_SECONDS`.
+
+Boundaries:
+
+- No JWT was added because the app already has a server-side signed cookie session.
+- No roles or permissions were added.
+- No external identity database was added.
+- No OAuth provider beyond Google was added.
+
 ## Current Foundation
 
 Gribo Digital is a Nuxt 4 application using:
@@ -258,3 +293,106 @@ Labs remain visual only. The tracks shown are SysSecurity, AI Systems, Physics, 
 ## Stage 2B Notes
 
 The next public migration step should focus on blog, repository, and docs surfaces. Keep admin functionality, real newsletter, analytics, and content editing out of scope until their dedicated roadmap stages.
+
+## Stage 6 Content Portability
+
+Stage 6 introduces `.gribo.json` packages for backup, export, import, and restore operations.
+
+Implementation boundaries:
+
+- Backup/import endpoints live under `/api/admin/backups/*`.
+- Existing Stage 5 API middleware protects all backup/import endpoints.
+- Packages can only read/write approved content and upload areas.
+- Unsafe paths such as `../`, absolute paths, `app/`, `server/`, `.env`, package files, and config files are rejected.
+- Safety snapshots are written to `server/backups/snapshots/`, outside public content and outside Nuxt Content collections.
+
+Package model:
+
+- `manifest` describes schema, package type, title, slug, content files, upload files, timestamp, and checksum.
+- `files` contains portable file payloads as `utf8` or `base64`.
+- Full-site export includes approved content folders and uploads.
+- Project export includes the project markdown plus docs resolved from `relatedDocs`, `docsPaths`, `docsPath`, or `docsFolder`.
+- Blog export includes the selected blog markdown.
+
+Import model:
+
+- Preview happens before writes.
+- Conflicts are detected by target path.
+- Import as copy writes non-conflicting paths or creates `-copy` suffixed paths.
+- Replace existing requires an explicit confirmation phrase.
+- Full-site replace additionally requires `RESTORE GRIBO BACKUP`.
+
+## Stage 7 Home Composer
+
+Stage 7 makes the public home editable from Gribo Studio.
+
+Source of truth:
+
+- `content/home/layout.json`
+
+Runtime behavior:
+
+- Public `/` reads the home layout through a public read-only endpoint.
+- `/admin/home` reads and writes the same layout through protected admin endpoints.
+- Admin writes are constrained to `content/home/layout.json`.
+- A safety snapshot is created before each save in `server/backups/snapshots/`.
+
+Configurable fields:
+
+- Hero label, headline, description, and CTAs.
+- Featured project mode and manual project slug.
+- Build log mode, limit, and manual entries.
+- Editorial feed mode, content type filters, limit, and manual selections.
+- Institutional identity block copy, CTA, and enabled state.
+
+Boundaries:
+
+- No drag and drop.
+- No media upload.
+- No full live preview.
+- No home layout revision history beyond safety snapshots.
+- No new external storage.
+
+## Stage 8 Insights / Analytics Foundation
+
+Stage 8 adds a first-party analytics layer for public Gribo pages.
+
+Storage:
+
+- Events are stored in `server/data/analytics/events.jsonl`.
+- Analytics is intentionally outside `content/` so editorial content and behavioral events remain separate.
+- Stage 6 content backups do not include analytics by default.
+
+Public tracking:
+
+- A client-only plugin records public page views.
+- Long-form routes record `read_start`, `read_progress`, and `read_complete`.
+- CTA clicks are captured for key public calls to action.
+- Admin routes and API routes are ignored.
+
+Privacy constraints:
+
+- No raw IP addresses are stored.
+- No public reader accounts are created.
+- No emails, names, or sensitive data are collected.
+- The anonymous session id uses `sessionStorage`, not tracking cookies.
+- Raw user agent strings are not stored; only a hash is persisted.
+
+Protected admin APIs:
+
+- `/api/admin/analytics/summary`
+- `/api/admin/analytics/content`
+- `/api/admin/analytics/labs`
+- `/api/admin/analytics/events`
+- `/api/admin/analytics/export`
+- `/api/admin/analytics/clear`
+
+The existing `/api/admin/**` auth middleware protects all analytics admin endpoints.
+
+Known limits:
+
+- No external analytics services.
+- No country/region metrics.
+- No bot filtering beyond basic validation and simple rate limiting.
+- No retention policy UI.
+- No per-content editor analytics panels yet.

@@ -15,7 +15,15 @@ function createBaseFrontmatter(contentType: AdminContentType, title: string, slu
     seoDescription: 'Draft editorial note from the Gribo Digital archive.',
     ogImage: '/og/gribo-digital.png',
     canonical: '',
-    noindex: true
+    noindex: true,
+    coverImage: '',
+    coverAlt: '',
+    coverCaption: '',
+    coverStyle: 'editorial-gradient',
+    coverPosition: 'center',
+    accentColor: 'coral',
+    mediaRefs: [],
+    blocks: []
   }
 
   if (contentType === 'blog') {

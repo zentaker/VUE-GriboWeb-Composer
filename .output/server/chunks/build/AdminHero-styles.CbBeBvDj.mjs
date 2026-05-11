@@ -1,0 +1,8 @@
+const AdminHero_vue_vue_type_style_index_0_scoped_7c576395_lang = '.admin-hero[data-v-7c576395]{background:linear-gradient(145deg,var(--paper),var(--paper-muted));border:1px solid var(--line);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;padding:clamp(30px,5vw,54px);position:relative}.admin-hero[data-v-7c576395]:after{background:radial-gradient(circle,rgba(255,121,109,.5),rgba(119,103,201,.22) 52%,transparent 72%);border-radius:50%;content:"";height:470px;pointer-events:none;position:absolute;right:-170px;top:-190px;width:470px}.admin-hero[data-v-7c576395]>*{position:relative;z-index:1}h1[data-v-7c576395]{font-size:clamp(42px,6vw,88px);font-weight:900;letter-spacing:-.075em;line-height:.92;margin:18px 0 0;max-width:860px}p[data-v-7c576395]:last-child{color:var(--muted);font-size:18px;margin:22px 0 0;max-width:760px}@media(max-width:680px){.admin-hero[data-v-7c576395]{border-radius:26px}}';
+
+const AdminHeroStyles_CbBeBvDj = [
+  AdminHero_vue_vue_type_style_index_0_scoped_7c576395_lang
+];
+
+export { AdminHeroStyles_CbBeBvDj as default };
+//# sourceMappingURL=AdminHero-styles.CbBeBvDj.mjs.map

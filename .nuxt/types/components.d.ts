@@ -24,6 +24,7 @@ interface _GlobalComponents {
   AdminStatCard: typeof import("../../app/components/admin/AdminStatCard.vue")['default']
   AdminTabs: typeof import("../../app/components/admin/AdminTabs.vue")['default']
   AdminTopbar: typeof import("../../app/components/admin/AdminTopbar.vue")['default']
+  BlogComposerPreview: typeof import("../../app/components/admin/BlogComposerPreview.vue")['default']
   BrandMark: typeof import("../../app/components/base/BrandMark.vue")['default']
   StatusBadge: typeof import("../../app/components/base/StatusBadge.vue")['default']
   TagPill: typeof import("../../app/components/base/TagPill.vue")['default']
@@ -31,6 +32,7 @@ interface _GlobalComponents {
   ActiveProjectsBlock: typeof import("../../app/components/blocks/ActiveProjectsBlock.vue")['default']
   ArticleHero: typeof import("../../app/components/blocks/ArticleHero.vue")['default']
   BuildLogBlock: typeof import("../../app/components/blocks/BuildLogBlock.vue")['default']
+  ContentBlockRenderer: typeof import("../../app/components/blocks/ContentBlockRenderer.vue")['default']
   DocsHero: typeof import("../../app/components/blocks/DocsHero.vue")['default']
   FeaturedProjectBlock: typeof import("../../app/components/blocks/FeaturedProjectBlock.vue")['default']
   HeroIntroBlock: typeof import("../../app/components/blocks/HeroIntroBlock.vue")['default']
@@ -117,6 +119,7 @@ interface _GlobalComponents {
   LazyAdminStatCard: LazyComponent<typeof import("../../app/components/admin/AdminStatCard.vue")['default']>
   LazyAdminTabs: LazyComponent<typeof import("../../app/components/admin/AdminTabs.vue")['default']>
   LazyAdminTopbar: LazyComponent<typeof import("../../app/components/admin/AdminTopbar.vue")['default']>
+  LazyBlogComposerPreview: LazyComponent<typeof import("../../app/components/admin/BlogComposerPreview.vue")['default']>
   LazyBrandMark: LazyComponent<typeof import("../../app/components/base/BrandMark.vue")['default']>
   LazyStatusBadge: LazyComponent<typeof import("../../app/components/base/StatusBadge.vue")['default']>
   LazyTagPill: LazyComponent<typeof import("../../app/components/base/TagPill.vue")['default']>
@@ -124,6 +127,7 @@ interface _GlobalComponents {
   LazyActiveProjectsBlock: LazyComponent<typeof import("../../app/components/blocks/ActiveProjectsBlock.vue")['default']>
   LazyArticleHero: LazyComponent<typeof import("../../app/components/blocks/ArticleHero.vue")['default']>
   LazyBuildLogBlock: LazyComponent<typeof import("../../app/components/blocks/BuildLogBlock.vue")['default']>
+  LazyContentBlockRenderer: LazyComponent<typeof import("../../app/components/blocks/ContentBlockRenderer.vue")['default']>
   LazyDocsHero: LazyComponent<typeof import("../../app/components/blocks/DocsHero.vue")['default']>
   LazyFeaturedProjectBlock: LazyComponent<typeof import("../../app/components/blocks/FeaturedProjectBlock.vue")['default']>
   LazyHeroIntroBlock: LazyComponent<typeof import("../../app/components/blocks/HeroIntroBlock.vue")['default']>

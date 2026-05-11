@@ -11,7 +11,9 @@ useGriboSeo({
 
 const filters = ['All', 'AI Systems', 'SysArchitecture', 'Data Science', 'Physics', 'SysSecurity']
 
-const formattedPosts = computed(() => (posts.value ?? []).map((post) => ({
+const formattedPosts = computed(() => (posts.value ?? [])
+  .filter((post) => String(post.status || '').toLowerCase() !== 'archived')
+  .map((post) => ({
   title: post.title,
   description: post.description,
   to: post.path,

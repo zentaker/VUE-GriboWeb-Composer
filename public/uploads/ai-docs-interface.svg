@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="AI docs interface">
+  <rect width="1600" height="900" fill="#11100f"/>
+  <rect x="120" y="100" width="1360" height="700" rx="48" fill="#1b1917" stroke="#38332e" stroke-width="4"/>
+  <rect x="170" y="160" width="260" height="580" rx="26" fill="#25211e"/>
+  <rect x="480" y="160" width="620" height="580" rx="26" fill="#fff7ee" opacity=".06"/>
+  <rect x="1150" y="160" width="270" height="580" rx="26" fill="#25211e"/>
+  <rect x="520" y="220" width="360" height="34" rx="17" fill="#ff796d"/>
+  <rect x="520" y="310" width="500" height="24" rx="12" fill="#a89f95"/>
+  <rect x="520" y="358" width="420" height="24" rx="12" fill="#a89f95"/>
+  <rect x="520" y="450" width="520" height="160" rx="24" fill="#0d0c0b"/>
+  <text x="562" y="540" fill="#fff7ee" font-family="Consolas, monospace" font-size="30">agent.memory.trace()</text>
+</svg>

@@ -6,7 +6,11 @@ definePageMeta({
 const route = useRoute()
 const username = ref('')
 const password = ref('')
-const errorMessage = ref('')
+const initialError = String(route.query.error || '')
+const errorMessage = ref(initialError === 'google_unauthorized'
+  ? 'This Google account is not authorized for Gribo Studio.'
+  : initialError
+)
 const isLoading = ref(false)
 
 const { data: session } = await useFetch('/api/auth/session')
@@ -78,6 +82,20 @@ async function login() {
         <button class="studio-button primary" :disabled="isLoading || (session && !session.loginEnabled)" type="submit">
           {{ isLoading ? 'Signing in...' : 'Login' }}
         </button>
+
+        <div class="login-divider"><span>or</span></div>
+
+        <a
+          class="studio-button google"
+          :class="{ disabled: session && !session.googleLoginEnabled }"
+          href="/api/auth/google"
+          @click="session && !session.googleLoginEnabled ? $event.preventDefault() : undefined"
+        >
+          Continue with Google
+        </a>
+        <p v-if="session && !session.googleLoginEnabled" class="login-hint">
+          Google login is available after OAuth variables are configured.
+        </p>
       </form>
     </section>
   </main>
@@ -198,9 +216,41 @@ async function login() {
   color: var(--bg);
 }
 
-.studio-button:disabled {
+.studio-button.google {
+  text-decoration: none;
+}
+
+.studio-button:disabled,
+.studio-button.disabled {
   cursor: not-allowed;
   opacity: 0.55;
+}
+
+.login-divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.login-divider::before,
+.login-divider::after {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  content: "";
+}
+
+.login-hint {
+  margin: -6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .login-error {

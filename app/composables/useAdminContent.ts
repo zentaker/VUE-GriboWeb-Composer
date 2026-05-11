@@ -29,20 +29,27 @@ export interface AdminContentReadItem {
 }
 
 export function useAdminContent() {
+  const adminFetchHeaders = import.meta.server ? useRequestHeaders(['cookie']) : undefined
+  const adminApiBase = import.meta.server ? useRequestURL().origin : ''
+  const adminApiUrl = (path: string) => `${adminApiBase}${path}`
+
   const listContent = (contentType: AdminContentType) =>
-    $fetch<{ items: AdminContentListItem[] }>('/api/admin/content/list', {
-      query: { contentType }
+    $fetch<{ items: AdminContentListItem[] }>(adminApiUrl('/api/admin/content/list'), {
+      query: { contentType },
+      headers: adminFetchHeaders
     })
 
   const readContent = (contentType: AdminContentType, filePath: string) =>
-    $fetch<{ item: AdminContentReadItem }>('/api/admin/content/read', {
+    $fetch<{ item: AdminContentReadItem }>(adminApiUrl('/api/admin/content/read'), {
       method: 'POST',
+      headers: adminFetchHeaders,
       body: { contentType, filePath }
     })
 
   const saveContent = (contentType: AdminContentType, filePath: string, frontmatter: Record<string, any>, body: string) =>
-    $fetch<{ ok: boolean, item: AdminContentReadItem }>('/api/admin/content/save', {
+    $fetch<{ ok: boolean, item: AdminContentReadItem }>(adminApiUrl('/api/admin/content/save'), {
       method: 'POST',
+      headers: adminFetchHeaders,
       body: { contentType, filePath, frontmatter, body }
     })
 
@@ -53,15 +60,24 @@ export function useAdminContent() {
     folder?: string,
     extra?: Record<string, unknown>
   ) =>
-    $fetch<{ ok: boolean, item: AdminContentReadItem }>('/api/admin/content/create', {
+    $fetch<{ ok: boolean, item: AdminContentReadItem }>(adminApiUrl('/api/admin/content/create'), {
       method: 'POST',
+      headers: adminFetchHeaders,
       body: { contentType, title, slug, folder, ...(extra ?? {}) }
     })
 
   const archiveContent = (contentType: AdminContentType, filePath: string) =>
-    $fetch<{ ok: boolean, softDeleted: boolean }>('/api/admin/content/delete', {
+    $fetch<{ ok: boolean, softDeleted: boolean }>(adminApiUrl('/api/admin/content/delete'), {
       method: 'POST',
-      body: { contentType, filePath }
+      headers: adminFetchHeaders,
+      body: { contentType, filePath, mode: 'archive' }
+    })
+
+  const deleteBlogContent = (filePath: string, confirmation: string) =>
+    $fetch<{ ok: boolean, deleted: boolean, item: { trashPath: string } }>(adminApiUrl('/api/admin/content/delete'), {
+      method: 'POST',
+      headers: adminFetchHeaders,
+      body: { contentType: 'blog', filePath, mode: 'delete', confirmation }
     })
 
   return {
@@ -69,6 +85,7 @@ export function useAdminContent() {
     readContent,
     saveContent,
     createContent,
-    archiveContent
+    archiveContent,
+    deleteBlogContent
   }
 }

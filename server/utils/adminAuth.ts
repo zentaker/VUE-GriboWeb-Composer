@@ -1,13 +1,18 @@
 import { createHmac, createHash, timingSafeEqual } from 'node:crypto'
 import type { H3Event } from 'h3'
 import { createError, deleteCookie, getCookie, getHeader, setCookie } from 'h3'
+import { findPasswordAdminUser, markAdminUserLogin, verifyAdminPassword } from './adminUsers'
 
 const ADMIN_SESSION_COOKIE = 'gribo_admin_session'
-const SESSION_TTL_SECONDS = 60 * 60 * 8
+const DEFAULT_SESSION_TTL_SECONDS = 60 * 60 * 8
 const PLACEHOLDER_VALUE = 'change-me-before-production'
 
 type AdminSessionPayload = {
+  id: string
+  name: string
+  email: string
   username: string
+  authProvider: 'password' | 'google' | 'env'
   exp: number
 }
 
@@ -50,7 +55,9 @@ export function getAdminAuthConfig(event?: H3Event) {
   const password = process.env.ADMIN_PASSWORD || (enforceProductionCredentials ? '' : PLACEHOLDER_VALUE)
   const passwordHash = process.env.ADMIN_PASSWORD_HASH || ''
   const sessionSecret = process.env.SESSION_SECRET || (enforceProductionCredentials ? '' : 'dev-session-secret')
-  const hasCredentials = Boolean(username && (password || passwordHash) && sessionSecret)
+  const sessionMaxAgeSeconds = Number(process.env.ADMIN_SESSION_MAX_AGE_SECONDS || DEFAULT_SESSION_TTL_SECONDS)
+  const hasBootstrapCredentials = Boolean(username && (password || passwordHash))
+  const hasCredentials = Boolean(sessionSecret && (hasBootstrapCredentials || !enforceProductionCredentials))
   const usesUnsafePlaceholder = [password, sessionSecret].includes(PLACEHOLDER_VALUE)
   const enabled = hasCredentials && (!enforceProductionCredentials || !usesUnsafePlaceholder)
 
@@ -62,6 +69,7 @@ export function getAdminAuthConfig(event?: H3Event) {
     password,
     passwordHash,
     sessionSecret,
+    sessionMaxAgeSeconds: Number.isFinite(sessionMaxAgeSeconds) ? sessionMaxAgeSeconds : DEFAULT_SESSION_TTL_SECONDS,
     reason: enabled
       ? ''
       : production
@@ -70,13 +78,40 @@ export function getAdminAuthConfig(event?: H3Event) {
   }
 }
 
-export function verifyAdminCredentials(username: string, password: string, event?: H3Event) {
+export async function verifyAdminCredentials(username: string, password: string, event?: H3Event) {
   const config = getAdminAuthConfig(event)
 
   if (!config.enabled) {
     return {
       ok: false,
       reason: config.reason
+    }
+  }
+
+  const user = await findPasswordAdminUser(username)
+
+  if (user) {
+    const passwordOk = verifyAdminPassword(password, user.passwordHash)
+
+    if (!passwordOk) {
+      return {
+        ok: false,
+        reason: 'Invalid username or password.'
+      }
+    }
+
+    const loggedInUser = await markAdminUserLogin(user.id) || user
+
+    return {
+      ok: true,
+      reason: '',
+      user: {
+        id: loggedInUser.id,
+        name: loggedInUser.name,
+        email: loggedInUser.email,
+        username: loggedInUser.username,
+        authProvider: loggedInUser.authProvider
+      }
     }
   }
 
@@ -87,15 +122,24 @@ export function verifyAdminCredentials(username: string, password: string, event
 
   return {
     ok: usernameOk && passwordOk,
-    reason: usernameOk && passwordOk ? '' : 'Invalid username or password.'
+    reason: usernameOk && passwordOk ? '' : 'Invalid username or password.',
+    user: usernameOk && passwordOk
+      ? {
+          id: 'env-admin',
+          name: 'Environment Admin',
+          email: '',
+          username: config.username,
+          authProvider: 'env' as const
+        }
+      : undefined
   }
 }
 
-export function createAdminSessionToken(username: string, event?: H3Event) {
+export function createAdminSessionToken(user: Omit<AdminSessionPayload, 'exp'>, event?: H3Event) {
   const config = getAdminAuthConfig(event)
   const payload: AdminSessionPayload = {
-    username,
-    exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS
+    ...user,
+    exp: Math.floor(Date.now() / 1000) + config.sessionMaxAgeSeconds
   }
   const encodedPayload = base64Url(JSON.stringify(payload))
   const signature = signValue(encodedPayload, config.sessionSecret)
@@ -125,11 +169,12 @@ export function readAdminSession(event: H3Event) {
 }
 
 export function setAdminSessionCookie(event: H3Event, token: string) {
+  const config = getAdminAuthConfig(event)
   setCookie(event, ADMIN_SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production' && !isLocalRequest(event),
-    maxAge: SESSION_TTL_SECONDS,
+    maxAge: config.sessionMaxAgeSeconds,
     path: '/'
   })
 }

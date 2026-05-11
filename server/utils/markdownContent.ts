@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { dirname } from 'node:path'
 
-export type MarkdownFrontmatter = Record<string, string | number | boolean | string[] | number[] | null | undefined>
+export type MarkdownFrontmatter = Record<string, unknown>
 
 const frontmatterOrder = [
   'title',
@@ -12,6 +12,7 @@ const frontmatterOrder = [
   'description',
   'date',
   'updatedAt',
+  'archivedAt',
   'author',
   'category',
   'type',
@@ -27,9 +28,20 @@ const frontmatterOrder = [
   'tags',
   'relatedTags',
   'stack',
+  'coverImage',
+  'coverAlt',
+  'coverCaption',
+  'coverStyle',
+  'coverPosition',
+  'accentColor',
+  'mediaRefs',
+  'blocks',
   'roadmap',
   'openQuestions',
   'docsPath',
+  'docsFolder',
+  'docsPaths',
+  'relatedDocs',
   'readingTime',
   'seoTitle',
   'seoDescription',
@@ -51,10 +63,24 @@ function parseScalar(value: string) {
   if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
     return trimmed.slice(1, -1)
   }
+  if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+    try {
+      const parsed = JSON.parse(trimmed)
+      return parsed
+    } catch {
+      try {
+        const parsed = JSON.parse(trimmed.replace(/'/g, '"'))
+        return parsed
+      } catch {
+        return trimmed
+      }
+    }
+  }
+
   if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
     try {
       const parsed = JSON.parse(trimmed.replace(/'/g, '"'))
-      return Array.isArray(parsed) ? parsed : trimmed
+      return parsed
     } catch {
       return trimmed
     }
@@ -140,6 +166,7 @@ function needsQuotes(value: string) {
 function stringifyScalar(value: unknown) {
   if (typeof value === 'boolean' || typeof value === 'number') return String(value)
   if (value === null || value === undefined) return 'null'
+  if (typeof value === 'object') return JSON.stringify(value)
   const text = String(value)
   return needsQuotes(text) ? JSON.stringify(text) : text
 }
@@ -159,6 +186,9 @@ export function stringifyMarkdownContent(frontmatter: MarkdownFrontmatter, body:
 
     if (Array.isArray(value)) {
       if (!value.length) return [`${key}: []`]
+      if (value.some((item) => typeof item === 'object' && item !== null)) {
+        return [`${key}: ${JSON.stringify(value)}`]
+      }
       return [`${key}:`, ...value.map((item) => `  - ${stringifyScalar(item)}`)]
     }
 

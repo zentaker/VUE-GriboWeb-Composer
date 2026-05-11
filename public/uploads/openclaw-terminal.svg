@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="OpenClaw terminal trace">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0d0c0b"/>
+      <stop offset="0.55" stop-color="#2c2421"/>
+      <stop offset="1" stop-color="#ff796d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <rect x="150" y="130" width="1300" height="640" rx="46" fill="#11100f" opacity=".88" stroke="#38332e" stroke-width="4"/>
+  <circle cx="210" cy="190" r="16" fill="#ff796d"/>
+  <circle cx="258" cy="190" r="16" fill="#c9a84d"/>
+  <circle cx="306" cy="190" r="16" fill="#7ed991"/>
+  <text x="210" y="305" fill="#fff7ee" font-family="Consolas, monospace" font-size="44">gribo@studio:~$ openclaw run friction-test</text>
+  <text x="210" y="385" fill="#a89f95" font-family="Consolas, monospace" font-size="34">gateway: waiting for local runtime...</text>
+  <text x="210" y="455" fill="#ff796d" font-family="Consolas, monospace" font-size="34">trace: configuration is not activation</text>
+  <text x="210" y="545" fill="#fff7ee" font-family="Consolas, monospace" font-size="34">status: draft dossier stored in memory</text>
+</svg>

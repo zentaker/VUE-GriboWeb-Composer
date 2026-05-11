@@ -1,15 +1,35 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  eyebrow?: string
+  title?: string
+  subtitle?: string
+  primaryCtaLabel?: string
+  primaryCtaTo?: string
+  secondaryCtaLabel?: string
+  secondaryCtaTo?: string
+}>(), {
+  eyebrow: 'Digital systems magazine-lab',
+  title: 'Ideas that become systems.',
+  subtitle: 'Gribo Digital documents systems, prototypes, research notes and cultural infrastructure through a living editorial archive.',
+  primaryCtaLabel: 'Explore projects',
+  primaryCtaTo: '/repository',
+  secondaryCtaLabel: 'Explore labs',
+  secondaryCtaTo: '/labs'
+})
+</script>
+
 <template>
   <section class="home-hero">
     <div class="hero-copy">
       <div>
-        <p class="eyebrow"><span class="pulse" />Digital systems magazine-lab</p>
-        <h1>Ideas that become systems.</h1>
+        <p class="eyebrow"><span class="pulse" />{{ eyebrow }}</p>
+        <h1>{{ title }}</h1>
         <p class="hero-subtitle">
-          Gribo Digital documents systems, prototypes, research notes and cultural infrastructure through a living editorial archive.
+          {{ subtitle }}
         </p>
         <div class="hero-actions">
-          <NuxtLink class="home-button primary" to="/repository">Explore projects</NuxtLink>
-          <NuxtLink class="home-button secondary" to="/labs">Explore labs</NuxtLink>
+          <NuxtLink class="home-button primary" :to="primaryCtaTo">{{ primaryCtaLabel }}</NuxtLink>
+          <NuxtLink class="home-button secondary" :to="secondaryCtaTo">{{ secondaryCtaLabel }}</NuxtLink>
         </div>
       </div>
     </div>

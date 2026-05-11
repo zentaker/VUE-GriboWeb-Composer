@@ -28,6 +28,14 @@ export default defineNuxtConfig({
       sqliteConnector: 'native'
     }
   },
+  nitro: {
+    storage: {
+      adminUsers: {
+        driver: 'fs',
+        base: './server/data'
+      }
+    }
+  },
   typescript: {
     strict: true
   }

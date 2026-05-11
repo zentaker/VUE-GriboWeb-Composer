@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const username = String(body.username || '')
   const password = String(body.password || '')
-  const result = verifyAdminCredentials(username, password, event)
+  const result = await verifyAdminCredentials(username, password, event)
 
   if (!result.ok) {
     throw createError({
@@ -11,13 +11,11 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const token = createAdminSessionToken(username, event)
+  const token = createAdminSessionToken(result.user!, event)
   setAdminSessionCookie(event, token)
 
   return {
     ok: true,
-    user: {
-      username
-    }
+    user: result.user
   }
 })

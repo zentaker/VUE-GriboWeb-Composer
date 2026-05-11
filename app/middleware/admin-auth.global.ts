@@ -2,9 +2,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (!to.path.startsWith('/admin') || to.path === '/admin/login') return
 
   try {
-    const session = await $fetch<{ authenticated: boolean }>('/api/auth/session', {
-      headers: import.meta.server ? useRequestHeaders(['cookie']) : undefined
-    })
+    const session = import.meta.server
+      ? await $fetch<{ authenticated: boolean }>(`${useRequestURL().origin}/api/auth/session`, {
+          headers: useRequestHeaders(['cookie'])
+        })
+      : await $fetch<{ authenticated: boolean }>('/api/auth/session')
 
     if (session.authenticated) return
   } catch {

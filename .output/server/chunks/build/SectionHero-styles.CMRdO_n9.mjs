@@ -1,0 +1,8 @@
+const SectionHero_vue_vue_type_style_index_0_scoped_2c32b3f3_lang = '.section-hero[data-v-2c32b3f3]{background:linear-gradient(145deg,var(--paper),var(--paper-muted));border:1px solid var(--line);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;padding:clamp(30px,5vw,58px);position:relative}.section-hero[data-v-2c32b3f3]:after{background:radial-gradient(circle,rgba(255,121,109,.42),rgba(119,103,201,.2) 52%,transparent 72%);border-radius:50%;content:"";height:470px;pointer-events:none;position:absolute;right:-170px;top:-190px;width:470px}.section-hero>div[data-v-2c32b3f3]{max-width:900px;position:relative;z-index:1}h1[data-v-2c32b3f3]{font-size:clamp(46px,7vw,104px);font-weight:900;letter-spacing:-.085em;line-height:.9;margin:24px 0 0}p[data-v-2c32b3f3]:last-child{color:var(--muted);font-size:clamp(18px,2vw,24px);letter-spacing:-.025em;line-height:1.35;margin:24px 0 0;max-width:760px}@media(max-width:720px){.section-hero[data-v-2c32b3f3]{border-radius:26px}}';
+
+const SectionHeroStyles_CMRdO_n9 = [
+  SectionHero_vue_vue_type_style_index_0_scoped_2c32b3f3_lang
+];
+
+export { SectionHeroStyles_CMRdO_n9 as default };
+//# sourceMappingURL=SectionHero-styles.CMRdO_n9.mjs.map

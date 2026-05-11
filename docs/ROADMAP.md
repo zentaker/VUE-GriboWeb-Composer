@@ -174,7 +174,7 @@
 ## 5. Admin Auth + Production Safety Gate
 
 - Type: Development / Security / Product Safety
-- Status: Current
+- Status: Completed
 - Goal: Protect Gribo Studio and admin write APIs before adding larger modules.
 - Scope:
   - Single-admin login.
@@ -188,7 +188,131 @@
   - No OAuth.
   - No external database.
   - No password reset.
+- No audit log.
+
+## 5.1 Admin Users + Google Login
+
+- Type: Development / Security / Product Safety
+- Status: Completed
+- Goal: Add minimal file-based admin users and optional Google OAuth login without introducing external databases or roles.
+- Scope:
+  - Admin Users screen in Gribo Studio.
+  - Password-based admin users with hashed passwords.
+  - Google-based admin users by authorized email.
+  - User enable/disable.
+  - Password change.
+  - Session identity includes admin user metadata.
+- Functional status:
+  - No roles.
+  - No granular permissions.
+  - No public registration.
+  - No password reset.
   - No audit log.
+
+## 6. Content Portability / Backup System
+
+- Type: Development / CMS Safety / Content Operations
+- Status: Completed / Provisionally accepted in local UI
+- Goal: Export, import, and restore Gribo content between local and hosted instances without rebuilding content manually.
+- Scope:
+  - Backups screen in Gribo Studio.
+  - Full-site `.gribo.json` backup export.
+  - Project package export with associated docs.
+  - Blog package export.
+  - Package import preview.
+  - Import as copy.
+  - Replace existing with confirmation.
+  - Automatic safety snapshots before import/restore.
+  - Protected `/api/admin/backups/*` endpoints.
+- Functional status:
+  - No ZIP packaging yet.
+  - No external/cloud storage.
+  - No Git sync.
+  - No media upload workflow.
+  - Full restore writes package files but does not prune files missing from the package.
+
+## 7. Home Composer Real
+
+- Type: Development / CMS Editing
+- Status: Completed
+- Goal: Edit the public home from Gribo Studio without touching code.
+- Scope:
+  - `/admin/home` edits `content/home/layout.json`.
+  - Public `/` reads the saved home layout.
+  - Hero, featured project, build log, editorial feed, and institutional block are configurable.
+  - Manual, latest, and mixed feed modes are supported.
+  - Saving requires admin authentication and creates a safety snapshot.
+- Functional status:
+  - No drag and drop.
+  - No media upload.
+  - No full live preview.
+  - No version history.
+
+## 8. Insights / Analytics Foundation
+
+- Type: Development / Analytics / Privacy
+- Status: Completed
+- Goal: Track anonymous public usage signals and expose them in Gribo Studio.
+- Scope:
+  - First-party event ingestion at `/api/analytics/event`.
+  - Anonymous session id stored in `sessionStorage`.
+  - Page views for public routes.
+  - Read start, progress and completion events for long-form content.
+  - CTA click events for key public calls to action.
+  - Insights dashboard at `/admin/insights`.
+  - Protected admin analytics endpoints.
+  - Local JSONL storage under `server/data/analytics/`.
+- Functional status:
+  - No third-party analytics.
+  - No raw IP storage.
+  - No reader accounts.
+  - No country/region analytics yet.
+  - No external dashboard.
+
+## 9. Media Library / Asset Manager
+
+- Type: Development / Media Operations
+- Status: Completed / Provisional seed foundation
+- Goal: Provide a Studio media surface and reusable seed assets for covers and content blocks.
+- Functional status:
+  - Shared Studio Media Library assets are available for composer selection.
+  - Upload persistence remains future work.
+
+## 10. Rich Content Composer
+
+- Type: Development / CMS Editing / Visual Fidelity
+- Status: Completed
+- Goal: Align the content composer with `gribo-project-content-composer.html` and add a functional block-based editing foundation.
+- Scope:
+  - Project/Blog/Docs editor now supports blocks.
+  - Block library and canvas added.
+  - Right inspector added.
+  - Cover/media selection added from Studio Media Library seed assets.
+  - Public Blog, Project, and Docs pages render blocks when present.
+  - Markdown body remains fallback for older content.
+- Functional status:
+  - No drag and drop.
+  - No real upload persistence inside the composer.
+  - No crop/resize tooling.
+  - Preview is a simple block preview, not full public-page parity.
+
+## 11. Final Integration / Programming Closure
+
+- Type: QA / Stabilization / Production Readiness
+- Status: Completed
+- Goal: Close the main programming pass before deep manual QA and real content population.
+- Scope:
+  - Production build validated.
+  - Public route smoke test completed.
+  - Admin route smoke test completed after login.
+  - Admin API protection smoke test completed.
+  - Admin route middleware session bug fixed for production SSR.
+  - Product Owner final QA checklist added.
+- Functional status:
+  - Manual browser QA is still required for real content creation.
+  - Media upload, backup restore, analytics read-progress, and Google OAuth need deeper environment-specific testing.
+- Next phase:
+  - Manual QA + Content Population.
 
 ## 2.1 Home Editorial Blocks
 
@@ -206,9 +330,10 @@
 - Status: Done as part of 2A visual fidelity pass
 - Goal: Visually migrate the admin from the mockups.
 
-## 7. Home Composer Real
+## 7. Home Composer Real (Legacy Roadmap Slot)
 
 - Type: Development
+- Status: Covered by Stage 7 current implementation
 - Goal: Edit home blocks from the admin.
 
 ## 8. Media Library
@@ -216,9 +341,10 @@
 - Type: Development
 - Goal: Upload and manage images.
 
-## 9. Insights / Analytics
+## 9. Insights / Analytics (Legacy Roadmap Slot)
 
 - Type: Development
+- Status: Covered by Stage 8 foundation
 - Goal: Views, reads, completion, metrics by content, and metrics grouped by lab.
 - Note: Keep this inside the same project. Do not use an external database in the first version. Evaluate internal or local storage.
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Gribo Park night surface">
+  <defs>
+    <radialGradient id="r" cx=".74" cy=".22" r=".72">
+      <stop offset="0" stop-color="#7767c9"/>
+      <stop offset=".52" stop-color="#1b1917"/>
+      <stop offset="1" stop-color="#11100f"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#r)"/>
+  <path d="M0 690c250-120 430-90 650-40s470 20 950-150v400H0z" fill="#25211e"/>
+  <circle cx="1180" cy="200" r="82" fill="#ff796d" opacity=".82"/>
+  <path d="M220 660h1160" stroke="#fff7ee" stroke-opacity=".15" stroke-width="5"/>
+  <text x="160" y="190" fill="#fff7ee" font-family="Inter, Arial" font-size="86" font-weight="800" letter-spacing="-5">Gribo Park</text>
+  <text x="164" y="250" fill="#a89f95" font-family="Inter, Arial" font-size="30">cultural infrastructure surface</text>
+</svg>

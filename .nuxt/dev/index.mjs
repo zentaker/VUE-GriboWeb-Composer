@@ -1,13 +1,13 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
 import { Server } from 'node:http';
-import { resolve, dirname, extname, relative, sep, isAbsolute as isAbsolute$1, join } from 'node:path';
-import nodeCrypto from 'node:crypto';
+import { resolve, dirname, basename, relative, join, extname, isAbsolute as isAbsolute$1, sep } from 'node:path';
+import nodeCrypto, { randomBytes, scryptSync, timingSafeEqual, createHmac, createHash, randomUUID } from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getQuery as getQuery$1, readBody, getRouterParam, setHeader, getResponseStatus, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatusText } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, setCookie, deleteCookie, getCookie, getHeader, getQuery as getQuery$1, readBody, getRouterParam, setHeader, getResponseStatus, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, readMultipartFormData, getResponseStatusText } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/h3/dist/index.mjs';
 import { escapeHtml } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/@vue/shared/dist/shared.cjs.js';
 import viteNodeEntry_mjs from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
-import { readFile, mkdir, writeFile, stat, readdir, access } from 'node:fs/promises';
+import { readFile, mkdir, writeFile, stat, readdir, access, rename } from 'node:fs/promises';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, encodePath, joinRelativeURL } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file://C:/Users/MSI/Desktop/GriboWeb/node_modules/destr/dist/index.mjs';
@@ -52,6 +52,7 @@ const storage = createStorage({});
 
 storage.mount('/assets', assets$1);
 
+storage.mount('adminUsers', unstorage_47drivers_47fs({"driver":"fs","base":"./server/data"}));
 storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:/Users/MSI/Desktop/GriboWeb","watchOptions":{"ignored":[null]}}));
 storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:/Users/MSI/Desktop/GriboWeb/server","watchOptions":{"ignored":[null]}}));
 storage.mount('cache:nuxt:payload', file_58_47_47_47C_58_47Users_47MSI_47Desktop_47GriboWeb_47node_modules_47_64nuxt_47nitro_45server_47dist_47runtime_47utils_47cache_45driver_46js({"driver":"file:///C:/Users/MSI/Desktop/GriboWeb/node_modules/@nuxt/nitro-server/dist/runtime/utils/cache-driver.js","base":"C:/Users/MSI/Desktop/GriboWeb/.nuxt/cache/nuxt/payload"}));
@@ -2346,6 +2347,316 @@ const _VlNosn = eventHandler((event) => {
   return readAsset(id);
 });
 
+const USERS_KEY = "admin-users.json";
+const SCRYPT_KEY_LENGTH = 64;
+function now() {
+  return (/* @__PURE__ */ new Date()).toISOString();
+}
+function normalizeEmail(value) {
+  return value.trim().toLowerCase();
+}
+function normalizeUsername(value) {
+  return value.trim().toLowerCase();
+}
+async function readAdminUsers() {
+  const storage = useStorage("adminUsers");
+  try {
+    const stored = await storage.getItem(USERS_KEY);
+    if (Array.isArray(stored)) return stored;
+    if (typeof stored === "string" && stored.trim()) return JSON.parse(stored);
+    await storage.setItem(USERS_KEY, []);
+    return [];
+  } catch {
+    return [];
+  }
+}
+async function writeAdminUsers(users) {
+  await useStorage("adminUsers").setItem(USERS_KEY, users);
+}
+function toPublicAdminUser(user) {
+  const { passwordHash: _passwordHash, ...publicUser } = user;
+  return publicUser;
+}
+function hashAdminPassword(password) {
+  const salt = randomBytes(16).toString("base64url");
+  const hash = scryptSync(password, salt, SCRYPT_KEY_LENGTH).toString("base64url");
+  return `scrypt$${salt}$${hash}`;
+}
+function verifyAdminPassword(password, passwordHash = "") {
+  const [scheme, salt, storedHash] = passwordHash.split("$");
+  if (scheme !== "scrypt" || !salt || !storedHash) return false;
+  const candidate = scryptSync(password, salt, SCRYPT_KEY_LENGTH);
+  const stored = Buffer.from(storedHash, "base64url");
+  return candidate.length === stored.length && timingSafeEqual(candidate, stored);
+}
+async function createAdminUser(input) {
+  const users = await readAdminUsers();
+  const email = normalizeEmail(input.email);
+  const username = normalizeUsername(input.username);
+  const googleEmail = input.googleEmail ? normalizeEmail(input.googleEmail) : "";
+  if (!input.name.trim()) throw createError({ statusCode: 400, statusMessage: "Name is required." });
+  if (!email) throw createError({ statusCode: 400, statusMessage: "Email is required." });
+  if (!username) throw createError({ statusCode: 400, statusMessage: "Username is required." });
+  if (!["password", "google"].includes(input.authProvider)) {
+    throw createError({ statusCode: 400, statusMessage: "Invalid auth provider." });
+  }
+  if (input.authProvider === "password" && (!input.password || input.password.length < 10)) {
+    throw createError({ statusCode: 400, statusMessage: "Password must be at least 10 characters." });
+  }
+  if (users.some((user2) => normalizeEmail(user2.email) === email || user2.googleEmail && normalizeEmail(user2.googleEmail) === email)) {
+    throw createError({ statusCode: 409, statusMessage: "Email is already used by another admin user." });
+  }
+  if (googleEmail && users.some((user2) => normalizeEmail(user2.email) === googleEmail || user2.googleEmail && normalizeEmail(user2.googleEmail) === googleEmail)) {
+    throw createError({ statusCode: 409, statusMessage: "Google email is already used by another admin user." });
+  }
+  if (users.some((user2) => normalizeUsername(user2.username) === username)) {
+    throw createError({ statusCode: 409, statusMessage: "Username is already used by another admin user." });
+  }
+  const timestamp = now();
+  const user = {
+    id: randomBytes(12).toString("base64url"),
+    name: input.name.trim(),
+    email,
+    username,
+    authProvider: input.authProvider,
+    googleEmail: input.authProvider === "google" ? googleEmail || email : googleEmail || void 0,
+    status: "active",
+    passwordHash: input.authProvider === "password" ? hashAdminPassword(input.password || "") : void 0,
+    createdAt: timestamp,
+    updatedAt: timestamp
+  };
+  users.push(user);
+  await writeAdminUsers(users);
+  return user;
+}
+async function updateAdminUser(id, input) {
+  const users = await readAdminUsers();
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) throw createError({ statusCode: 404, statusMessage: "Admin user not found." });
+  const next = { ...users[index] };
+  if (input.name !== void 0) next.name = input.name.trim();
+  if (input.email !== void 0) next.email = normalizeEmail(input.email);
+  if (input.username !== void 0) next.username = normalizeUsername(input.username);
+  if (input.googleEmail !== void 0) next.googleEmail = input.googleEmail ? normalizeEmail(input.googleEmail) : void 0;
+  if (input.authProvider !== void 0) next.authProvider = input.authProvider;
+  if (!next.name) throw createError({ statusCode: 400, statusMessage: "Name is required." });
+  if (!next.email) throw createError({ statusCode: 400, statusMessage: "Email is required." });
+  if (!next.username) throw createError({ statusCode: 400, statusMessage: "Username is required." });
+  if (!["password", "google"].includes(next.authProvider)) {
+    throw createError({ statusCode: 400, statusMessage: "Invalid auth provider." });
+  }
+  if (next.authProvider === "google" && !next.googleEmail) next.googleEmail = next.email;
+  if (next.authProvider === "password" && !next.passwordHash) {
+    throw createError({ statusCode: 400, statusMessage: "Password users require a password." });
+  }
+  if (users.some((user) => user.id !== id && normalizeUsername(user.username) === next.username)) {
+    throw createError({ statusCode: 409, statusMessage: "Username is already used by another admin user." });
+  }
+  if (users.some((user) => user.id !== id && (normalizeEmail(user.email) === next.email || user.googleEmail && normalizeEmail(user.googleEmail) === next.email))) {
+    throw createError({ statusCode: 409, statusMessage: "Email is already used by another admin user." });
+  }
+  next.updatedAt = now();
+  users[index] = next;
+  await writeAdminUsers(users);
+  return next;
+}
+async function setAdminUserStatus(id, status) {
+  const users = await readAdminUsers();
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) throw createError({ statusCode: 404, statusMessage: "Admin user not found." });
+  users[index] = { ...users[index], status, updatedAt: now() };
+  await writeAdminUsers(users);
+  return users[index];
+}
+async function changeAdminUserPassword(id, password) {
+  if (!password || password.length < 10) {
+    throw createError({ statusCode: 400, statusMessage: "Password must be at least 10 characters." });
+  }
+  const users = await readAdminUsers();
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) throw createError({ statusCode: 404, statusMessage: "Admin user not found." });
+  users[index] = {
+    ...users[index],
+    authProvider: "password",
+    passwordHash: hashAdminPassword(password),
+    updatedAt: now()
+  };
+  await writeAdminUsers(users);
+  return users[index];
+}
+async function findPasswordAdminUser(usernameOrEmail) {
+  const lookup = usernameOrEmail.trim().toLowerCase();
+  return (await readAdminUsers()).find(
+    (user) => user.status === "active" && user.authProvider === "password" && (normalizeUsername(user.username) === lookup || normalizeEmail(user.email) === lookup)
+  );
+}
+async function findGoogleAdminUser(email) {
+  const lookup = normalizeEmail(email);
+  return (await readAdminUsers()).find(
+    (user) => user.status === "active" && user.authProvider === "google" && (normalizeEmail(user.email) === lookup || user.googleEmail && normalizeEmail(user.googleEmail) === lookup)
+  );
+}
+async function markAdminUserLogin(id) {
+  const users = await readAdminUsers();
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) return void 0;
+  users[index] = { ...users[index], lastLoginAt: now(), updatedAt: now() };
+  await writeAdminUsers(users);
+  return users[index];
+}
+
+const ADMIN_SESSION_COOKIE = "gribo_admin_session";
+const DEFAULT_SESSION_TTL_SECONDS = 60 * 60 * 8;
+const PLACEHOLDER_VALUE = "change-me-before-production";
+function base64Url(input) {
+  return Buffer.from(input, "utf8").toString("base64url");
+}
+function fromBase64Url(input) {
+  return Buffer.from(input, "base64url").toString("utf8");
+}
+function safeEqual(a, b) {
+  const aBuffer = Buffer.from(a);
+  const bBuffer = Buffer.from(b);
+  return aBuffer.length === bBuffer.length && timingSafeEqual(aBuffer, bBuffer);
+}
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+function signValue(value, secret) {
+  return createHmac("sha256", secret).update(value).digest("base64url");
+}
+function isLocalRequest(event) {
+  const host = event ? getHeader(event, "host") || "" : "";
+  const remoteAddress = (event == null ? void 0 : event.node.req.socket.remoteAddress) || "";
+  const localHost = host.startsWith("localhost") || host.startsWith("127.0.0.1") || host.startsWith("[::1]");
+  const localRemote = ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(remoteAddress);
+  return localHost && localRemote;
+}
+function getAdminAuthConfig(event) {
+  const production = false;
+  const localRequest = isLocalRequest(event);
+  const username = process.env.ADMIN_USERNAME || ("admin");
+  const password = process.env.ADMIN_PASSWORD || (PLACEHOLDER_VALUE);
+  const passwordHash = process.env.ADMIN_PASSWORD_HASH || "";
+  const sessionSecret = process.env.SESSION_SECRET || ("dev-session-secret");
+  const sessionMaxAgeSeconds = Number(process.env.ADMIN_SESSION_MAX_AGE_SECONDS || DEFAULT_SESSION_TTL_SECONDS);
+  const hasBootstrapCredentials = Boolean((password));
+  const hasCredentials = Boolean((hasBootstrapCredentials || true));
+  const enabled = hasCredentials && (true);
+  return {
+    enabled,
+    production,
+    localRequest,
+    username,
+    password,
+    passwordHash,
+    sessionSecret,
+    sessionMaxAgeSeconds: Number.isFinite(sessionMaxAgeSeconds) ? sessionMaxAgeSeconds : DEFAULT_SESSION_TTL_SECONDS,
+    reason: enabled ? "" : "Admin credentials are not configured."
+  };
+}
+async function verifyAdminCredentials(username, password, event) {
+  const config = getAdminAuthConfig(event);
+  if (!config.enabled) {
+    return {
+      ok: false,
+      reason: config.reason
+    };
+  }
+  const user = await findPasswordAdminUser(username);
+  if (user) {
+    const passwordOk2 = verifyAdminPassword(password, user.passwordHash);
+    if (!passwordOk2) {
+      return {
+        ok: false,
+        reason: "Invalid username or password."
+      };
+    }
+    const loggedInUser = await markAdminUserLogin(user.id) || user;
+    return {
+      ok: true,
+      reason: "",
+      user: {
+        id: loggedInUser.id,
+        name: loggedInUser.name,
+        email: loggedInUser.email,
+        username: loggedInUser.username,
+        authProvider: loggedInUser.authProvider
+      }
+    };
+  }
+  const usernameOk = safeEqual(username, config.username);
+  const passwordOk = config.passwordHash ? safeEqual(sha256(password), config.passwordHash) : safeEqual(password, config.password);
+  return {
+    ok: usernameOk && passwordOk,
+    reason: usernameOk && passwordOk ? "" : "Invalid username or password.",
+    user: usernameOk && passwordOk ? {
+      id: "env-admin",
+      name: "Environment Admin",
+      email: "",
+      username: config.username,
+      authProvider: "env"
+    } : void 0
+  };
+}
+function createAdminSessionToken(user, event) {
+  const config = getAdminAuthConfig(event);
+  const payload = {
+    ...user,
+    exp: Math.floor(Date.now() / 1e3) + config.sessionMaxAgeSeconds
+  };
+  const encodedPayload = base64Url(JSON.stringify(payload));
+  const signature = signValue(encodedPayload, config.sessionSecret);
+  return `${encodedPayload}.${signature}`;
+}
+function readAdminSession(event) {
+  const token = getCookie(event, ADMIN_SESSION_COOKIE);
+  const config = getAdminAuthConfig(event);
+  if (!token || !config.enabled) return null;
+  const [payloadPart, signaturePart] = token.split(".");
+  if (!payloadPart || !signaturePart) return null;
+  const expectedSignature = signValue(payloadPart, config.sessionSecret);
+  if (!safeEqual(signaturePart, expectedSignature)) return null;
+  try {
+    const payload = JSON.parse(fromBase64Url(payloadPart));
+    if (!payload.username || payload.exp < Math.floor(Date.now() / 1e3)) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+function setAdminSessionCookie(event, token) {
+  const config = getAdminAuthConfig(event);
+  setCookie(event, ADMIN_SESSION_COOKIE, token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+    maxAge: config.sessionMaxAgeSeconds,
+    path: "/"
+  });
+}
+function clearAdminSessionCookie(event) {
+  deleteCookie(event, ADMIN_SESSION_COOKIE, {
+    path: "/"
+  });
+}
+function assertAdminAuthenticated(event) {
+  const session = readAdminSession(event);
+  if (!session) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Unauthorized"
+    });
+  }
+  return session;
+}
+
+const _mzLafK = defineEventHandler((event) => {
+  const path = getRequestURL(event).pathname;
+  if (!path.startsWith("/api/admin/")) return;
+  assertAdminAuthenticated(event);
+});
+
 const VueResolver = (_, value) => {
   return isRef(value) ? toValue(value) : value;
 };
@@ -2758,17 +3069,17 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "blog": "v3.5.0--Dx1G8rgpBngMGJee98vP2Mt1XxeH1X1UppLzOr6gT1M",
-  "projects": "v3.5.0--8fqSLNwV9PkUvD7zGbApLROt0nOEf-pKA_QHPcU058A",
-  "docs": "v3.5.0--bmhn4r2xDIwoP8RxZxIpHU8mtuRuHnMh91EWS9R3dB4",
+  "blog": "v3.5.0--8lTHdpM4p-UU1uJdki0s4ysQliAYimllTRTnjrs2NtE",
+  "projects": "v3.5.0--K-_qTlYY7fs1cktyvhcWeTfJBkgvU4uwHC7ooe7F_TM",
+  "docs": "v3.5.0--kZH6Mb4GN4oPi-f9PDiaWR6b3or89_H2-GGRJgvAjng",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",
-  "home": "v3.5.0--i85j8LGy6Q-TJzlteTb1zziGfCjX7g_fDFN0a1sjx-0",
+  "home": "v3.5.0--6rGrv_50488GBaS_204B3ISzDX9dQgleInb1ky9gRJo",
   "settings": "v3.5.0--7NdHW3U4wwSq3Ia4uCr0UVNrNwsOoJSUDSevpNoDzt0"
 };
 const checksumsStructure = {
-  "blog": "D1nqOjw9cSJ92Hk2kh1TzwwAK0r722yUjtEHToUmqGI",
-  "projects": "1joIppyCmuFo62RcOAzNT7hJCumb1dxSy_R6tYl44KU",
-  "docs": "fletLM_fWcFCfR0fBo-nsvWiomWbRXWWKOwsO6sn56w",
+  "blog": "HgiavfbRY-6HTrcyV6bFUbVpHh0Fu8-bBSQgJaL1Eok",
+  "projects": "Ya1fIzksAjPnUJ5lymykYpfUYupMis1Zksv70SXpYiU",
+  "docs": "ikhwkEO43qpXZKvFHiSSKrkBOvOqnzybQBnJjInMINk",
   "labs": "IA7318SIMAnuJVIwwKXY6-D649IlKXot3TzcLsBVdR8",
   "home": "mk-tLIReAPgs28M1s8MdR795Twcc4eXp3Dv3oYnGS4E",
   "settings": "HRPrPWOq90oDSymRhxY64nXZuq9JhSLBKqaYKakfBIo"
@@ -2788,15 +3099,24 @@ const contentManifest = {
     "fields": {
       "id": "string",
       "title": "string",
+      "accentColor": "string",
+      "archivedAt": "string",
       "author": "string",
+      "blocks": "json",
       "body": "json",
       "canonical": "string",
       "category": "string",
+      "coverAlt": "string",
+      "coverCaption": "string",
+      "coverImage": "string",
+      "coverPosition": "string",
+      "coverStyle": "string",
       "date": "string",
       "description": "string",
       "excerpt": "string",
       "extension": "string",
       "lab": "string",
+      "mediaRefs": "json",
       "meta": "json",
       "navigation": "json",
       "noindex": "boolean",
@@ -2821,8 +3141,15 @@ const contentManifest = {
     "fields": {
       "id": "string",
       "title": "string",
+      "accentColor": "string",
+      "blocks": "json",
       "body": "json",
       "canonical": "string",
+      "coverAlt": "string",
+      "coverCaption": "string",
+      "coverImage": "string",
+      "coverPosition": "string",
+      "coverStyle": "string",
       "date": "string",
       "description": "string",
       "docsFolder": "string",
@@ -2830,6 +3157,7 @@ const contentManifest = {
       "docsPaths": "json",
       "extension": "string",
       "lab": "string",
+      "mediaRefs": "json",
       "meta": "json",
       "navigation": "json",
       "noindex": "boolean",
@@ -2860,13 +3188,21 @@ const contentManifest = {
     "fields": {
       "id": "string",
       "title": "string",
+      "accentColor": "string",
+      "blocks": "json",
       "body": "json",
       "canonical": "string",
+      "coverAlt": "string",
+      "coverCaption": "string",
+      "coverImage": "string",
+      "coverPosition": "string",
+      "coverStyle": "string",
       "date": "string",
       "description": "string",
       "docsFolder": "string",
       "extension": "string",
       "lab": "string",
+      "mediaRefs": "json",
       "meta": "json",
       "navigation": "json",
       "noindex": "boolean",
@@ -3332,6 +3668,7 @@ const frontmatterOrder = [
   "description",
   "date",
   "updatedAt",
+  "archivedAt",
   "author",
   "category",
   "type",
@@ -3347,9 +3684,20 @@ const frontmatterOrder = [
   "tags",
   "relatedTags",
   "stack",
+  "coverImage",
+  "coverAlt",
+  "coverCaption",
+  "coverStyle",
+  "coverPosition",
+  "accentColor",
+  "mediaRefs",
+  "blocks",
   "roadmap",
   "openQuestions",
   "docsPath",
+  "docsFolder",
+  "docsPaths",
+  "relatedDocs",
   "readingTime",
   "seoTitle",
   "seoDescription",
@@ -3369,10 +3717,23 @@ function parseScalar(value) {
   if (trimmed.startsWith('"') && trimmed.endsWith('"') || trimmed.startsWith("'") && trimmed.endsWith("'")) {
     return trimmed.slice(1, -1);
   }
+  if (trimmed.startsWith("[") && trimmed.endsWith("]") || trimmed.startsWith("{") && trimmed.endsWith("}")) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      return parsed;
+    } catch {
+      try {
+        const parsed = JSON.parse(trimmed.replace(/'/g, '"'));
+        return parsed;
+      } catch {
+        return trimmed;
+      }
+    }
+  }
   if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
     try {
       const parsed = JSON.parse(trimmed.replace(/'/g, '"'));
-      return Array.isArray(parsed) ? parsed : trimmed;
+      return parsed;
     } catch {
       return trimmed;
     }
@@ -3432,6 +3793,7 @@ function needsQuotes(value) {
 function stringifyScalar(value) {
   if (typeof value === "boolean" || typeof value === "number") return String(value);
   if (value === null || value === void 0) return "null";
+  if (typeof value === "object") return JSON.stringify(value);
   const text = String(value);
   return needsQuotes(text) ? JSON.stringify(text) : text;
 }
@@ -3445,6 +3807,9 @@ function stringifyMarkdownContent(frontmatter, body) {
     if (value === void 0) return [];
     if (Array.isArray(value)) {
       if (!value.length) return [`${key}: []`];
+      if (value.some((item) => typeof item === "object" && item !== null)) {
+        return [`${key}: ${JSON.stringify(value)}`];
+      }
       return [`${key}:`, ...value.map((item) => `  - ${stringifyScalar(item)}`)];
     }
     return [`${key}: ${stringifyScalar(value)}`];
@@ -3466,6 +3831,1011 @@ async function writeMarkdownFile(absolutePath, frontmatter, body) {
 }
 function todayIsoDate() {
   return (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+}
+
+const workspaceRoot$2 = resolve(process.cwd());
+const analyticsRoot = resolve(workspaceRoot$2, "server/data/analytics");
+const eventsPath = resolve(analyticsRoot, "events.jsonl");
+const allowedEventTypes = /* @__PURE__ */ new Set(["view", "read_start", "read_progress", "read_complete", "cta_click"]);
+const allowedContentTypes = /* @__PURE__ */ new Set(["home", "blog", "project", "docs", "lab"]);
+const rateWindowMs = 1e4;
+const maxEventsPerWindow = 40;
+const rateMemory = /* @__PURE__ */ new Map();
+function clampText(value, fallback = "", max = 240) {
+  return String(value != null ? value : fallback).replace(/\s+/g, " ").trim().slice(0, max);
+}
+function normalizePath(value) {
+  const route = String(value || "/").split("#")[0].split("?")[0].trim() || "/";
+  return route.startsWith("/") ? route : `/${route}`;
+}
+function inferContentType(route) {
+  if (route === "/") return "home";
+  if (route === "/blog" || route.startsWith("/blog/")) return "blog";
+  if (route === "/repository" || route.startsWith("/repository/")) return "project";
+  if (route === "/docs" || route.startsWith("/docs/")) return "docs";
+  if (route === "/labs" || route.startsWith("/labs/")) return "lab";
+  return "";
+}
+function inferSlug(route, contentType) {
+  if (contentType === "home") return "home";
+  const parts = route.split("/").filter(Boolean);
+  if (contentType === "docs") return parts.slice(1).join("/") || "docs-index";
+  return parts[1] || "index";
+}
+function safeMetadata(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const output = {};
+  for (const [key, raw] of Object.entries(value).slice(0, 12)) {
+    const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 48);
+    if (!safeKey) continue;
+    if (typeof raw === "boolean" || typeof raw === "number") {
+      output[safeKey] = raw;
+    } else {
+      output[safeKey] = clampText(raw, "", 220);
+    }
+  }
+  return output;
+}
+function hashUserAgent(value) {
+  if (!value) return "";
+  return createHash("sha256").update(`gribo-ua:${value}`).digest("hex");
+}
+async function fileExists$2(path) {
+  try {
+    return (await stat(path)).isFile();
+  } catch {
+    return false;
+  }
+}
+async function directoryExists$1(path) {
+  try {
+    return (await stat(path)).isDirectory();
+  } catch {
+    return false;
+  }
+}
+async function walkMarkdown(root) {
+  const absoluteRoot = resolve(workspaceRoot$2, root);
+  const files = [];
+  if (!await directoryExists$1(absoluteRoot)) return files;
+  async function walk(current) {
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolute = join(current, entry.name);
+      if (entry.isDirectory()) {
+        await walk(absolute);
+      } else if (entry.isFile() && extname(entry.name) === ".md") {
+        files.push(absolute);
+      }
+    }
+  }
+  await walk(absoluteRoot);
+  return files;
+}
+function publicDocRoute(absolutePath) {
+  const portable = relative(resolve(workspaceRoot$2, "content/docs"), absolutePath).replace(/\\/g, "/");
+  return `/docs/${portable.replace(/\.md$/, "").replace(/\/index$/, "")}`;
+}
+async function readContentMeta() {
+  const items = [
+    {
+      contentType: "home",
+      slug: "home",
+      route: "/",
+      title: "Gribo Digital",
+      lab: ""
+    }
+  ];
+  const blogFiles = await walkMarkdown("content/blog");
+  const projectFiles = await walkMarkdown("content/projects");
+  const docsFiles = await walkMarkdown("content/docs");
+  const labFiles = await walkMarkdown("content/labs");
+  for (const absolutePath of blogFiles) {
+    const raw = await readFile(absolutePath, "utf8");
+    const { frontmatter } = parseMarkdownContent(raw);
+    const slug = String(frontmatter.slug || basename(absolutePath, ".md"));
+    items.push({
+      contentType: "blog",
+      slug,
+      route: `/blog/${slug}`,
+      title: String(frontmatter.title || slug),
+      lab: String(frontmatter.lab || "")
+    });
+  }
+  for (const absolutePath of projectFiles) {
+    const raw = await readFile(absolutePath, "utf8");
+    const { frontmatter } = parseMarkdownContent(raw);
+    const slug = String(frontmatter.slug || basename(absolutePath, ".md"));
+    items.push({
+      contentType: "project",
+      slug,
+      route: `/repository/${slug}`,
+      title: String(frontmatter.title || slug),
+      lab: String(frontmatter.lab || "")
+    });
+  }
+  for (const absolutePath of docsFiles) {
+    const raw = await readFile(absolutePath, "utf8");
+    const { frontmatter } = parseMarkdownContent(raw);
+    const route = publicDocRoute(absolutePath);
+    items.push({
+      contentType: "docs",
+      slug: route.replace(/^\/docs\//, ""),
+      route,
+      title: String(frontmatter.title || route),
+      lab: String(frontmatter.lab || "")
+    });
+  }
+  for (const absolutePath of labFiles) {
+    const raw = await readFile(absolutePath, "utf8");
+    const { frontmatter } = parseMarkdownContent(raw);
+    const slug = String(frontmatter.slug || basename(absolutePath, ".md"));
+    items.push({
+      contentType: "lab",
+      slug,
+      route: `/labs/${slug}`,
+      title: String(frontmatter.title || slug),
+      lab: slug
+    });
+  }
+  return items;
+}
+async function resolveContentMeta(route, contentType, slug) {
+  const content = await readContentMeta();
+  return content.find((item) => item.route === route) || content.find((item) => item.contentType === contentType && item.slug === slug);
+}
+function checkRateLimit(sessionId) {
+  const now = Date.now();
+  const current = rateMemory.get(sessionId);
+  if (!current || current.resetAt < now) {
+    rateMemory.set(sessionId, { count: 1, resetAt: now + rateWindowMs });
+    return;
+  }
+  current.count += 1;
+  if (current.count > maxEventsPerWindow) {
+    throw createError({ statusCode: 429, statusMessage: "Too many analytics events." });
+  }
+}
+async function recordAnalyticsEvent(event, input) {
+  const route = normalizePath(input == null ? void 0 : input.route);
+  if (route.startsWith("/admin") || route.startsWith("/api")) {
+    throw createError({ statusCode: 400, statusMessage: "Admin and API routes are not tracked." });
+  }
+  if (JSON.stringify(input || {}).length > 4096) {
+    throw createError({ statusCode: 413, statusMessage: "Analytics event is too large." });
+  }
+  const eventType = clampText(input == null ? void 0 : input.eventType);
+  if (!allowedEventTypes.has(eventType)) {
+    throw createError({ statusCode: 400, statusMessage: "Unsupported analytics event type." });
+  }
+  const inferredType = inferContentType(route);
+  const requestedType = clampText(input == null ? void 0 : input.contentType);
+  const contentType = allowedContentTypes.has(requestedType) ? requestedType : inferredType;
+  if (!contentType) {
+    throw createError({ statusCode: 400, statusMessage: "Unsupported analytics route." });
+  }
+  const sessionId = clampText(input == null ? void 0 : input.sessionId, "", 96);
+  if (!/^[a-zA-Z0-9_-]{12,96}$/.test(sessionId)) {
+    throw createError({ statusCode: 400, statusMessage: "Anonymous session id is required." });
+  }
+  checkRateLimit(sessionId);
+  const slug = clampText(input == null ? void 0 : input.slug, inferSlug(route, contentType), 220);
+  const meta = await resolveContentMeta(route, contentType, slug);
+  const eventRecord = {
+    eventId: randomUUID(),
+    eventType,
+    contentType,
+    slug: (meta == null ? void 0 : meta.slug) || slug,
+    lab: (meta == null ? void 0 : meta.lab) || clampText(input == null ? void 0 : input.lab, "", 120),
+    title: (meta == null ? void 0 : meta.title) || clampText(input == null ? void 0 : input.title, route, 220),
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    sessionId,
+    referrer: clampText(input == null ? void 0 : input.referrer, "", 500),
+    userAgentHash: hashUserAgent(getHeader(event, "user-agent") || ""),
+    route,
+    metadata: safeMetadata(input == null ? void 0 : input.metadata)
+  };
+  await mkdir(analyticsRoot, { recursive: true });
+  await writeFile(eventsPath, `${JSON.stringify(eventRecord)}
+`, { flag: "a" });
+  return {
+    ok: true,
+    eventId: eventRecord.eventId
+  };
+}
+async function readAnalyticsEvents(limit) {
+  if (!await fileExists$2(eventsPath)) return [];
+  const raw = await readFile(eventsPath, "utf8");
+  const events = raw.split(/\r?\n/).filter(Boolean).map((line) => {
+    try {
+      return JSON.parse(line);
+    } catch {
+      return null;
+    }
+  }).filter((event) => Boolean(event)).sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+  return limit ? events.slice(0, limit) : events;
+}
+function createEmptyContentSummary(event) {
+  return {
+    title: event.title,
+    contentType: event.contentType,
+    slug: event.slug,
+    route: event.route,
+    lab: event.lab,
+    views: 0,
+    readStarts: 0,
+    readCompletes: 0,
+    ctaClicks: 0,
+    maxProgress: 0,
+    completionRate: 0,
+    lastViewedAt: ""
+  };
+}
+async function aggregateAnalytics() {
+  var _a;
+  const events = await readAnalyticsEvents();
+  const byContent = /* @__PURE__ */ new Map();
+  const byLab = /* @__PURE__ */ new Map();
+  const byType = /* @__PURE__ */ new Map();
+  let totalViews = 0;
+  let totalReads = 0;
+  let totalCompletions = 0;
+  let totalCtaClicks = 0;
+  for (const event of events) {
+    const key = `${event.contentType}:${event.route}`;
+    if (!byContent.has(key)) byContent.set(key, createEmptyContentSummary(event));
+    const content = byContent.get(key);
+    content.title = event.title || content.title;
+    content.lab = event.lab || content.lab;
+    content.lastViewedAt = content.lastViewedAt && content.lastViewedAt > event.timestamp ? content.lastViewedAt : event.timestamp;
+    if (!byType.has(event.contentType)) {
+      byType.set(event.contentType, { contentType: event.contentType, views: 0, reads: 0, completions: 0, ctaClicks: 0 });
+    }
+    const labKey = event.lab || "unassigned";
+    if (!byLab.has(labKey)) byLab.set(labKey, { lab: labKey, views: 0, reads: 0, completions: 0 });
+    const type = byType.get(event.contentType);
+    const lab = byLab.get(labKey);
+    if (event.eventType === "view") {
+      totalViews += 1;
+      content.views += 1;
+      type.views += 1;
+      lab.views += 1;
+    }
+    if (event.eventType === "read_start") {
+      totalReads += 1;
+      content.readStarts += 1;
+      type.reads += 1;
+      lab.reads += 1;
+    }
+    if (event.eventType === "read_complete") {
+      totalCompletions += 1;
+      content.readCompletes += 1;
+      type.completions += 1;
+      lab.completions += 1;
+    }
+    if (event.eventType === "cta_click") {
+      totalCtaClicks += 1;
+      content.ctaClicks += 1;
+      type.ctaClicks += 1;
+    }
+    if (event.eventType === "read_progress") {
+      const progress = Number(((_a = event.metadata) == null ? void 0 : _a.progress) || 0);
+      if (Number.isFinite(progress)) content.maxProgress = Math.max(content.maxProgress, progress);
+    }
+  }
+  const contentRows = Array.from(byContent.values()).map((item) => ({
+    ...item,
+    completionRate: item.readStarts ? Math.round(item.readCompletes / item.readStarts * 100) : 0
+  }));
+  return {
+    overview: {
+      totalViews,
+      totalReads,
+      readCompletions: totalCompletions,
+      ctaClicks: totalCtaClicks,
+      completionRate: totalReads ? Math.round(totalCompletions / totalReads * 100) : 0
+    },
+    content: contentRows.sort((a, b) => b.views - a.views || b.readStarts - a.readStarts).slice(0, 50),
+    labs: Array.from(byLab.values()).sort((a, b) => b.views - a.views),
+    types: Array.from(byType.values()).sort((a, b) => b.views - a.views),
+    recentEvents: events.slice(0, 40)
+  };
+}
+async function exportAnalytics(event) {
+  const payload = {
+    exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    source: "gribo-digital",
+    privacy: "Anonymous analytics export. No raw IP addresses are stored.",
+    events: await readAnalyticsEvents()
+  };
+  setHeader(event, "content-type", "application/json; charset=utf-8");
+  setHeader(event, "content-disposition", `attachment; filename="gribo-analytics-${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}.json"`);
+  return JSON.stringify(payload, null, 2);
+}
+async function clearAnalyticsData(confirmation) {
+  if (confirmation !== "CLEAR ANALYTICS") {
+    throw createError({ statusCode: 400, statusMessage: "Confirmation must be CLEAR ANALYTICS." });
+  }
+  await mkdir(analyticsRoot, { recursive: true });
+  await writeFile(eventsPath, "", "utf8");
+  return {
+    ok: true
+  };
+}
+
+const GOOGLE_STATE_COOKIE = "gribo_google_oauth_state";
+function localRedirectUrl(event) {
+  const url = getRequestURL(event);
+  return `${url.origin}/api/auth/google/callback`;
+}
+function getGoogleOAuthConfig(event) {
+  const clientId = process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID || "";
+  const clientSecret = process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET || "";
+  const redirectUrl = process.env.NUXT_OAUTH_GOOGLE_REDIRECT_URL || localRedirectUrl(event);
+  return {
+    enabled: Boolean(clientId && clientSecret && redirectUrl),
+    clientId,
+    clientSecret,
+    redirectUrl
+  };
+}
+function createGoogleState(event) {
+  const state = randomBytes(24).toString("base64url");
+  setCookie(event, GOOGLE_STATE_COOKIE, state, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+    maxAge: 60 * 10,
+    path: "/"
+  });
+  return state;
+}
+function assertGoogleState(event, state) {
+  const stored = getCookie(event, GOOGLE_STATE_COOKIE);
+  deleteCookie(event, GOOGLE_STATE_COOKIE, { path: "/" });
+  if (!stored || !state || stored !== state) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid Google login state."
+    });
+  }
+}
+async function exchangeGoogleCode(event, code) {
+  const config = getGoogleOAuthConfig(event);
+  if (!config.enabled) {
+    throw createError({
+      statusCode: 503,
+      statusMessage: "Google login is not configured."
+    });
+  }
+  const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      code,
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      redirect_uri: config.redirectUrl,
+      grant_type: "authorization_code"
+    })
+  });
+  if (!tokenResponse.ok) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Google login token exchange failed."
+    });
+  }
+  return await tokenResponse.json();
+}
+async function fetchGoogleUser(accessToken) {
+  const userResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    headers: {
+      authorization: `Bearer ${accessToken}`
+    }
+  });
+  if (!userResponse.ok) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Google user profile could not be read."
+    });
+  }
+  return await userResponse.json();
+}
+
+const workspaceRoot$1 = resolve(process.cwd());
+const homeLayoutPath = resolve(workspaceRoot$1, "content/home/layout.json");
+const snapshotsRoot$1 = resolve(workspaceRoot$1, "server/backups/snapshots");
+const defaultHomeLayout = {
+  hero: {
+    label: "Digital systems magazine-lab",
+    headline: "Ideas that become systems.",
+    description: "Gribo Digital documents systems, prototypes, research notes and cultural infrastructure through a living editorial archive.",
+    primaryCta: {
+      label: "Explore projects",
+      to: "/repository"
+    },
+    secondaryCta: {
+      label: "Explore labs",
+      to: "/labs"
+    }
+  },
+  featuredProject: {
+    mode: "manual",
+    slug: "tennis-image-analysis"
+  },
+  buildLog: {
+    mode: "manual",
+    limit: 3,
+    manualItems: []
+  },
+  feed: {
+    mode: "mixed",
+    limit: 4,
+    contentTypes: ["blog", "projects"],
+    manualItems: []
+  },
+  identity: {
+    enabled: true,
+    headline: "Build, reflect, archive, evolve.",
+    description: "Gribo works like external memory: it records what is being built, what breaks, what changes and what eventually becomes a system.",
+    ctaLabel: "Explore labs",
+    ctaTarget: "/labs"
+  },
+  sections: []
+};
+function safeString(value, fallback) {
+  const text = typeof value === "string" ? value.trim() : "";
+  return text || fallback;
+}
+function safeMode(value, fallback) {
+  return value === "manual" || value === "latest" || value === "mixed" ? value : fallback;
+}
+function positiveLimit(value, fallback) {
+  const limit = Number(value);
+  return Number.isFinite(limit) && limit > 0 ? Math.min(Math.floor(limit), 12) : fallback;
+}
+function parseManualFeedItems(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => ({
+    type: (item == null ? void 0 : item.type) === "blog" || (item == null ? void 0 : item.type) === "projects" || (item == null ? void 0 : item.type) === "labs" ? item.type : "blog",
+    slug: safeString(item == null ? void 0 : item.slug, "")
+  })).filter((item) => item.slug);
+}
+function parseBuildItems(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => ({
+    date: safeString(item == null ? void 0 : item.date, "Now"),
+    title: safeString(item == null ? void 0 : item.title, "Untitled build note"),
+    meta: safeString(item == null ? void 0 : item.meta, "A short note from the Gribo build log.")
+  })).filter((item) => item.title);
+}
+function normalizeHomeLayout(input) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
+  const hero = (_a = input == null ? void 0 : input.hero) != null ? _a : {};
+  const spotlight = (_b = input == null ? void 0 : input.spotlight) != null ? _b : {};
+  const featuredProject = (_c = input == null ? void 0 : input.featuredProject) != null ? _c : {};
+  const buildLog = (_d = input == null ? void 0 : input.buildLog) != null ? _d : {};
+  const feed = (_e = input == null ? void 0 : input.feed) != null ? _e : {};
+  const identity = (_f = input == null ? void 0 : input.identity) != null ? _f : {};
+  return {
+    hero: {
+      label: safeString((_g = hero.label) != null ? _g : hero.eyebrow, defaultHomeLayout.hero.label),
+      headline: safeString((_h = hero.headline) != null ? _h : hero.title, defaultHomeLayout.hero.headline),
+      description: safeString(hero.description, defaultHomeLayout.hero.description),
+      primaryCta: {
+        label: safeString((_i = hero.primaryCta) == null ? void 0 : _i.label, defaultHomeLayout.hero.primaryCta.label),
+        to: safeString((_j = hero.primaryCta) == null ? void 0 : _j.to, defaultHomeLayout.hero.primaryCta.to)
+      },
+      secondaryCta: {
+        label: safeString((_k = hero.secondaryCta) == null ? void 0 : _k.label, defaultHomeLayout.hero.secondaryCta.label),
+        to: safeString((_l = hero.secondaryCta) == null ? void 0 : _l.to, defaultHomeLayout.hero.secondaryCta.to)
+      }
+    },
+    featuredProject: {
+      mode: featuredProject.mode === "latest" ? "latest" : "manual",
+      slug: safeString((_m = featuredProject.slug) != null ? _m : spotlight.slug, defaultHomeLayout.featuredProject.slug)
+    },
+    buildLog: {
+      mode: buildLog.mode === "latest" ? "latest" : "manual",
+      limit: positiveLimit(buildLog.limit, defaultHomeLayout.buildLog.limit),
+      manualItems: parseBuildItems(buildLog.manualItems)
+    },
+    feed: {
+      mode: safeMode(feed.mode, defaultHomeLayout.feed.mode),
+      limit: positiveLimit(feed.limit, defaultHomeLayout.feed.limit),
+      contentTypes: Array.isArray(feed.contentTypes) ? feed.contentTypes.filter((type) => ["blog", "projects", "labs"].includes(String(type))).map(String) : defaultHomeLayout.feed.contentTypes,
+      manualItems: parseManualFeedItems(feed.manualItems)
+    },
+    identity: {
+      enabled: identity.enabled !== false,
+      headline: safeString(identity.headline, defaultHomeLayout.identity.headline),
+      description: safeString(identity.description, defaultHomeLayout.identity.description),
+      ctaLabel: safeString(identity.ctaLabel, defaultHomeLayout.identity.ctaLabel),
+      ctaTarget: safeString(identity.ctaTarget, defaultHomeLayout.identity.ctaTarget)
+    },
+    sections: Array.isArray(input == null ? void 0 : input.sections) ? input.sections : []
+  };
+}
+function validateHomeLayout(layout) {
+  if (!layout.hero.headline.trim()) {
+    throw createError({ statusCode: 400, statusMessage: "Hero headline is required." });
+  }
+  if (layout.featuredProject.mode === "manual" && !layout.featuredProject.slug.trim()) {
+    throw createError({ statusCode: 400, statusMessage: "Manual featured project requires a project slug." });
+  }
+  if (layout.buildLog.limit <= 0 || layout.feed.limit <= 0) {
+    throw createError({ statusCode: 400, statusMessage: "Limits must be positive numbers." });
+  }
+  if (layout.feed.contentTypes.some((type) => !["blog", "projects", "labs"].includes(type))) {
+    throw createError({ statusCode: 400, statusMessage: "Feed contains an invalid content type." });
+  }
+}
+async function fileExists$1(path) {
+  try {
+    return (await stat(path)).isFile();
+  } catch {
+    return false;
+  }
+}
+function timestampSlug$1(date = /* @__PURE__ */ new Date()) {
+  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z").replace("T", "-");
+}
+async function createHomeLayoutSnapshot() {
+  if (!await fileExists$1(homeLayoutPath)) return null;
+  const content = await readFile(homeLayoutPath, "utf8");
+  await mkdir(snapshotsRoot$1, { recursive: true });
+  const snapshot = {
+    manifest: {
+      schemaVersion: "1.0.0",
+      packageType: "full-site",
+      exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      source: "gribo-digital",
+      title: "Home layout safety snapshot",
+      slug: `home-layout-snapshot-${timestampSlug$1()}`,
+      contentFiles: ["content/home/layout.json"],
+      uploadFiles: [],
+      notes: "Automatic safety snapshot before saving Home Composer layout."
+    },
+    files: [
+      {
+        path: "content/home/layout.json",
+        encoding: "utf8",
+        content
+      }
+    ]
+  };
+  const filename = `${snapshot.manifest.slug}.gribo.json`;
+  const absolutePath = resolve(snapshotsRoot$1, filename);
+  await writeFile(absolutePath, JSON.stringify(snapshot, null, 2), "utf8");
+  return {
+    filename,
+    path: relative(workspaceRoot$1, absolutePath).replace(/\\/g, "/"),
+    createdAt: snapshot.manifest.exportedAt
+  };
+}
+async function readHomeLayout() {
+  try {
+    const raw = await readFile(homeLayoutPath, "utf8");
+    return normalizeHomeLayout(JSON.parse(raw));
+  } catch {
+    return defaultHomeLayout;
+  }
+}
+async function writeHomeLayout(input) {
+  const layout = normalizeHomeLayout(input);
+  validateHomeLayout(layout);
+  const snapshot = await createHomeLayoutSnapshot();
+  await mkdir(dirname(homeLayoutPath), { recursive: true });
+  await writeFile(homeLayoutPath, JSON.stringify(layout, null, 2), "utf8");
+  return {
+    layout,
+    snapshot
+  };
+}
+
+const workspaceRoot = resolve(process.cwd());
+const snapshotsRoot = resolve(workspaceRoot, "server/backups/snapshots");
+const allowedContentRoots = [
+  "content/blog/",
+  "content/projects/",
+  "content/docs/",
+  "content/labs/",
+  "content/home/",
+  "content/settings/"
+];
+const allowedRoots = [...allowedContentRoots, "public/uploads/"];
+const textExtensions = /* @__PURE__ */ new Set([".md", ".json", ".txt", ".csv", ".svg"]);
+function toPortablePath(value) {
+  return value.replace(/\\/g, "/").replace(/^\/+/, "");
+}
+function timestampSlug(date = /* @__PURE__ */ new Date()) {
+  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z").replace("T", "-");
+}
+function normalizeMaybePublicDocPath(value) {
+  const clean = toPortablePath(value.trim());
+  if (!clean) return "";
+  if (clean.startsWith("content/docs/")) return clean;
+  if (clean.startsWith("docs/")) return `content/${clean}`;
+  if (clean.startsWith("/docs/")) return `content/${clean.slice(1)}`;
+  return clean;
+}
+function unique(values) {
+  return Array.from(new Set(values.filter(Boolean)));
+}
+function slugWithCopySuffix(slug, suffix) {
+  return slug.endsWith(suffix) ? slug : `${slug}${suffix}`;
+}
+function validatePortablePath(pathInput) {
+  const path = toPortablePath(String(pathInput || ""));
+  if (!path || path.includes("\0") || isAbsolute$1(path) || path.split("/").some((part) => part === ".." || part === "")) {
+    throw createError({ statusCode: 400, statusMessage: `Unsafe portable path: ${path || "(empty)"}` });
+  }
+  if (!allowedRoots.some((root) => path.startsWith(root))) {
+    throw createError({ statusCode: 400, statusMessage: `Portable path is outside approved areas: ${path}` });
+  }
+  if (path.startsWith("content/") && ![".md", ".json"].includes(extname(path))) {
+    throw createError({ statusCode: 400, statusMessage: `Unsupported content file type: ${path}` });
+  }
+  const absolutePath = resolve(workspaceRoot, path);
+  const relativePath = relative(workspaceRoot, absolutePath);
+  if (relativePath.startsWith("..") || relativePath === ".." || isAbsolute$1(relativePath)) {
+    throw createError({ statusCode: 400, statusMessage: `Unsafe portable path: ${path}` });
+  }
+  return {
+    path,
+    absolutePath
+  };
+}
+function validatePackageManifest(manifest) {
+  if (!manifest || typeof manifest !== "object") {
+    throw createError({ statusCode: 400, statusMessage: "Package manifest is required." });
+  }
+  if (manifest.schemaVersion !== "1.0.0") {
+    throw createError({ statusCode: 400, statusMessage: "Unsupported Gribo package schema version." });
+  }
+  if (!["full-site", "project", "blog", "docs", "lab"].includes(manifest.packageType)) {
+    throw createError({ statusCode: 400, statusMessage: "Unsupported Gribo package type." });
+  }
+  const contentFiles = Array.isArray(manifest.contentFiles) ? manifest.contentFiles.map(String) : [];
+  const uploadFiles = Array.isArray(manifest.uploadFiles) ? manifest.uploadFiles.map(String) : [];
+  for (const file of [...contentFiles, ...uploadFiles]) {
+    validatePortablePath(file);
+  }
+  return {
+    schemaVersion: "1.0.0",
+    packageType: manifest.packageType,
+    exportedAt: String(manifest.exportedAt || (/* @__PURE__ */ new Date()).toISOString()),
+    source: "gribo-digital",
+    title: String(manifest.title || "Gribo package"),
+    slug: String(manifest.slug || "gribo-package"),
+    contentFiles,
+    uploadFiles,
+    checksum: manifest.checksum ? String(manifest.checksum) : void 0,
+    notes: manifest.notes ? String(manifest.notes) : void 0
+  };
+}
+function validatePortablePackage(input) {
+  const manifest = validatePackageManifest(input == null ? void 0 : input.manifest);
+  const files = Array.isArray(input == null ? void 0 : input.files) ? input.files : [];
+  const manifestPaths = /* @__PURE__ */ new Set([...manifest.contentFiles, ...manifest.uploadFiles]);
+  const normalizedFiles = files.map((file) => {
+    var _a;
+    const { path } = validatePortablePath(file == null ? void 0 : file.path);
+    const encoding = (file == null ? void 0 : file.encoding) === "base64" ? "base64" : "utf8";
+    if (!manifestPaths.has(path)) {
+      throw createError({ statusCode: 400, statusMessage: `Package file is not declared in manifest: ${path}` });
+    }
+    return {
+      path,
+      encoding,
+      content: String((_a = file == null ? void 0 : file.content) != null ? _a : "")
+    };
+  });
+  if (!normalizedFiles.length) {
+    throw createError({ statusCode: 400, statusMessage: "Package contains no files." });
+  }
+  return {
+    manifest,
+    files: normalizedFiles
+  };
+}
+async function fileExists(absolutePath) {
+  try {
+    return (await stat(absolutePath)).isFile();
+  } catch {
+    return false;
+  }
+}
+async function directoryExists(absolutePath) {
+  try {
+    return (await stat(absolutePath)).isDirectory();
+  } catch {
+    return false;
+  }
+}
+async function walkFiles(rootPortablePath) {
+  const rootPath = toPortablePath(rootPortablePath).replace(/\/?$/, "/");
+  if (!allowedRoots.some((root2) => rootPath.startsWith(root2))) {
+    throw createError({ statusCode: 400, statusMessage: `Portable path is outside approved areas: ${rootPath}` });
+  }
+  if (rootPath.includes("\0") || isAbsolute$1(rootPath) || rootPath.split("/").some((part) => part === "..")) {
+    throw createError({ statusCode: 400, statusMessage: `Unsafe portable path: ${rootPath}` });
+  }
+  const root = resolve(workspaceRoot, rootPath);
+  const relativeRoot = relative(workspaceRoot, root);
+  if (relativeRoot.startsWith("..") || relativeRoot === ".." || isAbsolute$1(relativeRoot)) {
+    throw createError({ statusCode: 400, statusMessage: `Unsafe portable path: ${rootPath}` });
+  }
+  const files = [];
+  if (!await directoryExists(root)) return files;
+  async function walk(current) {
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolute = join(current, entry.name);
+      if (entry.isDirectory()) {
+        await walk(absolute);
+        continue;
+      }
+      if (entry.isFile()) {
+        files.push(toPortablePath(relative(workspaceRoot, absolute)));
+      }
+    }
+  }
+  await walk(root);
+  return files.sort();
+}
+async function readPortableFile(path) {
+  const { absolutePath } = validatePortablePath(path);
+  if (!await fileExists(absolutePath)) return null;
+  const extension = extname(path).toLowerCase();
+  const encoding = textExtensions.has(extension) ? "utf8" : "base64";
+  const content = await readFile(absolutePath, encoding === "utf8" ? "utf8" : "base64");
+  return {
+    path,
+    encoding,
+    content
+  };
+}
+async function readPackageFiles(paths) {
+  const files = [];
+  for (const path of unique(paths)) {
+    const file = await readPortableFile(path);
+    if (file) files.push(file);
+  }
+  return files.sort((a, b) => a.path.localeCompare(b.path));
+}
+function checksumPackage(files) {
+  const hash = createHash("sha256");
+  for (const file of files) {
+    hash.update(file.path);
+    hash.update(file.encoding);
+    hash.update(file.content);
+  }
+  return hash.digest("hex");
+}
+async function findMarkdownBySlug(root, slug) {
+  const rootPath = `content/${root}/`;
+  const files = (await walkFiles(rootPath)).filter((path) => path.endsWith(".md"));
+  for (const path of files) {
+    const { absolutePath } = validatePortablePath(path);
+    const raw = await readFile(absolutePath, "utf8");
+    const { frontmatter } = parseMarkdownContent(raw);
+    const fileSlug = basename(path, ".md");
+    if (String(frontmatter.slug || fileSlug) === slug || fileSlug === slug) {
+      return {
+        path,
+        frontmatter
+      };
+    }
+  }
+  return null;
+}
+async function resolveDocPath(input) {
+  const normalized = normalizeMaybePublicDocPath(input).replace(/\.md$/, "");
+  const candidates = normalized.endsWith("/index") ? [`${normalized}.md`] : [`${normalized}.md`, `${normalized}/index.md`];
+  for (const candidate of candidates) {
+    const { absolutePath, path } = validatePortablePath(candidate);
+    if (await fileExists(absolutePath)) return path;
+  }
+  return "";
+}
+async function collectDocsFromProject(frontmatter) {
+  const direct = [
+    ...Array.isArray(frontmatter.relatedDocs) ? frontmatter.relatedDocs.map(String) : [],
+    ...Array.isArray(frontmatter.docsPaths) ? frontmatter.docsPaths.map(String) : [],
+    frontmatter.docsPath ? String(frontmatter.docsPath) : ""
+  ];
+  const docs = [];
+  for (const item of direct) {
+    const resolved = await resolveDocPath(item);
+    if (resolved) docs.push(resolved);
+  }
+  if (docs.length) return unique(docs);
+  const docsFolder = String(frontmatter.docsFolder || "").trim();
+  if (docsFolder) {
+    return (await walkFiles(`content/docs/${docsFolder}/`)).filter((path) => path.endsWith(".md"));
+  }
+  return [];
+}
+async function collectFullBackupFiles() {
+  const contentFiles = [
+    ...await walkFiles("content/blog/"),
+    ...await walkFiles("content/projects/"),
+    ...await walkFiles("content/docs/"),
+    ...await walkFiles("content/labs/"),
+    ...await walkFiles("content/home/"),
+    ...await walkFiles("content/settings/")
+  ].filter((path) => [".md", ".json"].includes(extname(path)));
+  const uploadFiles = await walkFiles("public/uploads/");
+  return {
+    contentFiles: unique(contentFiles),
+    uploadFiles: unique(uploadFiles)
+  };
+}
+async function collectProjectPackageFiles(slug) {
+  const project = await findMarkdownBySlug("projects", slug);
+  if (!project) {
+    throw createError({ statusCode: 404, statusMessage: "Project not found." });
+  }
+  const docs = await collectDocsFromProject(project.frontmatter);
+  return {
+    source: project,
+    contentFiles: unique([project.path, ...docs]),
+    uploadFiles: []
+  };
+}
+async function collectBlogPackageFiles(slug) {
+  const blog = await findMarkdownBySlug("blog", slug);
+  if (!blog) {
+    throw createError({ statusCode: 404, statusMessage: "Blog entry not found." });
+  }
+  return {
+    source: blog,
+    contentFiles: [blog.path],
+    uploadFiles: []
+  };
+}
+async function createPortablePackage(input) {
+  const files = await readPackageFiles([...input.contentFiles, ...input.uploadFiles || []]);
+  const contentFiles = files.filter((file) => file.path.startsWith("content/")).map((file) => file.path);
+  const uploadFiles = files.filter((file) => file.path.startsWith("public/uploads/")).map((file) => file.path);
+  const manifest = {
+    schemaVersion: "1.0.0",
+    packageType: input.packageType,
+    exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    source: "gribo-digital",
+    title: input.title,
+    slug: input.slug,
+    contentFiles,
+    uploadFiles,
+    notes: input.notes,
+    checksum: checksumPackage(files)
+  };
+  return {
+    manifest,
+    files
+  };
+}
+function createDownloadResponse(event, pkg, filename) {
+  setHeader(event, "content-type", "application/vnd.gribo.package+json; charset=utf-8");
+  setHeader(event, "content-disposition", `attachment; filename="${filename}"`);
+  return JSON.stringify(pkg, null, 2);
+}
+async function detectImportConflicts(pkg) {
+  const conflicts = [];
+  const creates = [];
+  for (const file of pkg.files) {
+    const { absolutePath, path } = validatePortablePath(file.path);
+    if (await fileExists(absolutePath)) conflicts.push(path);
+    else creates.push(path);
+  }
+  return {
+    conflicts,
+    creates
+  };
+}
+async function createSnapshotFromPaths(paths, notes) {
+  const existingFiles = [];
+  for (const path of unique(paths)) {
+    const file = await readPortableFile(path);
+    if (file) existingFiles.push(file);
+  }
+  await mkdir(snapshotsRoot, { recursive: true });
+  const snapshot = {
+    manifest: {
+      schemaVersion: "1.0.0",
+      packageType: "full-site",
+      exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      source: "gribo-digital",
+      title: "Safety snapshot",
+      slug: `safety-snapshot-${timestampSlug()}`,
+      contentFiles: existingFiles.filter((file) => file.path.startsWith("content/")).map((file) => file.path),
+      uploadFiles: existingFiles.filter((file) => file.path.startsWith("public/uploads/")).map((file) => file.path),
+      notes,
+      checksum: checksumPackage(existingFiles)
+    },
+    files: existingFiles
+  };
+  const filename = `${snapshot.manifest.slug}.gribo.json`;
+  const absolutePath = resolve(snapshotsRoot, filename);
+  await writeFile(absolutePath, JSON.stringify(snapshot, null, 2), "utf8");
+  return {
+    filename,
+    path: toPortablePath(relative(workspaceRoot, absolutePath)),
+    fileCount: existingFiles.length,
+    createdAt: snapshot.manifest.exportedAt
+  };
+}
+async function createSafetySnapshot(pkg, mode) {
+  if (pkg.manifest.packageType === "full-site" && mode === "replace") {
+    const all = await collectFullBackupFiles();
+    return createSnapshotFromPaths([...all.contentFiles, ...all.uploadFiles], "Automatic full-site safety snapshot before restore.");
+  }
+  return createSnapshotFromPaths(pkg.files.map((file) => file.path), `Automatic safety snapshot before ${mode} import of ${pkg.manifest.packageType}.`);
+}
+async function nextAvailableCopyPath(path) {
+  const extension = extname(path);
+  const withoutExtension = path.slice(0, -extension.length);
+  const copyBase = `${withoutExtension}-copy`;
+  let candidate = `${copyBase}${extension}`;
+  let counter = 2;
+  while (await fileExists(validatePortablePath(candidate).absolutePath)) {
+    candidate = `${copyBase}-${counter}${extension}`;
+    counter += 1;
+  }
+  return candidate;
+}
+function rewriteMarkdownSlug(content, path) {
+  if (!path.endsWith(".md")) return content;
+  const parsed = parseMarkdownContent(content);
+  const fileSlug = basename(path, ".md");
+  if (!parsed.frontmatter.slug || path.startsWith("content/blog/") || path.startsWith("content/projects/") || path.startsWith("content/labs/")) {
+    parsed.frontmatter.slug = slugWithCopySuffix(fileSlug, "");
+  }
+  return stringifyMarkdownContent(parsed.frontmatter, parsed.body);
+}
+async function writePortableFile(file, targetPath) {
+  const { absolutePath } = validatePortablePath(targetPath);
+  const content = file.encoding === "base64" ? Buffer.from(file.content, "base64") : rewriteMarkdownSlug(file.content, targetPath);
+  await mkdir(dirname(absolutePath), { recursive: true });
+  await writeFile(absolutePath, content);
+}
+async function applyImportAsCopy(pkg) {
+  const written = [];
+  for (const file of pkg.files) {
+    const { absolutePath } = validatePortablePath(file.path);
+    const targetPath = await fileExists(absolutePath) ? await nextAvailableCopyPath(file.path) : file.path;
+    await writePortableFile(file, targetPath);
+    written.push(targetPath);
+  }
+  return written;
+}
+async function applyImportReplace(pkg) {
+  const written = [];
+  for (const file of pkg.files) {
+    await writePortableFile(file, file.path);
+    written.push(file.path);
+  }
+  return written;
+}
+async function listSafetySnapshots() {
+  if (!await directoryExists(snapshotsRoot)) return [];
+  const entries = await readdir(snapshotsRoot, { withFileTypes: true });
+  const snapshots = [];
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith(".gribo.json")) continue;
+    const absolutePath = join(snapshotsRoot, entry.name);
+    const info = await stat(absolutePath);
+    snapshots.push({
+      filename: entry.name,
+      path: toPortablePath(relative(workspaceRoot, absolutePath)),
+      createdAt: info.mtime.toISOString(),
+      size: info.size
+    });
+  }
+  return snapshots.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 const adminContentRoots = {
@@ -3592,22 +4962,81 @@ const _kECPLV = eventHandler(async (event) => {
   return loadDatabaseAdapter(conf).all(sql);
 });
 
-const _lazy_6Meu_V = () => Promise.resolve().then(function () { return create_post$1; });
+const _lazy_s_f3df = () => Promise.resolve().then(function () { return clear_post$1; });
+const _lazy_XIsTnd = () => Promise.resolve().then(function () { return content_get$1; });
+const _lazy_tRY24e = () => Promise.resolve().then(function () { return events_get$1; });
+const _lazy_KteOni = () => Promise.resolve().then(function () { return export_get$1; });
+const _lazy_9E6syI = () => Promise.resolve().then(function () { return labs_get$1; });
+const _lazy_xZ9C8G = () => Promise.resolve().then(function () { return summary_get$1; });
+const _lazy_tWjB8H = () => Promise.resolve().then(function () { return exportBlog_get$1; });
+const _lazy_hFvNC_ = () => Promise.resolve().then(function () { return exportFull_get$1; });
+const _lazy_R_kEWh = () => Promise.resolve().then(function () { return exportProject_get$1; });
+const _lazy_fpu5Tu = () => Promise.resolve().then(function () { return import_post$1; });
+const _lazy_nuUt7E = () => Promise.resolve().then(function () { return latestSnapshot_get$1; });
+const _lazy_rT2ebV = () => Promise.resolve().then(function () { return preview_post$1; });
+const _lazy_nHgelC = () => Promise.resolve().then(function () { return snapshots_get$1; });
+const _lazy_6Meu_V = () => Promise.resolve().then(function () { return create_post$3; });
 const _lazy_ctiunc = () => Promise.resolve().then(function () { return delete_post$1; });
-const _lazy_5Ot9ot = () => Promise.resolve().then(function () { return list_get$1; });
+const _lazy_5Ot9ot = () => Promise.resolve().then(function () { return list_get$5; });
 const _lazy_ZsQkjz = () => Promise.resolve().then(function () { return read_post$1; });
-const _lazy_EwIuiz = () => Promise.resolve().then(function () { return save_post$1; });
+const _lazy_EwIuiz = () => Promise.resolve().then(function () { return save_post$3; });
+const _lazy_A_Uxe0 = () => Promise.resolve().then(function () { return homeLayout_get$3; });
+const _lazy_Rj0kpN = () => Promise.resolve().then(function () { return save_post$1; });
+const _lazy_K1_nhV = () => Promise.resolve().then(function () { return list_get$3; });
+const _lazy_MWbJgD = () => Promise.resolve().then(function () { return upload_post$1; });
+const _lazy_eMuZ4k = () => Promise.resolve().then(function () { return create_post$1; });
+const _lazy_8tjvtK = () => Promise.resolve().then(function () { return list_get$1; });
+const _lazy_n4VGt0 = () => Promise.resolve().then(function () { return password_post$1; });
+const _lazy_X8OGXD = () => Promise.resolve().then(function () { return status_post$1; });
+const _lazy_JVRjmh = () => Promise.resolve().then(function () { return update_post$1; });
+const _lazy_wTiCTk = () => Promise.resolve().then(function () { return event_post$1; });
+const _lazy_QtUYSl = () => Promise.resolve().then(function () { return google_get$1; });
+const _lazy_7PjkMZ = () => Promise.resolve().then(function () { return callback_get$1; });
+const _lazy_mxuvS2 = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_MWXgUT = () => Promise.resolve().then(function () { return logout_post$1; });
+const _lazy_OJWNDK = () => Promise.resolve().then(function () { return session_get$1; });
 const _lazy_DMt1dq = () => Promise.resolve().then(function () { return health_get$1; });
+const _lazy_x8G8ZJ = () => Promise.resolve().then(function () { return homeLayout_get$1; });
 const _lazy__TJAIX = () => Promise.resolve().then(function () { return renderer; });
 
 const handlers = [
   { route: '', handler: _VlNosn, lazy: false, middleware: true, method: undefined },
+  { route: '', handler: _mzLafK, lazy: false, middleware: true, method: undefined },
+  { route: '/api/admin/analytics/clear', handler: _lazy_s_f3df, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/analytics/content', handler: _lazy_XIsTnd, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/analytics/events', handler: _lazy_tRY24e, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/analytics/export', handler: _lazy_KteOni, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/analytics/labs', handler: _lazy_9E6syI, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/analytics/summary', handler: _lazy_xZ9C8G, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/backups/export-blog', handler: _lazy_tWjB8H, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/backups/export-full', handler: _lazy_hFvNC_, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/backups/export-project', handler: _lazy_R_kEWh, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/backups/import', handler: _lazy_fpu5Tu, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/backups/latest-snapshot', handler: _lazy_nuUt7E, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/backups/preview', handler: _lazy_rT2ebV, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/backups/snapshots', handler: _lazy_nHgelC, lazy: true, middleware: false, method: "get" },
   { route: '/api/admin/content/create', handler: _lazy_6Meu_V, lazy: true, middleware: false, method: "post" },
   { route: '/api/admin/content/delete', handler: _lazy_ctiunc, lazy: true, middleware: false, method: "post" },
   { route: '/api/admin/content/list', handler: _lazy_5Ot9ot, lazy: true, middleware: false, method: "get" },
   { route: '/api/admin/content/read', handler: _lazy_ZsQkjz, lazy: true, middleware: false, method: "post" },
   { route: '/api/admin/content/save', handler: _lazy_EwIuiz, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/home-layout', handler: _lazy_A_Uxe0, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/home-layout/save', handler: _lazy_Rj0kpN, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/media/list', handler: _lazy_K1_nhV, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/media/upload', handler: _lazy_MWbJgD, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/users/create', handler: _lazy_eMuZ4k, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/users/list', handler: _lazy_8tjvtK, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/users/password', handler: _lazy_n4VGt0, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/users/status', handler: _lazy_X8OGXD, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/users/update', handler: _lazy_JVRjmh, lazy: true, middleware: false, method: "post" },
+  { route: '/api/analytics/event', handler: _lazy_wTiCTk, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/google', handler: _lazy_QtUYSl, lazy: true, middleware: false, method: "get" },
+  { route: '/api/auth/google/callback', handler: _lazy_7PjkMZ, lazy: true, middleware: false, method: "get" },
+  { route: '/api/auth/login', handler: _lazy_mxuvS2, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/logout', handler: _lazy_MWXgUT, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/session', handler: _lazy_OJWNDK, lazy: true, middleware: false, method: "get" },
   { route: '/api/health', handler: _lazy_DMt1dq, lazy: true, middleware: false, method: "get" },
+  { route: '/api/home-layout', handler: _lazy_x8G8ZJ, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy__TJAIX, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: handler$1, lazy: false, middleware: false, method: undefined },
   { route: '/__nuxt_content/blog/sql_dump.txt', handler: _ZIkdk3, lazy: false, middleware: false, method: undefined },
@@ -3900,6 +5329,224 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const clear_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return await clearAnalyticsData(String((body == null ? void 0 : body.confirmation) || ""));
+});
+
+const clear_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: clear_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const content_get = defineEventHandler(async () => {
+  const summary = await aggregateAnalytics();
+  return {
+    items: summary.content
+  };
+});
+
+const content_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: content_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const events_get = defineEventHandler(async (event) => {
+  const query = getQuery$1(event);
+  const limit = Math.min(Math.max(Number(query.limit || 40), 1), 200);
+  return {
+    items: await readAnalyticsEvents(limit)
+  };
+});
+
+const events_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: events_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const export_get = defineEventHandler(async (event) => {
+  return await exportAnalytics(event);
+});
+
+const export_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: export_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const labs_get = defineEventHandler(async () => {
+  const summary = await aggregateAnalytics();
+  return {
+    items: summary.labs
+  };
+});
+
+const labs_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: labs_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const summary_get = defineEventHandler(async () => {
+  return await aggregateAnalytics();
+});
+
+const summary_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: summary_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const exportBlog_get = defineEventHandler(async (event) => {
+  const query = getQuery$1(event);
+  const slug = String(query.slug || "");
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Blog slug is required." });
+  }
+  const collected = await collectBlogPackageFiles(slug);
+  const title = String(collected.source.frontmatter.title || slug);
+  const pkg = await createPortablePackage({
+    packageType: "blog",
+    title,
+    slug,
+    contentFiles: collected.contentFiles,
+    uploadFiles: collected.uploadFiles,
+    notes: "Portable Gribo blog package."
+  });
+  return createDownloadResponse(event, pkg, `gribo-blog-${slug}.gribo.json`);
+});
+
+const exportBlog_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: exportBlog_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const exportFull_get = defineEventHandler(async (event) => {
+  const files = await collectFullBackupFiles();
+  const timestamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 16).replace(/[-:T]/g, "");
+  const pkg = await createPortablePackage({
+    packageType: "full-site",
+    title: "Gribo Digital full-site backup",
+    slug: `gribo-backup-${timestamp}`,
+    contentFiles: files.contentFiles,
+    uploadFiles: files.uploadFiles,
+    notes: "Full backup of approved Gribo content and uploads folders."
+  });
+  return createDownloadResponse(event, pkg, `gribo-backup-${timestamp}.gribo.json`);
+});
+
+const exportFull_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: exportFull_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const exportProject_get = defineEventHandler(async (event) => {
+  const query = getQuery$1(event);
+  const slug = String(query.slug || "");
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Project slug is required." });
+  }
+  const collected = await collectProjectPackageFiles(slug);
+  const title = String(collected.source.frontmatter.title || slug);
+  const pkg = await createPortablePackage({
+    packageType: "project",
+    title,
+    slug,
+    contentFiles: collected.contentFiles,
+    uploadFiles: collected.uploadFiles,
+    notes: "Project package with associated documentation detected from project frontmatter."
+  });
+  return createDownloadResponse(event, pkg, `gribo-project-${slug}.gribo.json`);
+});
+
+const exportProject_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: exportProject_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const import_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const pkg = validatePortablePackage(body.package);
+  const mode = body.mode === "replace" ? "replace" : "copy";
+  const conflicts = await detectImportConflicts(pkg);
+  if (mode === "replace" && conflicts.conflicts.length && body.confirmation !== "REPLACE GRIBO CONTENT") {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Replace existing requires confirmation: REPLACE GRIBO CONTENT"
+    });
+  }
+  if (pkg.manifest.packageType === "full-site" && mode === "replace" && body.restoreConfirmation !== "RESTORE GRIBO BACKUP") {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Full restore requires confirmation: RESTORE GRIBO BACKUP"
+    });
+  }
+  const snapshot = await createSafetySnapshot(pkg, mode);
+  const written = mode === "replace" ? await applyImportReplace(pkg) : await applyImportAsCopy(pkg);
+  return {
+    ok: true,
+    mode,
+    manifest: pkg.manifest,
+    snapshot,
+    written
+  };
+});
+
+const import_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: import_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const latestSnapshot_get = defineEventHandler(async (event) => {
+  const snapshots = await listSafetySnapshots();
+  const latest = snapshots[0];
+  if (!latest) {
+    throw createError({ statusCode: 404, statusMessage: "No safety snapshots found." });
+  }
+  setHeader(event, "content-type", "application/vnd.gribo.package+json; charset=utf-8");
+  setHeader(event, "content-disposition", `attachment; filename="${latest.filename}"`);
+  return await readFile(resolve(process.cwd(), latest.path), "utf8");
+});
+
+const latestSnapshot_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: latestSnapshot_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const preview_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const pkg = validatePortablePackage(body.package);
+  const conflicts = await detectImportConflicts(pkg);
+  return {
+    ok: true,
+    manifest: pkg.manifest,
+    files: pkg.files.map((file) => ({
+      path: file.path,
+      encoding: file.encoding,
+      size: file.content.length
+    })),
+    creates: conflicts.creates,
+    conflicts: conflicts.conflicts,
+    warnings: [
+      ...pkg.files.some((file) => file.path.startsWith("public/uploads/")) ? ["Uploads are included as portable file payloads. Media upload management is still future work."] : [],
+      ...conflicts.conflicts.length ? ["Conflicting files already exist. Use Import as copy or confirm Replace existing."] : []
+    ]
+  };
+});
+
+const preview_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: preview_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const snapshots_get = defineEventHandler(async () => {
+  return {
+    snapshots: await listSafetySnapshots()
+  };
+});
+
+const snapshots_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: snapshots_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
 function createBaseFrontmatter(contentType, title, slug, body) {
   const today = todayIsoDate();
   const base = {
@@ -3914,7 +5561,15 @@ function createBaseFrontmatter(contentType, title, slug, body) {
     seoDescription: "Draft editorial note from the Gribo Digital archive.",
     ogImage: "/og/gribo-digital.png",
     canonical: "",
-    noindex: true
+    noindex: true,
+    coverImage: "",
+    coverAlt: "",
+    coverCaption: "",
+    coverStyle: "editorial-gradient",
+    coverPosition: "center",
+    accentColor: "coral",
+    mediaRefs: [],
+    blocks: []
   };
   if (contentType === "blog") {
     return {
@@ -4000,7 +5655,7 @@ A research line for gathering the essays, prototypes, documentation, and questio
 A draft note for the Gribo archive. Shape the argument, keep the friction visible, and let the system explain what it is becoming.
 `;
 }
-const create_post = defineEventHandler(async (event) => {
+const create_post$2 = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const contentType = assertAdminContentType(body.contentType);
   const title = String(body.title || "Untitled draft");
@@ -4030,19 +5685,58 @@ const create_post = defineEventHandler(async (event) => {
   };
 });
 
-const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: create_post
+  default: create_post$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const delete_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
+  const mode = String(body.mode || "archive");
+  if (!["archive", "delete"].includes(mode)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Unsupported delete mode."
+    });
+  }
   const resolved = resolveAdminContentFile(body.contentType, body.filePath);
+  if (mode === "delete") {
+    if (resolved.contentType !== "blog") {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Physical delete is only enabled for blog entries."
+      });
+    }
+    if (String(body.confirmation || "") !== "DELETE BLOG ENTRY") {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Type DELETE BLOG ENTRY to confirm permanent removal."
+      });
+    }
+    const trashRoot = resolve(process.cwd(), "server/data/trash/blog");
+    const filename = resolved.filePath.replace(/^blog\//, "").replace(/\//g, "__");
+    const trashName = `${(/* @__PURE__ */ new Date()).toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z")}-${filename}`;
+    const trashPath = resolve(trashRoot, trashName);
+    await mkdir(trashRoot, { recursive: true });
+    await rename(resolved.absolutePath, trashPath);
+    return {
+      ok: true,
+      deleted: true,
+      softDeleted: false,
+      item: {
+        contentType: resolved.contentType,
+        filePath: resolved.filePath,
+        trashPath: `server/data/trash/blog/${trashName}`
+      }
+    };
+  }
   const content = await readMarkdownFile(resolved.absolutePath);
   const frontmatter = {
     ...content.frontmatter,
     status: "archived",
-    updatedAt: todayIsoDate()
+    archivedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    updatedAt: todayIsoDate(),
+    noindex: true
   };
   await writeMarkdownFile(resolved.absolutePath, frontmatter, content.body);
   return {
@@ -4061,7 +5755,7 @@ const delete_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: delete_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const list_get = defineEventHandler(async (event) => {
+const list_get$4 = defineEventHandler(async (event) => {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
   const query = getQuery$1(event);
   const requestedTypes = query.contentType ? [assertAdminContentType(query.contentType)] : ["blog", "projects", "docs", "labs"];
@@ -4102,9 +5796,9 @@ const list_get = defineEventHandler(async (event) => {
   };
 });
 
-const list_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const list_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: list_get
+  default: list_get$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const read_post = defineEventHandler(async (event) => {
@@ -4127,7 +5821,7 @@ const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: read_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const save_post = defineEventHandler(async (event) => {
+const save_post$2 = defineEventHandler(async (event) => {
   var _a, _b, _c;
   const body = await readBody(event);
   const resolved = resolveAdminContentFile(body.contentType, body.filePath);
@@ -4148,9 +5842,381 @@ const save_post = defineEventHandler(async (event) => {
   };
 });
 
+const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: save_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const homeLayout_get$2 = defineEventHandler(async () => {
+  const layout = await readHomeLayout();
+  return {
+    layout
+  };
+});
+
+const homeLayout_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: homeLayout_get$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const save_post = defineEventHandler(async (event) => {
+  var _a;
+  const body = await readBody(event);
+  const result = await writeHomeLayout((_a = body == null ? void 0 : body.layout) != null ? _a : body);
+  return {
+    ok: true,
+    ...result
+  };
+});
+
 const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: save_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const allowedImageExtensions = /* @__PURE__ */ new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"]);
+function titleFromFilename$1(filename) {
+  return filename.replace(/\.[a-z0-9]+$/i, "").replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+const list_get$2 = defineEventHandler(async () => {
+  const uploadsRoot = resolve(process.cwd(), "public/uploads");
+  const assets = [];
+  async function walk(current) {
+    const entries = await readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = join(current, entry.name);
+      if (entry.isDirectory()) {
+        await walk(absolutePath);
+        continue;
+      }
+      if (!entry.isFile()) continue;
+      const extension = extname(entry.name).toLowerCase();
+      if (!allowedImageExtensions.has(extension)) continue;
+      const relativePath = relative(uploadsRoot, absolutePath).split(sep).join("/");
+      const info = await stat(absolutePath);
+      const filename = relativePath.split("/").pop() || relativePath;
+      assets.push({
+        id: relativePath.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase(),
+        title: titleFromFilename$1(filename),
+        filename,
+        url: `/uploads/${relativePath}`,
+        type: extension.replace(".", "").toUpperCase(),
+        usage: "Media Library",
+        description: "Image available from public/uploads.",
+        size: info.size,
+        updatedAt: info.mtime.toISOString()
+      });
+    }
+  }
+  try {
+    await mkdir(uploadsRoot, { recursive: true });
+    await walk(uploadsRoot);
+  } catch {
+    return { assets: [] };
+  }
+  return {
+    assets: assets.sort((a, b) => a.title.localeCompare(b.title))
+  };
+});
+
+const list_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: list_get$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const maxUploadBytes = 5 * 1024 * 1024;
+const allowedExtensions = /* @__PURE__ */ new Set([".jpg", ".jpeg", ".png", ".webp"]);
+const allowedMimeTypes = /* @__PURE__ */ new Set(["image/jpeg", "image/png", "image/webp"]);
+function titleFromFilename(filename) {
+  return filename.replace(/\.[a-z0-9]+$/i, "").replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+function safeFilename(filename) {
+  const extension = extname(filename).toLowerCase();
+  const base = filename.replace(/\.[a-z0-9]+$/i, "").normalize("NFKD").replace(/[^\w\s-]/g, "").trim().replace(/[\s_]+/g, "-").replace(/-+/g, "-").toLowerCase().replace(/^-+|-+$/g, "");
+  return `${base || "gribo-image"}-${randomUUID().slice(0, 8)}${extension}`;
+}
+const upload_post = defineEventHandler(async (event) => {
+  var _a;
+  const parts = await readMultipartFormData(event);
+  const file = parts == null ? void 0 : parts.find((part) => part.name === "file");
+  if (!file || !file.filename || !((_a = file.data) == null ? void 0 : _a.length)) {
+    throw createError({ statusCode: 400, statusMessage: "Upload failed." });
+  }
+  const extension = extname(file.filename).toLowerCase();
+  const mimeType = String(file.type || "").toLowerCase();
+  if (!allowedExtensions.has(extension) || !allowedMimeTypes.has(mimeType)) {
+    throw createError({ statusCode: 400, statusMessage: "File type not allowed." });
+  }
+  if (file.data.length > maxUploadBytes) {
+    throw createError({ statusCode: 400, statusMessage: "File is too large." });
+  }
+  const uploadsRoot = resolve(process.cwd(), "public/uploads");
+  await mkdir(uploadsRoot, { recursive: true });
+  const filename = safeFilename(file.filename);
+  const absolutePath = resolve(uploadsRoot, filename);
+  if (!absolutePath.startsWith(uploadsRoot)) {
+    throw createError({ statusCode: 400, statusMessage: "Upload path is not allowed." });
+  }
+  await writeFile(absolutePath, file.data);
+  const asset = {
+    id: filename.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase(),
+    title: titleFromFilename(filename),
+    filename,
+    url: `/uploads/${filename}`,
+    type: extension.replace(".", "").toUpperCase(),
+    usage: "Media Library",
+    description: "Uploaded from Gribo Studio.",
+    size: file.data.length,
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  return {
+    ok: true,
+    asset
+  };
+});
+
+const upload_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: upload_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const create_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const password = String(body.password || "");
+  const confirmPassword = String(body.confirmPassword || "");
+  if (body.authProvider === "password" && password !== confirmPassword) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Password confirmation does not match."
+    });
+  }
+  const user = await createAdminUser({
+    name: String(body.name || ""),
+    email: String(body.email || ""),
+    username: String(body.username || ""),
+    authProvider: body.authProvider === "google" ? "google" : "password",
+    password,
+    googleEmail: body.authProvider === "google" ? String(body.googleEmail || body.email || "") : String(body.googleEmail || "")
+  });
+  return {
+    ok: true,
+    user: toPublicAdminUser(user)
+  };
+});
+
+const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: create_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const list_get = defineEventHandler(async () => {
+  const users = (await readAdminUsers()).map(toPublicAdminUser);
+  return {
+    users
+  };
+});
+
+const list_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: list_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const password_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const password = String(body.password || "");
+  const confirmPassword = String(body.confirmPassword || "");
+  if (password !== confirmPassword) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Password confirmation does not match."
+    });
+  }
+  const user = await changeAdminUserPassword(String(body.id || ""), password);
+  return {
+    ok: true,
+    user: toPublicAdminUser(user)
+  };
+});
+
+const password_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: password_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const status_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const status = body.status === "disabled" ? "disabled" : "active";
+  const user = await setAdminUserStatus(String(body.id || ""), status);
+  return {
+    ok: true,
+    user: toPublicAdminUser(user)
+  };
+});
+
+const status_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: status_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const update_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const user = await updateAdminUser(String(body.id || ""), {
+    name: String(body.name || ""),
+    email: String(body.email || ""),
+    username: String(body.username || ""),
+    googleEmail: String(body.googleEmail || ""),
+    authProvider: body.authProvider === "google" ? "google" : "password"
+  });
+  return {
+    ok: true,
+    user: toPublicAdminUser(user)
+  };
+});
+
+const update_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: update_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const event_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return await recordAnalyticsEvent(event, body);
+});
+
+const event_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: event_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const google_get = defineEventHandler((event) => {
+  const config = getGoogleOAuthConfig(event);
+  if (!config.enabled) {
+    throw createError({
+      statusCode: 503,
+      statusMessage: "Google login is not configured."
+    });
+  }
+  const state = createGoogleState(event);
+  const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  url.searchParams.set("client_id", config.clientId);
+  url.searchParams.set("redirect_uri", config.redirectUrl);
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("scope", "openid email profile");
+  url.searchParams.set("state", state);
+  url.searchParams.set("prompt", "select_account");
+  return sendRedirect(event, url.toString());
+});
+
+const google_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: google_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const callback_get = defineEventHandler(async (event) => {
+  const query = getQuery$1(event);
+  const code = String(query.code || "");
+  const state = String(query.state || "");
+  try {
+    assertGoogleState(event, state);
+    if (!code) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Missing Google authorization code."
+      });
+    }
+    const token = await exchangeGoogleCode(event, code);
+    if (!token.access_token) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Google access token was not returned."
+      });
+    }
+    const googleUser = await fetchGoogleUser(token.access_token);
+    const email = String(googleUser.email || "").toLowerCase();
+    const adminUser = await findGoogleAdminUser(email);
+    if (!adminUser) {
+      return sendRedirect(event, "/admin/login?error=google_unauthorized");
+    }
+    const loggedInUser = await markAdminUserLogin(adminUser.id) || adminUser;
+    const sessionToken = createAdminSessionToken({
+      id: loggedInUser.id,
+      name: loggedInUser.name || googleUser.name || loggedInUser.email,
+      email: loggedInUser.email,
+      username: loggedInUser.username,
+      authProvider: "google"
+    }, event);
+    setAdminSessionCookie(event, sessionToken);
+    return sendRedirect(event, "/admin");
+  } catch (error) {
+    const message = encodeURIComponent((error == null ? void 0 : error.statusMessage) || (error == null ? void 0 : error.message) || "Google login failed.");
+    return sendRedirect(event, `/admin/login?error=${message}`);
+  }
+});
+
+const callback_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: callback_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const login_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const username = String(body.username || "");
+  const password = String(body.password || "");
+  const result = await verifyAdminCredentials(username, password, event);
+  if (!result.ok) {
+    throw createError({
+      statusCode: result.reason.includes("configured") ? 503 : 401,
+      statusMessage: result.reason
+    });
+  }
+  const token = createAdminSessionToken(result.user, event);
+  setAdminSessionCookie(event, token);
+  return {
+    ok: true,
+    user: result.user
+  };
+});
+
+const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: login_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const logout_post = defineEventHandler((event) => {
+  clearAdminSessionCookie(event);
+  return {
+    ok: true
+  };
+});
+
+const logout_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: logout_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const session_get = defineEventHandler((event) => {
+  const config = getAdminAuthConfig(event);
+  const googleConfig = getGoogleOAuthConfig(event);
+  const session = readAdminSession(event);
+  return {
+    authenticated: Boolean(session),
+    loginEnabled: config.enabled,
+    googleLoginEnabled: googleConfig.enabled,
+    production: config.production,
+    reason: config.enabled ? "" : config.reason,
+    user: session ? {
+      id: session.id,
+      name: session.name,
+      email: session.email,
+      authProvider: session.authProvider,
+      username: session.username
+    } : null
+  };
+});
+
+const session_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: session_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const health_get = defineEventHandler(() => ({
@@ -4162,6 +6228,18 @@ const health_get = defineEventHandler(() => ({
 const health_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: health_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const homeLayout_get = defineEventHandler(async () => {
+  const layout = await readHomeLayout();
+  return {
+    layout
+  };
+});
+
+const homeLayout_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: homeLayout_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

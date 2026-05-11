@@ -6,6 +6,12 @@ definePageMeta({
 const { listContent } = useAdminContent()
 const { data, pending, refresh } = await useAsyncData('admin-blog-list', () => listContent('blog'))
 const rows = computed(() => data.value?.items ?? [])
+const statusFilter = ref('All')
+const statusFilters = ['All', 'Draft', 'Review', 'Published', 'Archived']
+const filteredRows = computed(() => {
+  if (statusFilter.value === 'All') return rows.value
+  return rows.value.filter((post) => String(post.status || 'draft').toLowerCase() === statusFilter.value.toLowerCase())
+})
 
 const editLink = (filePath: string) => `/admin/content/edit?type=blog&file=${encodeURIComponent(filePath)}`
 const previewLink = (post: { publicPath: string, status: string }) => post.status === 'published'
@@ -27,15 +33,24 @@ const previewLink = (post: { publicPath: string, status: string }) => post.statu
           <NuxtLink class="studio-btn" to="/admin/content/new?type=blog&direct=true">New Blog Entry</NuxtLink>
         </template>
         <div class="filters">
-          <span class="status-badge">All</span>
-          <span class="status-badge">Draft</span>
-          <span class="status-badge">Review</span>
-          <span class="status-badge">Published</span>
+          <button
+            v-for="filter in statusFilters"
+            :key="filter"
+            class="filter-pill"
+            :class="{ active: statusFilter === filter }"
+            type="button"
+            @click="statusFilter = filter"
+          >
+            {{ filter }}
+          </button>
           <button class="ghost-btn" type="button" @click="refresh">Refresh</button>
         </div>
         <p v-if="pending" class="muted">Reading content/blog...</p>
         <div v-else class="table-card">
-          <div v-for="post in rows" :key="post.filePath" class="table-row">
+          <div v-if="!filteredRows.length" class="empty-row">
+            No blog entries match this filter.
+          </div>
+          <div v-for="post in filteredRows" :key="post.filePath" class="table-row">
             <div class="content-title">
               <strong>{{ post.title }}</strong>
               <span>{{ post.lab || 'unassigned' }} / {{ post.filePath }}</span>
@@ -54,8 +69,9 @@ const previewLink = (post: { publicPath: string, status: string }) => post.statu
         :items="[
           { label: 'Collection', value: 'content/blog' },
           { label: 'Items', value: String(rows.length) },
+          { label: 'Visible filter', value: statusFilter },
           { label: 'Editor', value: 'Markdown + frontmatter' },
-          { label: 'Delete', value: 'Soft archive only' }
+          { label: 'Delete', value: 'Danger Zone only' }
         ]"
       >
         <div class="preview-copy">
@@ -94,7 +110,8 @@ const previewLink = (post: { publicPath: string, status: string }) => post.statu
 
 .studio-btn,
 .ghost-btn,
-.mini-link {
+.mini-link,
+.filter-pill {
   display: inline-grid;
   min-height: 38px;
   place-items: center;
@@ -115,9 +132,15 @@ const previewLink = (post: { publicPath: string, status: string }) => post.statu
   color: #191714;
 }
 
+.filter-pill.active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
 .studio-btn:hover,
 .ghost-btn:hover,
-.mini-link:hover {
+.mini-link:hover,
+.filter-pill:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
 }
@@ -139,6 +162,12 @@ const previewLink = (post: { publicPath: string, status: string }) => post.statu
 
 .table-row:last-child {
   border-bottom: 0;
+}
+
+.empty-row {
+  padding: 18px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .content-title {

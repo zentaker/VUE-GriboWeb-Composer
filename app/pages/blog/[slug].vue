@@ -4,12 +4,22 @@ const slug = computed(() => String(route.params.slug))
 const path = computed(() => `/blog/${route.params.slug}`)
 const { data: post } = await useAsyncData(`blog-${path.value}`, async () => {
   const byPath = await queryCollection('blog').path(path.value).first()
-  return byPath ?? await queryCollection('blog').where('slug', '=', slug.value).first()
+  const resolved = byPath ?? await queryCollection('blog').where('slug', '=', slug.value).first()
+
+  if (String(resolved?.status || '').toLowerCase() === 'archived' && route.query.preview !== 'true') {
+    return null
+  }
+
+  return resolved
 })
 
 const dateLabel = computed(() => post.value?.date
   ? new Date(post.value.date).toLocaleDateString('en', { month: 'long', day: '2-digit', year: 'numeric' })
   : 'Draft')
+const postBlocks = computed(() => Array.isArray(post.value?.blocks)
+  ? post.value.blocks.filter((block: any) => block?.visible !== false)
+  : []
+)
 const explicitRelatedItems = computed(() => {
   const items: { label: string, title: string, to: string }[] = []
   const relatedProjects = Array.isArray(post.value?.relatedProjects) ? post.value.relatedProjects : []
@@ -68,6 +78,8 @@ useGriboSeo(() => ({
         :category="post.category"
         :date="dateLabel"
         :status="post.status"
+        :cover-style="post.coverStyle"
+        :accent-color="post.accentColor"
       />
 
       <div class="article-wrap">
@@ -77,7 +89,8 @@ useGriboSeo(() => ({
             <span class="tag">{{ post.category }}</span>
           </div>
 
-          <ContentRenderer id="content" class="content-prose" :value="post" />
+          <ContentBlockRenderer v-if="postBlocks.length" id="content" :blocks="postBlocks" context="blog" />
+          <ContentRenderer v-else id="content" class="content-prose" :value="post" />
 
           <RelatedContent
             v-if="explicitRelatedItems.length"

@@ -1,6 +1,40 @@
 <script setup lang="ts">
+type HomeLayout = {
+  hero: {
+    label: string
+    headline: string
+    description: string
+    primaryCta: { label: string, to: string }
+    secondaryCta: { label: string, to: string }
+  }
+  featuredProject: {
+    mode: 'manual' | 'latest'
+    slug: string
+  }
+  buildLog: {
+    mode: 'manual' | 'latest'
+    limit: number
+    manualItems: Array<{ date: string, title: string, meta: string }>
+  }
+  feed: {
+    mode: 'manual' | 'latest' | 'mixed'
+    limit: number
+    contentTypes: string[]
+    manualItems: Array<{ type: 'blog' | 'projects' | 'labs', slug: string }>
+  }
+  identity: {
+    enabled: boolean
+    headline: string
+    description: string
+    ctaLabel: string
+    ctaTarget: string
+  }
+}
+
+const { data: homeLayoutResponse } = await useFetch<{ layout: HomeLayout }>('/api/home-layout')
 const { data: posts } = await useAsyncData('home-blog', () => queryCollection('blog').order('date', 'DESC').limit(4).all())
 const { data: projects } = await useAsyncData('home-projects', () => queryCollection('projects').limit(4).all())
+const { data: contentLabs } = await useAsyncData('home-labs', () => queryCollection('labs').order('order', 'ASC').limit(5).all())
 
 useGriboSeo({
   title: 'Gribo Digital',
@@ -10,7 +44,7 @@ useGriboSeo({
   canonical: 'https://gribo.digital'
 })
 
-const buildLogItems = [
+const fallbackBuildLogItems = [
   {
     date: 'May 07',
     title: 'Codex as an initial sandbox',
@@ -28,7 +62,7 @@ const buildLogItems = [
   }
 ]
 
-const labs = [
+const fallbackLabs = [
   {
     title: 'SysSecurity',
     description: 'Security systems, threat models, operational trust, and defensive culture.'
@@ -96,12 +130,14 @@ const fallbackArticles = [
   }
 ]
 
+const layout = computed(() => homeLayoutResponse.value?.layout)
+
 const activeProjects = computed(() => {
   const contentProjects = (projects.value ?? []).map((project, index) => ({
     title: project.title,
-    description: project.description,
+    description: project.description || project.summary || 'A living project dossier from the Gribo archive.',
     status: project.status,
-    to: project.path.replace('/projects/', '/repository/'),
+    to: `/repository/${project.slug}`,
     progress: [58, 31, 44, 63][index] ?? 35,
     type: project.stack?.[0] ?? 'Living research'
   }))
@@ -111,7 +147,42 @@ const activeProjects = computed(() => {
     .slice(0, 4)
 })
 
-const featuredProject = computed(() => activeProjects.value.find((project) => project.title.includes('Tennis')) ?? activeProjects.value[0] ?? fallbackProjects[0])
+const labs = computed(() => {
+  const mappedLabs = (contentLabs.value ?? []).map((lab) => ({
+    title: lab.title,
+    description: lab.description
+  }))
+
+  return mappedLabs.length ? mappedLabs : fallbackLabs
+})
+
+const featuredProject = computed(() => {
+  const configured = layout.value?.featuredProject
+
+  if (configured?.mode === 'manual') {
+    const selected = activeProjects.value.find((project) => project.to.endsWith(`/${configured.slug}`))
+    if (selected) return selected
+  }
+
+  return activeProjects.value[0] ?? fallbackProjects[0]
+})
+
+const buildLogItems = computed(() => {
+  const configured = layout.value?.buildLog
+  const limit = configured?.limit ?? 3
+
+  if (configured?.mode === 'manual' && configured.manualItems.length) {
+    return configured.manualItems.slice(0, limit)
+  }
+
+  const latestPosts = (posts.value ?? []).map((post) => ({
+    date: post.date ? new Date(post.date).toLocaleDateString('en', { month: 'short', day: '2-digit' }) : 'Now',
+    title: post.title,
+    meta: post.excerpt || post.description || 'Editorial note from the Gribo archive.'
+  }))
+
+  return [...latestPosts, ...fallbackBuildLogItems].slice(0, limit)
+})
 
 const thinkingArticles = computed(() => {
   const contentPosts = (posts.value ?? []).map((post) => ({
@@ -119,16 +190,63 @@ const thinkingArticles = computed(() => {
     kicker: `${post.category} / ${post.status ?? 'draft'}`,
     to: post.path
   }))
+  const contentProjects = activeProjects.value.map((project) => ({
+    title: project.title,
+    kicker: `Repository / ${project.status}`,
+    to: project.to
+  }))
+  const contentLabItems = (contentLabs.value ?? []).map((lab) => ({
+    title: lab.title,
+    kicker: `Lab / ${lab.status}`,
+    to: `/labs/${lab.slug}`
+  }))
+  const manualItems = layout.value?.feed?.manualItems ?? []
+  const manualResolved = manualItems
+    .map((item) => {
+      if (item.type === 'blog') {
+        const post = (posts.value ?? []).find((entry) => entry.slug === item.slug)
+        return post ? { title: post.title, kicker: `Blog / ${post.status ?? 'draft'}`, to: post.path } : null
+      }
+      if (item.type === 'projects') {
+        const project = activeProjects.value.find((entry) => entry.to.endsWith(`/${item.slug}`))
+        return project ? { title: project.title, kicker: `Repository / ${project.status}`, to: project.to } : null
+      }
+      const lab = (contentLabs.value ?? []).find((entry) => entry.slug === item.slug)
+      return lab ? { title: lab.title, kicker: `Lab / ${lab.status}`, to: `/labs/${lab.slug}` } : null
+    })
+    .filter((item): item is { title: string, kicker: string, to: string } => Boolean(item))
 
-  return [...contentPosts, ...fallbackArticles]
+  const configured = layout.value?.feed
+  const limit = configured?.limit ?? 4
+  const allowedTypes = configured?.contentTypes?.length ? configured.contentTypes : ['blog', 'projects']
+  const latestItems = [
+    ...(allowedTypes.includes('blog') ? contentPosts : []),
+    ...(allowedTypes.includes('projects') ? contentProjects : []),
+    ...(allowedTypes.includes('labs') ? contentLabItems : [])
+  ]
+  const source = configured?.mode === 'manual'
+    ? manualResolved
+    : configured?.mode === 'mixed'
+      ? [...manualResolved, ...latestItems]
+      : latestItems
+
+  return [...source, ...fallbackArticles]
     .filter((article, index, list) => list.findIndex((item) => item.title === article.title) === index)
-    .slice(0, 4)
+    .slice(0, limit)
 })
 </script>
 
 <template>
   <div class="content-shell home-page">
-    <HeroIntroBlock>
+    <HeroIntroBlock
+      :eyebrow="layout?.hero.label"
+      :title="layout?.hero.headline"
+      :subtitle="layout?.hero.description"
+      :primary-cta-label="layout?.hero.primaryCta.label"
+      :primary-cta-to="layout?.hero.primaryCta.to"
+      :secondary-cta-label="layout?.hero.secondaryCta.label"
+      :secondary-cta-to="layout?.hero.secondaryCta.to"
+    >
       <FeaturedProjectBlock
         :title="featuredProject.title"
         :description="featuredProject.description"
@@ -139,7 +257,14 @@ const thinkingArticles = computed(() => {
 
     <LabsTracksBlock :labs="labs" />
     <ActiveProjectsBlock :projects="activeProjects" />
-    <ManifestoBlock>
+    <ManifestoBlock
+      v-if="layout?.identity.enabled !== false"
+      :headline="layout?.identity.headline"
+      :description="layout?.identity.description"
+      :cta-label="layout?.identity.ctaLabel"
+      :cta-target="layout?.identity.ctaTarget"
+      show-cta
+    >
       <ThinkingArticlesBlock :articles="thinkingArticles" />
     </ManifestoBlock>
     <NewsletterBlock />

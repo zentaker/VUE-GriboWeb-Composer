@@ -1,8 +1,27 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  headline?: string
+  description?: string
+  ctaLabel?: string
+  ctaTarget?: string
+  showCta?: boolean
+}>(), {
+  headline: 'Build, reflect, archive, evolve.',
+  description: 'Gribo works like external memory: it records what is being built, what breaks, what changes and what eventually becomes a system.',
+  ctaLabel: 'Explore labs',
+  ctaTarget: '/labs',
+  showCta: false
+})
+</script>
+
 <template>
   <section id="thinking" class="home-section thinking">
     <div class="manifesto">
-      <h2>Build, reflect, archive, evolve.</h2>
-      <p>Gribo works like external memory: it records what is being built, what breaks, what changes and what eventually becomes a system.</p>
+      <h2>{{ headline }}</h2>
+      <div>
+        <p>{{ description }}</p>
+        <NuxtLink v-if="showCta" class="manifesto-link" :to="ctaTarget">{{ ctaLabel }}</NuxtLink>
+      </div>
     </div>
     <slot />
   </section>
@@ -42,6 +61,14 @@ p {
   margin: 0;
   color: color-mix(in srgb, var(--bg), transparent 28%);
   font-size: 18px;
+}
+
+.manifesto-link {
+  display: inline-flex;
+  margin-top: 22px;
+  color: var(--bg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 @media (max-width: 1100px) {

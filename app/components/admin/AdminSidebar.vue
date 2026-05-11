@@ -15,18 +15,24 @@
       <NuxtLink to="/admin/projects"><span class="nav-icon">P</span>Repository Projects</NuxtLink>
       <NuxtLink to="/admin/docs"><span class="nav-icon">D</span>Documentation</NuxtLink>
       <NuxtLink to="/admin/labs"><span class="nav-icon">L</span>Labs</NuxtLink>
+      <NuxtLink to="/admin/insights"><span class="nav-icon">I</span>Insights</NuxtLink>
       <NuxtLink to="/admin/media"><span class="nav-icon">M</span>Media Library</NuxtLink>
+      <NuxtLink to="/admin/backups"><span class="nav-icon">X</span>Backups</NuxtLink>
+      <NuxtLink to="/admin/users"><span class="nav-icon">U</span>Admin Users</NuxtLink>
 
       <p class="side-section-title">Create / Composer</p>
       <NuxtLink to="/admin/content/new?type=projects"><span class="nav-icon">P</span>New Project</NuxtLink>
       <NuxtLink to="/admin/content/new?type=blog&direct=true"><span class="nav-icon">B</span>New Blog Entry</NuxtLink>
       <NuxtLink to="/admin/content/new?type=docs"><span class="nav-icon">D</span>New Docs Page</NuxtLink>
       <NuxtLink to="/admin/content/new?type=labs&direct=true"><span class="nav-icon">L</span>New Lab</NuxtLink>
-      <NuxtLink to="/admin/home"><span class="nav-icon">C</span>Content Blocks</NuxtLink>
+      <NuxtLink to="/admin/content/new?type=projects"><span class="nav-icon">C</span>Content Blocks</NuxtLink>
+      <NuxtLink to="/admin/media"><span class="nav-icon">M</span>Media Upload</NuxtLink>
+      <NuxtLink to="/admin/content/new?type=projects"><span class="nav-icon">P</span>Preview</NuxtLink>
+      <NuxtLink to="/admin/queue"><span class="nav-icon">↗</span>Publish Settings</NuxtLink>
     </nav>
     <div class="side-card">
-      <strong>Nuxt Content map</strong>
-      <p>Stage 4 writes only to <code>content/blog</code>, <code>projects</code>, <code>docs</code>, and <code>labs</code>. Auth is still pending.</p>
+      <strong>ProjectComposer.vue</strong>
+      <p>Editing surface for content/projects/*.md, rich blocks, media references and markdown fallback.</p>
     </div>
   </aside>
 </template>

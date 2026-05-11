@@ -105,6 +105,7 @@ declare global {
   const unwrapSlot: typeof import('../../node_modules/@nuxtjs/mdc/dist/runtime/utils/node').flatUnwrap
   const updateAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').updateAppConfig
   const useAdminContent: typeof import('../../app/composables/useAdminContent').useAdminContent
+  const useAdminUsers: typeof import('../../app/composables/useAdminUsers').useAdminUsers
   const useAnnouncer: typeof import('../../node_modules/nuxt/dist/app/composables/announcer').useAnnouncer
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').useAppConfig
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useAsyncData
@@ -185,6 +186,7 @@ declare global {
   const useShadowRoot: typeof import('vue').useShadowRoot
   const useSlots: typeof import('vue').useSlots
   const useState: typeof import('../../node_modules/nuxt/dist/app/composables/state').useState
+  const useStudioMediaLibrary: typeof import('../../app/composables/useStudioMediaLibrary').useStudioMediaLibrary
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useTransitionState: typeof import('vue').useTransitionState
   const watch: typeof import('vue').watch
@@ -209,6 +211,12 @@ declare global {
   // @ts-ignore
   export type { AdminContentType, AdminContentListItem, AdminContentReadItem } from '../../app/composables/useAdminContent'
   import('../../app/composables/useAdminContent')
+  // @ts-ignore
+  export type { AdminUserProvider, AdminUserStatus, AdminUserRecord } from '../../app/composables/useAdminUsers'
+  import('../../app/composables/useAdminUsers')
+  // @ts-ignore
+  export type { StudioMediaAsset } from '../../app/composables/useStudioMediaLibrary'
+  import('../../app/composables/useStudioMediaLibrary')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -318,6 +326,7 @@ declare module 'vue' {
     readonly unwrapSlot: UnwrapRef<typeof import('../../node_modules/@nuxtjs/mdc/dist/runtime/utils/node')['flatUnwrap']>
     readonly updateAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']>
     readonly useAdminContent: UnwrapRef<typeof import('../../app/composables/useAdminContent')['useAdminContent']>
+    readonly useAdminUsers: UnwrapRef<typeof import('../../app/composables/useAdminUsers')['useAdminUsers']>
     readonly useAnnouncer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/announcer')['useAnnouncer']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
@@ -398,6 +407,7 @@ declare module 'vue' {
     readonly useShadowRoot: UnwrapRef<typeof import('vue')['useShadowRoot']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useState: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']>
+    readonly useStudioMediaLibrary: UnwrapRef<typeof import('../../app/composables/useStudioMediaLibrary')['useStudioMediaLibrary']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly useTransitionState: UnwrapRef<typeof import('vue')['useTransitionState']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>

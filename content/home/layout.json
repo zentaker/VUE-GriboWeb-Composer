@@ -1,42 +1,57 @@
 {
   "hero": {
-    "eyebrow": "Editorial laboratory / living archive",
-    "title": "Ideas that leave a system behind.",
-    "description": "A place for notes, prototypes, failures, decisions, architectures, and questions that continue to move after the first version is built."
-  },
-  "spotlight": {
-    "title": "AI Documentation as Product Interface",
-    "description": "A technical note on documentation as interface: not a manual after the fact, but a surface where intent, limits, and next action become readable.",
-    "source": "/docs/tennis-ai-friction"
-  },
-  "seedBlocks": {
-    "HeroIntroBlock": {
-      "eyebrow": "Digital systems magazine-lab",
-      "title": "Ideas that become systems.",
-      "subtitle": "Systems are read here as memory, interface, language, and cultural infrastructure."
+    "label": "Digital systems magazine-lab",
+    "headline": "Ideas that become systems.",
+    "description": "Gribo Digital documents systems, prototypes, research notes and cultural infrastructure through a living editorial archive.",
+    "primaryCta": {
+      "label": "Explore projects",
+      "to": "/repository"
     },
-    "FeaturedProjectBlock": "A project is treated as a living dossier: state, decisions, questions, and the residue of unfinished architecture.",
-    "BuildLogBlock": "Short traces from the making process before they become polished case studies.",
-    "LabsTracksBlock": "Research lines that keep fragments from becoming isolated artifacts.",
-    "ActiveProjectsBlock": "Ongoing systems, prototypes, and dossiers with visible edges.",
-    "ThinkingArticlesBlock": "Essays and notes for the cultural layer of technical work.",
-    "ManifestoBlock": "Build, reflect, archive, evolve.",
-    "ParticipationCtaBlock": "A future invitation to follow the work, contribute context, or enter the conversation.",
-    "NewsletterBlock": "A quiet signal for progress notes, prototypes, essays, and decisions."
+    "secondaryCta": {
+      "label": "Explore labs",
+      "to": "/labs"
+    }
   },
-  "sections": [
-    "latest-from-the-magazine",
-    "repository-notes"
-  ],
-  "futureBlocks": [
-    "HeroIntroBlock",
-    "FeaturedProjectBlock",
-    "BuildLogBlock",
-    "LabsTracksBlock",
-    "ActiveProjectsBlock",
-    "ThinkingArticlesBlock",
-    "ManifestoBlock",
-    "ParticipationCtaBlock",
-    "NewsletterBlock"
-  ]
+  "featuredProject": {
+    "mode": "manual",
+    "slug": "tennis-image-analysis"
+  },
+  "buildLog": {
+    "mode": "manual",
+    "limit": 3,
+    "manualItems": [
+      {
+        "date": "May 07",
+        "title": "Codex as an initial sandbox",
+        "meta": "Testing feasibility without starting from a cloud VM."
+      },
+      {
+        "date": "May 05",
+        "title": "Friction in autonomous agents",
+        "meta": "Editorial notes for a Gribo Digital post."
+      },
+      {
+        "date": "Apr 25",
+        "title": "Internet and server proximity",
+        "meta": "An essay about regional infrastructure and latency."
+      }
+    ]
+  },
+  "feed": {
+    "mode": "mixed",
+    "limit": 4,
+    "contentTypes": [
+      "blog",
+      "projects"
+    ],
+    "manualItems": []
+  },
+  "identity": {
+    "enabled": true,
+    "headline": "Build, reflect, archive, evolve.",
+    "description": "Gribo works like external memory: it records what is being built, what breaks, what changes and what eventually becomes a system.",
+    "ctaLabel": "Explore labs",
+    "ctaTarget": "/labs"
+  },
+  "sections": []
 }

@@ -5,6 +5,8 @@ defineProps<{
   category?: string
   date?: string
   status?: string
+  coverStyle?: string
+  accentColor?: string
 }>()
 </script>
 
@@ -28,7 +30,11 @@ defineProps<{
           </div>
         </div>
       </div>
-      <div class="hero-art" aria-hidden="true">
+      <div
+        class="hero-art"
+        :class="`style-${coverStyle || 'editorial-gradient'}`"
+        :style="{ '--cover-accent': `var(--${accentColor || 'coral'}, var(--coral))` }"
+      >
         <div class="terminal-window">
           <div class="terminal-header"><span /><span /><span /></div>
           <div class="terminal-body">
@@ -63,6 +69,7 @@ defineProps<{
 .hero-copy {
   display: flex;
   flex-direction: column;
+  gap: clamp(32px, 5vw, 72px);
   justify-content: space-between;
   padding: clamp(34px, 5vw, 62px);
 }
@@ -110,9 +117,21 @@ h1 {
   overflow: hidden;
   border-left: 1px solid var(--line);
   background:
-    radial-gradient(circle at 24% 18%, rgba(255, 121, 109, 0.9), transparent 28%),
+    radial-gradient(circle at 24% 18%, color-mix(in srgb, var(--cover-accent), transparent 12%), transparent 28%),
     radial-gradient(circle at 78% 82%, rgba(119, 103, 201, 0.7), transparent 30%),
     linear-gradient(145deg, #191714, #332b26);
+}
+
+.hero-art.style-soft-magazine {
+  background:
+    radial-gradient(circle at 20% 16%, color-mix(in srgb, var(--cover-accent), transparent 20%), transparent 32%),
+    radial-gradient(circle at 78% 82%, rgba(255, 247, 238, 0.32), transparent 30%),
+    linear-gradient(145deg, #3a302a, #171412);
+}
+
+.hero-art.style-minimal-dark,
+.hero-art.style-terminal-dark {
+  background: linear-gradient(145deg, #0f0e0d, #25211f);
 }
 
 .terminal-window {

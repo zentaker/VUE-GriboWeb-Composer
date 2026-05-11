@@ -8,6 +8,7 @@ declare module '@nuxt/content' {
     description?: string
     date?: string
     updatedAt?: string
+    archivedAt?: string
     author?: string
     category?: string
     type?: string
@@ -15,6 +16,14 @@ declare module '@nuxt/content' {
     lab?: string
     readingTime?: string
     tags: string[]
+    coverImage?: string
+    coverAlt?: string
+    coverCaption?: string
+    coverStyle?: string
+    coverPosition?: string
+    accentColor?: string
+    mediaRefs: string[]
+    blocks: unknown[]
     seoTitle?: string
     seoDescription?: string
     ogTitle?: string
@@ -44,6 +53,14 @@ declare module '@nuxt/content' {
     relatedBlogSlugs: string[]
     tags: string[]
     stack: string[]
+    coverImage?: string
+    coverAlt?: string
+    coverCaption?: string
+    coverStyle?: string
+    coverPosition?: string
+    accentColor?: string
+    mediaRefs: string[]
+    blocks: unknown[]
     seoTitle?: string
     seoDescription?: string
     ogTitle?: string
@@ -67,6 +84,14 @@ declare module '@nuxt/content' {
     order: number
     updatedAt?: string
     tags: string[]
+    coverImage?: string
+    coverAlt?: string
+    coverCaption?: string
+    coverStyle?: string
+    coverPosition?: string
+    accentColor?: string
+    mediaRefs: string[]
+    blocks: unknown[]
     seoTitle?: string
     seoDescription?: string
     ogTitle?: string

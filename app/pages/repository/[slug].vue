@@ -87,6 +87,10 @@ const explicitRelatedArticles = computed(() => {
   }))
 })
 const projectDescription = computed(() => displayProject.value?.summary ?? displayProject.value?.description ?? 'A living project dossier from the Gribo repository.')
+const projectBlocks = computed(() => Array.isArray(displayProject.value?.blocks)
+  ? displayProject.value.blocks.filter((block: any) => block?.visible !== false)
+  : []
+)
 const stackLine = computed(() => {
   const stack = displayProject.value?.stack
   if (Array.isArray(stack)) return stack.join(', ')
@@ -183,7 +187,8 @@ useGriboSeo(() => ({
               and which technical documents belong to it.
             </p>
             <article class="doc-body-card">
-              <ContentRenderer v-if="project" id="content" class="content-prose" :value="project" />
+              <ContentBlockRenderer v-if="projectBlocks.length" id="content" :blocks="projectBlocks" context="project" />
+              <ContentRenderer v-else-if="project" id="content" class="content-prose" :value="project" />
               <div v-else id="content" class="content-prose" v-html="previewHtml" />
             </article>
           </section>

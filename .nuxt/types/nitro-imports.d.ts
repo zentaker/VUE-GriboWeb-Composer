@@ -4,25 +4,42 @@ declare global {
   const __buildAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').buildAssetsURL
   const __publicAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').publicAssetsURL
   const adminContentRoots: typeof import('../../server/utils/safeContentPaths').adminContentRoots
+  const aggregateAnalytics: typeof import('../../server/utils/analytics').aggregateAnalytics
   const appendCorsHeaders: typeof import('../../node_modules/h3').appendCorsHeaders
   const appendCorsPreflightHeaders: typeof import('../../node_modules/h3').appendCorsPreflightHeaders
   const appendHeader: typeof import('../../node_modules/h3').appendHeader
   const appendHeaders: typeof import('../../node_modules/h3').appendHeaders
   const appendResponseHeader: typeof import('../../node_modules/h3').appendResponseHeader
   const appendResponseHeaders: typeof import('../../node_modules/h3').appendResponseHeaders
+  const applyImportAsCopy: typeof import('../../server/utils/portableBackups').applyImportAsCopy
+  const applyImportReplace: typeof import('../../server/utils/portableBackups').applyImportReplace
+  const assertAdminAuthenticated: typeof import('../../server/utils/adminAuth').assertAdminAuthenticated
   const assertAdminContentType: typeof import('../../server/utils/safeContentPaths').assertAdminContentType
+  const assertGoogleState: typeof import('../../server/utils/googleOAuth').assertGoogleState
   const assertMethod: typeof import('../../node_modules/h3').assertMethod
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedEventHandler
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedFunction
   const callNodeListener: typeof import('../../node_modules/h3').callNodeListener
+  const changeAdminUserPassword: typeof import('../../server/utils/adminUsers').changeAdminUserPassword
+  const clearAdminSessionCookie: typeof import('../../server/utils/adminAuth').clearAdminSessionCookie
+  const clearAnalyticsData: typeof import('../../server/utils/analytics').clearAnalyticsData
   const clearResponseHeaders: typeof import('../../node_modules/h3').clearResponseHeaders
   const clearSession: typeof import('../../node_modules/h3').clearSession
+  const collectBlogPackageFiles: typeof import('../../server/utils/portableBackups').collectBlogPackageFiles
+  const collectFullBackupFiles: typeof import('../../server/utils/portableBackups').collectFullBackupFiles
+  const collectProjectPackageFiles: typeof import('../../server/utils/portableBackups').collectProjectPackageFiles
+  const createAdminSessionToken: typeof import('../../server/utils/adminAuth').createAdminSessionToken
+  const createAdminUser: typeof import('../../server/utils/adminUsers').createAdminUser
   const createApp: typeof import('../../node_modules/h3').createApp
   const createAppEventHandler: typeof import('../../node_modules/h3').createAppEventHandler
+  const createDownloadResponse: typeof import('../../server/utils/portableBackups').createDownloadResponse
   const createError: typeof import('../../node_modules/h3').createError
   const createEvent: typeof import('../../node_modules/h3').createEvent
   const createEventStream: typeof import('../../node_modules/h3').createEventStream
+  const createGoogleState: typeof import('../../server/utils/googleOAuth').createGoogleState
+  const createPortablePackage: typeof import('../../server/utils/portableBackups').createPortablePackage
   const createRouter: typeof import('../../node_modules/h3').createRouter
+  const createSafetySnapshot: typeof import('../../server/utils/portableBackups').createSafetySnapshot
   const defaultContentType: typeof import('../../node_modules/h3').defaultContentType
   const defineAppConfig: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/config').defineAppConfig
   const defineCachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').defineCachedEventHandler
@@ -41,15 +58,23 @@ declare global {
   const defineWebSocket: typeof import('../../node_modules/h3').defineWebSocket
   const defineWebSocketHandler: typeof import('../../node_modules/h3').defineWebSocketHandler
   const deleteCookie: typeof import('../../node_modules/h3').deleteCookie
+  const detectImportConflicts: typeof import('../../server/utils/portableBackups').detectImportConflicts
   const dynamicEventHandler: typeof import('../../node_modules/h3').dynamicEventHandler
   const eventHandler: typeof import('../../node_modules/h3').eventHandler
+  const exchangeGoogleCode: typeof import('../../server/utils/googleOAuth').exchangeGoogleCode
+  const exportAnalytics: typeof import('../../server/utils/analytics').exportAnalytics
+  const fetchGoogleUser: typeof import('../../server/utils/googleOAuth').fetchGoogleUser
   const fetchWithEvent: typeof import('../../node_modules/h3').fetchWithEvent
+  const findGoogleAdminUser: typeof import('../../server/utils/adminUsers').findGoogleAdminUser
+  const findPasswordAdminUser: typeof import('../../server/utils/adminUsers').findPasswordAdminUser
   const fromNodeMiddleware: typeof import('../../node_modules/h3').fromNodeMiddleware
   const fromPlainHandler: typeof import('../../node_modules/h3').fromPlainHandler
   const fromWebHandler: typeof import('../../node_modules/h3').fromWebHandler
+  const getAdminAuthConfig: typeof import('../../server/utils/adminAuth').getAdminAuthConfig
   const getContentDirectory: typeof import('../../server/utils/safeContentPaths').getContentDirectory
   const getContentPublicPath: typeof import('../../server/utils/safeContentPaths').getContentPublicPath
   const getCookie: typeof import('../../node_modules/h3').getCookie
+  const getGoogleOAuthConfig: typeof import('../../server/utils/googleOAuth').getGoogleOAuthConfig
   const getHeader: typeof import('../../node_modules/h3').getHeader
   const getHeaders: typeof import('../../node_modules/h3').getHeaders
   const getMethod: typeof import('../../node_modules/h3').getMethod
@@ -76,6 +101,7 @@ declare global {
   const getValidatedRouterParams: typeof import('../../node_modules/h3').getValidatedRouterParams
   const handleCacheHeaders: typeof import('../../node_modules/h3').handleCacheHeaders
   const handleCors: typeof import('../../node_modules/h3').handleCors
+  const hashAdminPassword: typeof import('../../server/utils/adminUsers').hashAdminPassword
   const isCorsOriginAllowed: typeof import('../../node_modules/h3').isCorsOriginAllowed
   const isError: typeof import('../../node_modules/h3').isError
   const isEvent: typeof import('../../node_modules/h3').isEvent
@@ -86,7 +112,10 @@ declare global {
   const isWebResponse: typeof import('../../node_modules/h3').isWebResponse
   const lazyEventHandler: typeof import('../../node_modules/h3').lazyEventHandler
   const listAdminMarkdownFiles: typeof import('../../server/utils/safeContentPaths').listAdminMarkdownFiles
+  const listSafetySnapshots: typeof import('../../server/utils/portableBackups').listSafetySnapshots
+  const markAdminUserLogin: typeof import('../../server/utils/adminUsers').markAdminUserLogin
   const nitroPlugin: typeof import('../../node_modules/nitropack/dist/runtime/internal/plugin').nitroPlugin
+  const normalizeHomeLayout: typeof import('../../server/utils/homeLayout').normalizeHomeLayout
   const parseCookies: typeof import('../../node_modules/h3').parseCookies
   const parseMarkdown: typeof import('../../node_modules/@nuxtjs/mdc/dist/runtime/parser').parseMarkdown
   const parseMarkdownContent: typeof import('../../server/utils/markdownContent').parseMarkdownContent
@@ -96,12 +125,17 @@ declare global {
   const queryCollectionItemSurroundings: typeof import('../../node_modules/@nuxt/content/dist/runtime/nitro').queryCollectionItemSurroundings
   const queryCollectionNavigation: typeof import('../../node_modules/@nuxt/content/dist/runtime/nitro').queryCollectionNavigation
   const queryCollectionSearchSections: typeof import('../../node_modules/@nuxt/content/dist/runtime/nitro').queryCollectionSearchSections
+  const readAdminSession: typeof import('../../server/utils/adminAuth').readAdminSession
+  const readAdminUsers: typeof import('../../server/utils/adminUsers').readAdminUsers
+  const readAnalyticsEvents: typeof import('../../server/utils/analytics').readAnalyticsEvents
   const readBody: typeof import('../../node_modules/h3').readBody
   const readFormData: typeof import('../../node_modules/h3').readFormData
+  const readHomeLayout: typeof import('../../server/utils/homeLayout').readHomeLayout
   const readMarkdownFile: typeof import('../../server/utils/markdownContent').readMarkdownFile
   const readMultipartFormData: typeof import('../../node_modules/h3').readMultipartFormData
   const readRawBody: typeof import('../../node_modules/h3').readRawBody
   const readValidatedBody: typeof import('../../node_modules/h3').readValidatedBody
+  const recordAnalyticsEvent: typeof import('../../server/utils/analytics').recordAnalyticsEvent
   const removeResponseHeader: typeof import('../../node_modules/h3').removeResponseHeader
   const resolveAdminContentFile: typeof import('../../server/utils/safeContentPaths').resolveAdminContentFile
   const resolveAdminCreatePath: typeof import('../../server/utils/safeContentPaths').resolveAdminCreatePath
@@ -118,6 +152,8 @@ declare global {
   const sendStream: typeof import('../../node_modules/h3').sendStream
   const sendWebResponse: typeof import('../../node_modules/h3').sendWebResponse
   const serveStatic: typeof import('../../node_modules/h3').serveStatic
+  const setAdminSessionCookie: typeof import('../../server/utils/adminAuth').setAdminSessionCookie
+  const setAdminUserStatus: typeof import('../../server/utils/adminUsers').setAdminUserStatus
   const setCookie: typeof import('../../node_modules/h3').setCookie
   const setHeader: typeof import('../../node_modules/h3').setHeader
   const setHeaders: typeof import('../../node_modules/h3').setHeaders
@@ -131,10 +167,12 @@ declare global {
   const toEventHandler: typeof import('../../node_modules/h3').toEventHandler
   const toNodeListener: typeof import('../../node_modules/h3').toNodeListener
   const toPlainHandler: typeof import('../../node_modules/h3').toPlainHandler
+  const toPublicAdminUser: typeof import('../../server/utils/adminUsers').toPublicAdminUser
   const toWebHandler: typeof import('../../node_modules/h3').toWebHandler
   const toWebRequest: typeof import('../../node_modules/h3').toWebRequest
   const todayIsoDate: typeof import('../../server/utils/markdownContent').todayIsoDate
   const unsealSession: typeof import('../../node_modules/h3').unsealSession
+  const updateAdminUser: typeof import('../../server/utils/adminUsers').updateAdminUser
   const updateSession: typeof import('../../node_modules/h3').updateSession
   const useAppConfig: typeof import('../../node_modules/nitropack/dist/runtime/internal/config').useAppConfig
   const useBase: typeof import('../../node_modules/h3').useBase
@@ -143,7 +181,15 @@ declare global {
   const useRuntimeConfig: typeof import('../../node_modules/nitropack/dist/runtime/internal/config').useRuntimeConfig
   const useSession: typeof import('../../node_modules/h3').useSession
   const useStorage: typeof import('../../node_modules/nitropack/dist/runtime/internal/storage').useStorage
+  const validateHomeLayout: typeof import('../../server/utils/homeLayout').validateHomeLayout
+  const validatePackageManifest: typeof import('../../server/utils/portableBackups').validatePackageManifest
+  const validatePortablePackage: typeof import('../../server/utils/portableBackups').validatePortablePackage
+  const validatePortablePath: typeof import('../../server/utils/portableBackups').validatePortablePath
+  const verifyAdminCredentials: typeof import('../../server/utils/adminAuth').verifyAdminCredentials
+  const verifyAdminPassword: typeof import('../../server/utils/adminUsers').verifyAdminPassword
+  const writeAdminUsers: typeof import('../../server/utils/adminUsers').writeAdminUsers
   const writeEarlyHints: typeof import('../../node_modules/h3').writeEarlyHints
+  const writeHomeLayout: typeof import('../../server/utils/homeLayout').writeHomeLayout
   const writeMarkdownFile: typeof import('../../server/utils/markdownContent').writeMarkdownFile
 }
 // for type re-export
@@ -152,8 +198,20 @@ declare global {
   export type { EventHandler, EventHandlerRequest, EventHandlerResponse, EventHandlerObject, H3EventContext } from '../../node_modules/h3'
   import('../../node_modules/h3')
   // @ts-ignore
+  export type { AdminUserProvider, AdminUserStatus, AdminUser, PublicAdminUser } from '../../server/utils/adminUsers'
+  import('../../server/utils/adminUsers')
+  // @ts-ignore
+  export type { AnalyticsEventType, AnalyticsContentType, AnalyticsEvent } from '../../server/utils/analytics'
+  import('../../server/utils/analytics')
+  // @ts-ignore
+  export type { HomeLayoutMode, HomeLayout } from '../../server/utils/homeLayout'
+  import('../../server/utils/homeLayout')
+  // @ts-ignore
   export type { MarkdownFrontmatter } from '../../server/utils/markdownContent'
   import('../../server/utils/markdownContent')
+  // @ts-ignore
+  export type { GriboPackageType, GriboFileEncoding, GriboImportMode, GriboPortableFile, GriboPortableManifest, GriboPortablePackage } from '../../server/utils/portableBackups'
+  import('../../server/utils/portableBackups')
   // @ts-ignore
   export type { AdminContentType } from '../../server/utils/safeContentPaths'
   import('../../server/utils/safeContentPaths')
@@ -175,5 +233,11 @@ export { defineAppConfig } from 'C:/Users/MSI/Desktop/GriboWeb/node_modules/@nux
 export { queryCollection, queryCollectionSearchSections, queryCollectionNavigation, queryCollectionItemSurroundings } from 'C:/Users/MSI/Desktop/GriboWeb/node_modules/@nuxt/content/dist/runtime/nitro';
 export { parseMarkdown } from 'C:/Users/MSI/Desktop/GriboWeb/node_modules/@nuxtjs/mdc/dist/runtime/parser';
 export { stringifyMarkdown } from 'C:/Users/MSI/Desktop/GriboWeb/node_modules/@nuxtjs/mdc/dist/runtime/stringify';
+export { getAdminAuthConfig, verifyAdminCredentials, createAdminSessionToken, readAdminSession, setAdminSessionCookie, clearAdminSessionCookie, assertAdminAuthenticated } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/adminAuth';
+export { readAdminUsers, writeAdminUsers, toPublicAdminUser, hashAdminPassword, verifyAdminPassword, createAdminUser, updateAdminUser, setAdminUserStatus, changeAdminUserPassword, findPasswordAdminUser, findGoogleAdminUser, markAdminUserLogin } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/adminUsers';
+export { recordAnalyticsEvent, readAnalyticsEvents, aggregateAnalytics, exportAnalytics, clearAnalyticsData } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/analytics';
+export { getGoogleOAuthConfig, createGoogleState, assertGoogleState, exchangeGoogleCode, fetchGoogleUser } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/googleOAuth';
+export { normalizeHomeLayout, validateHomeLayout, readHomeLayout, writeHomeLayout } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/homeLayout';
 export { parseMarkdownContent, stringifyMarkdownContent, readMarkdownFile, writeMarkdownFile, todayIsoDate } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/markdownContent';
+export { validatePortablePath, validatePackageManifest, validatePortablePackage, collectFullBackupFiles, collectProjectPackageFiles, collectBlogPackageFiles, createPortablePackage, createDownloadResponse, detectImportConflicts, createSafetySnapshot, applyImportAsCopy, applyImportReplace, listSafetySnapshots } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/portableBackups';
 export { adminContentRoots, assertAdminContentType, slugifyContentTitle, resolveAdminContentFile, resolveAdminCreatePath, listAdminMarkdownFiles, getContentPublicPath, getContentDirectory } from 'C:/Users/MSI/Desktop/GriboWeb/server/utils/safeContentPaths';

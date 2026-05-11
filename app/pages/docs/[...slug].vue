@@ -47,6 +47,10 @@ const previewHtml = computed(() => previewBody.value
 
 const title = computed(() => displayDoc.value?.title ?? 'Docs placeholder')
 const description = computed(() => displayDoc.value?.description ?? 'This route is wired for Nuxt Content documentation pages.')
+const docBlocks = computed(() => Array.isArray(displayDoc.value?.blocks)
+  ? displayDoc.value.blocks.filter((block: any) => block?.visible !== false)
+  : []
+)
 const docsFolder = computed(() => displayDoc.value?.docsFolder || slug.value.split('/')[0])
 const { data: siblingDocs } = await useAsyncData(`docs-siblings-${slug.value}`, async () => {
   return await queryCollection('docs').all()
@@ -155,7 +159,8 @@ useGriboSeo(() => ({
       </section>
 
       <section id="content" class="docs-content-card">
-        <ContentRenderer v-if="doc" class="content-prose" :value="doc" />
+        <ContentBlockRenderer v-if="docBlocks.length" :blocks="docBlocks" context="docs" />
+        <ContentRenderer v-else-if="doc" class="content-prose" :value="doc" />
         <div v-else class="content-prose" v-html="previewHtml" />
       </section>
 
