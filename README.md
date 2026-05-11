@@ -1,6 +1,6 @@
 # Gribo Digital
 
-Nuxt 4 foundation for Gribo Digital: an editorial laboratory for digital systems, cultural infrastructure, and living research.
+Nuxt 4 foundation for Gribo Digital: an editorial laboratory for digital systems, cultural infrastructure, and living research.test
 
 ## Install
 
