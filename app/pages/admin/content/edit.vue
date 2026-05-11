@@ -1006,6 +1006,25 @@ onBeforeUnmount(() => {
                     </select>
                   </label>
                 </div>
+
+                <div v-if="isBlogComposer" class="inspector-card blog-hero-preview-card">
+                  <h3>Frontend preview</h3>
+                  <div class="preview-card">
+                    <div class="preview-header"><span class="dot" /><span class="dot" /><span class="dot" /></div>
+                    <div class="frontend-preview">
+                      <BlogComposerPreview
+                        :title="frontmatter.title || 'Untitled content'"
+                        :description="frontmatter.description || frontmatter.excerpt || 'Editorial preview surface.'"
+                        :category="frontmatter.category || 'Field note'"
+                        :date="composerPreviewDate"
+                        :status="frontmatter.status || 'draft'"
+                        :cover-style="frontmatter.coverStyle || 'editorial-gradient'"
+                        :accent-color="frontmatter.accentColor || 'coral'"
+                        :blocks="visibleBlocks"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <article v-if="!editableBlocks.length" class="empty-canvas">
@@ -1438,7 +1457,7 @@ onBeforeUnmount(() => {
         </template>
       </div>
 
-      <aside class="composer-inspector">
+      <aside class="composer-inspector" :class="{ 'blog-inspector-flow': isBlogComposer }">
         <div class="inspector-card">
           <h3>Block inspector</h3>
           <template v-if="selectedBlock">
@@ -1451,7 +1470,7 @@ onBeforeUnmount(() => {
           <p v-else>Select a block to edit its properties, visibility and output mapping.</p>
         </div>
 
-        <div class="inspector-card">
+        <div v-if="!isBlogComposer" class="inspector-card">
           <h3>Frontend preview</h3>
           <div class="preview-card">
             <div class="preview-header"><span class="dot" /><span class="dot" /><span class="dot" /></div>
@@ -2459,7 +2478,7 @@ textarea {
 }
 
 .project-form-top.blog-hero-options {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
 }
 
 .cover-upload,
@@ -2809,6 +2828,14 @@ textarea {
 .composer-inspector {
   position: sticky;
   top: calc(var(--topbar) + 22px);
+}
+
+.composer-inspector.blog-inspector-flow {
+  position: sticky;
+}
+
+.blog-hero-preview-card {
+  align-self: start;
 }
 
 .inspector-card {

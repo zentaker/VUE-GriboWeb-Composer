@@ -149,6 +149,12 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Blog Composer preview keeps hero in two-column miniature mode.
 - [x] Blog Composer preview prioritizes visual fidelity over text readability.
 - [x] Blog Composer preview shows the full hero without bottom clipping.
+- [x] Blog Composer Frontend Preview does not remain sticky through body block editing.
+- [x] Page Outline appears while editing body blocks.
+- [x] Right rail scroll behavior supports the editor workflow.
+- [x] Blog Composer right rail treats Frontend Preview as contextual to Blog Hero Design.
+- [x] Page Outline appears by the first body block.
+- [x] Frontend Preview does not remain dominant during body block editing.
 - [x] Public ArticleHero remains unchanged.
 - [x] Public blog page still renders body blocks.
 

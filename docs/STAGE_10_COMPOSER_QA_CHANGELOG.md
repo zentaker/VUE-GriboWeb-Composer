@@ -162,6 +162,52 @@ Acceptance:
 Status:
 - Completed.
 
+## Completed - Blog Composer Right Rail Sticky Behavior Adjusted
+
+Problem:
+- The right inspector column kept the Frontend Preview sticky for too long, delaying access to Page Outline while editing body blocks.
+
+Decision:
+- The hero preview should be contextually useful near Blog Hero Design, but it should scroll away naturally once the editor reaches body blocks.
+
+Implementation summary:
+- Adjusted right rail sticky/scroll behavior for Blog Composer.
+- Allowed Page Outline to appear earlier during body block editing.
+- Kept the hero preview itself unchanged.
+
+Acceptance:
+- Frontend Preview is visible near Blog Hero Design.
+- Frontend Preview does not remain stuck through several body blocks.
+- Page Outline appears earlier and is usable while editing blocks.
+- Blog Composer layout remains stable.
+
+Status:
+- Completed.
+
+## Completed - Blog Composer Right Rail Context Zones
+
+Problem:
+- The right rail kept Frontend Preview visible too far into body block editing. This made Page Outline appear too late.
+
+Decision:
+- Frontend Preview belongs to Blog Hero Design. Page Outline belongs to body block editing.
+
+Implementation summary:
+- Moved the Blog Composer Frontend Preview into the Blog Hero Design zone.
+- Removed the Blog Composer Frontend Preview from the global right inspector rail.
+- Made Page Outline visible earlier while editing body blocks.
+- Kept `BlogComposerPreview` visual scale unchanged.
+
+Acceptance:
+- Frontend Preview is visible around Blog Hero Design.
+- Frontend Preview is not visible or no longer dominant when editing the first body block.
+- Page Outline appears by the first Text Block.
+- Page Outline remains usable through Image/Text body blocks.
+- Public blog view remains unchanged.
+
+Status:
+- Completed.
+
 ## Pending - Quote / Citation Block
 
 Problem:
