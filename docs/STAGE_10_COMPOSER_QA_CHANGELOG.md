@@ -208,6 +208,29 @@ Acceptance:
 Status:
 - Completed.
 
+## Completed - Blog Composer Block Inspector Removed From Right Rail
+
+Problem:
+- The Blog Composer right rail showed a Block Inspector card that duplicated information already visible in the editable block cards and Page Outline.
+
+Decision:
+- Remove the Block Inspector card from the Blog Composer right rail so Page Outline becomes the primary navigation surface.
+
+Implementation summary:
+- Removed the redundant Block Inspector card from Blog Composer right rail.
+- Kept block selection/editor behavior intact.
+- Kept Page Outline as the first visible right rail card.
+
+Acceptance:
+- Block Inspector no longer appears in Blog Composer.
+- Page Outline appears first in the right rail.
+- Block selection still works.
+- Block controls still work.
+- Project/Docs Composer remain unchanged.
+
+Status:
+- Completed.
+
 ## Pending - Quote / Citation Block
 
 Problem:

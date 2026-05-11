@@ -155,6 +155,9 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Blog Composer right rail treats Frontend Preview as contextual to Blog Hero Design.
 - [x] Page Outline appears by the first body block.
 - [x] Frontend Preview does not remain dominant during body block editing.
+- [x] Blog Composer right rail does not show redundant Block Inspector.
+- [x] Blog Composer Page Outline is the first right rail card.
+- [x] Removing Block Inspector does not break block selection or block controls.
 - [x] Public ArticleHero remains unchanged.
 - [x] Public blog page still renders body blocks.
 

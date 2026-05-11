@@ -1458,7 +1458,7 @@ onBeforeUnmount(() => {
       </div>
 
       <aside class="composer-inspector" :class="{ 'blog-inspector-flow': isBlogComposer }">
-        <div class="inspector-card">
+        <div v-if="!isBlogComposer" class="inspector-card">
           <h3>Block inspector</h3>
           <template v-if="selectedBlock">
             <p>{{ blockUiTitle(selectedBlock) }} - {{ selectedBlock.type }} - {{ selectedBlock.visible ? 'Visible' : 'Hidden' }}</p>

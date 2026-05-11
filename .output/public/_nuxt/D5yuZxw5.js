@@ -1,0 +1,1 @@
+import{_ as n,o as e,c as _}from"./D9wwSW1o.js";const a={},c={class:"brand-mark","aria-hidden":"true"};function r(s,t){return e(),_("span",c)}const d=Object.assign(n(a,[["render",r]]),{__name:"BrandMark"});export{d as _};
