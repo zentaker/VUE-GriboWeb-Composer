@@ -3069,7 +3069,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "blog": "v3.5.0--7iDokvRAZj8pNnUXeoLcIfczBheBvepYavTLsxBZwMY",
+  "blog": "v3.5.0--GteaSvwYHKyxD5EEDobClniGadVeIWaaOC1UrMqvbGI",
   "projects": "v3.5.0--K-_qTlYY7fs1cktyvhcWeTfJBkgvU4uwHC7ooe7F_TM",
   "docs": "v3.5.0--kZH6Mb4GN4oPi-f9PDiaWR6b3or89_H2-GGRJgvAjng",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",
@@ -5655,11 +5655,20 @@ A research line for gathering the essays, prototypes, documentation, and questio
 A draft note for the Gribo archive. Shape the argument, keep the friction visible, and let the system explain what it is becoming.
 `;
 }
+function isStaleBlogSlug$1(value) {
+  const slug = String(value).trim();
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+}
+function hasRealBlogTitle$1(value) {
+  const slug = slugifyContentTitle(String(value || ""));
+  return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
+}
 const create_post$2 = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const contentType = assertAdminContentType(body.contentType);
   const title = String(body.title || "Untitled draft");
-  const slug = slugifyContentTitle(String(body.slug || title));
+  const providedSlug = slugifyContentTitle(String(body.slug || title));
+  const slug = contentType === "blog" && isStaleBlogSlug$1(providedSlug) && hasRealBlogTitle$1(title) ? slugifyContentTitle(title) : providedSlug;
   const resolved = resolveAdminCreatePath(contentType, slug, body.docsFolder || body.folder);
   try {
     await access(resolved.absolutePath);
@@ -5828,7 +5837,8 @@ const save_post$2 = defineEventHandler(async (event) => {
   const incomingFrontmatter = { ...(_a = body.frontmatter) != null ? _a : {} };
   const title = String((_b = incomingFrontmatter.title) != null ? _b : "Untitled");
   incomingFrontmatter.title = title;
-  incomingFrontmatter.slug = incomingFrontmatter.slug || slugifyContentTitle(title);
+  const incomingSlug = String(incomingFrontmatter.slug || "");
+  incomingFrontmatter.slug = resolved.contentType === "blog" && isStaleBlogSlug(incomingSlug) && hasRealBlogTitle(title) ? slugifyContentTitle(title) : incomingSlug || slugifyContentTitle(title);
   incomingFrontmatter.updatedAt = todayIsoDate();
   await writeMarkdownFile(resolved.absolutePath, incomingFrontmatter, String((_c = body.body) != null ? _c : ""));
   return {
@@ -5841,6 +5851,14 @@ const save_post$2 = defineEventHandler(async (event) => {
     }
   };
 });
+function isStaleBlogSlug(value) {
+  const slug = String(value || "").trim();
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+}
+function hasRealBlogTitle(value) {
+  const slug = slugifyContentTitle(String(value || ""));
+  return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
+}
 
 const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,

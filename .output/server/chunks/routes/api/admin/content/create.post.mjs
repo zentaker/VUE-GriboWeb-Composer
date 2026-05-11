@@ -118,11 +118,20 @@ A research line for gathering the essays, prototypes, documentation, and questio
 A draft note for the Gribo archive. Shape the argument, keep the friction visible, and let the system explain what it is becoming.
 `;
 }
+function isStaleBlogSlug(value) {
+  const slug = String(value).trim();
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+}
+function hasRealBlogTitle(value) {
+  const slug = slugifyContentTitle(String(value || ""));
+  return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
+}
 const create_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const contentType = assertAdminContentType(body.contentType);
   const title = String(body.title || "Untitled draft");
-  const slug = slugifyContentTitle(String(body.slug || title));
+  const providedSlug = slugifyContentTitle(String(body.slug || title));
+  const slug = contentType === "blog" && isStaleBlogSlug(providedSlug) && hasRealBlogTitle(title) ? slugifyContentTitle(title) : providedSlug;
   const resolved = resolveAdminCreatePath(contentType, slug, body.docsFolder || body.folder);
   try {
     await access(resolved.absolutePath);

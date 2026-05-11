@@ -5,7 +5,10 @@ export default defineEventHandler(async (event) => {
   const title = String(incomingFrontmatter.title ?? 'Untitled')
 
   incomingFrontmatter.title = title
-  incomingFrontmatter.slug = incomingFrontmatter.slug || slugifyContentTitle(title)
+  const incomingSlug = String(incomingFrontmatter.slug || '')
+  incomingFrontmatter.slug = resolved.contentType === 'blog' && isStaleBlogSlug(incomingSlug) && hasRealBlogTitle(title)
+    ? slugifyContentTitle(title)
+    : incomingSlug || slugifyContentTitle(title)
   incomingFrontmatter.updatedAt = todayIsoDate()
 
   await writeMarkdownFile(resolved.absolutePath, incomingFrontmatter, String(body.body ?? ''))
@@ -20,3 +23,20 @@ export default defineEventHandler(async (event) => {
     }
   }
 })
+
+function isStaleBlogSlug(value: string) {
+  const slug = String(value || '').trim()
+  return !slug
+    || /^untitled-blog-entry-\d+$/.test(slug)
+    || /^untitled-draft-\d+$/.test(slug)
+    || /^draft-\d+$/.test(slug)
+}
+
+function hasRealBlogTitle(value: string) {
+  const slug = slugifyContentTitle(String(value || ''))
+  return Boolean(slug)
+    && slug !== 'untitled-blog-entry'
+    && slug !== 'untitled-draft'
+    && slug !== 'untitled'
+    && slug !== 'draft'
+}

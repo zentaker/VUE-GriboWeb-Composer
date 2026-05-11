@@ -109,11 +109,31 @@ function createSeedBody(contentType: AdminContentType, title: string) {
   return `# ${title}\n\nA draft note for the Gribo archive. Shape the argument, keep the friction visible, and let the system explain what it is becoming.\n`
 }
 
+function isStaleBlogSlug(value: string) {
+  const slug = String(value || '').trim()
+  return !slug
+    || /^untitled-blog-entry-\d+$/.test(slug)
+    || /^untitled-draft-\d+$/.test(slug)
+    || /^draft-\d+$/.test(slug)
+}
+
+function hasRealBlogTitle(value: string) {
+  const slug = slugifyContentTitle(String(value || ''))
+  return Boolean(slug)
+    && slug !== 'untitled-blog-entry'
+    && slug !== 'untitled-draft'
+    && slug !== 'untitled'
+    && slug !== 'draft'
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const contentType = assertAdminContentType(body.contentType)
   const title = String(body.title || 'Untitled draft')
-  const slug = slugifyContentTitle(String(body.slug || title))
+  const providedSlug = slugifyContentTitle(String(body.slug || title))
+  const slug = contentType === 'blog' && isStaleBlogSlug(providedSlug) && hasRealBlogTitle(title)
+    ? slugifyContentTitle(title)
+    : providedSlug
   const resolved = resolveAdminCreatePath(contentType, slug, body.docsFolder || body.folder)
 
   try {

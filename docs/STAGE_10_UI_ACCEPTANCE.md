@@ -129,6 +129,13 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Text Block remains intended for rich text body.
 - [x] Page Outline uses internal title or UI-only fallback correctly.
 
+## Blog Slug Generation
+
+- [x] Blog slug auto-updates from title before manual override.
+- [x] Timestamp fallback slug is replaced on save when the blog title is real.
+- [x] Manual slug override is respected after title changes.
+- [x] Project, docs, and labs slug behavior is unaffected.
+
 ## No Regression
 
 - [x] Home Composer remains separate.

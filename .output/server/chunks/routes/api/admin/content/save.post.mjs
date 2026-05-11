@@ -17,7 +17,8 @@ const save_post = defineEventHandler(async (event) => {
   const incomingFrontmatter = { ...(_a = body.frontmatter) != null ? _a : {} };
   const title = String((_b = incomingFrontmatter.title) != null ? _b : "Untitled");
   incomingFrontmatter.title = title;
-  incomingFrontmatter.slug = incomingFrontmatter.slug || slugifyContentTitle(title);
+  const incomingSlug = String(incomingFrontmatter.slug || "");
+  incomingFrontmatter.slug = resolved.contentType === "blog" && isStaleBlogSlug(incomingSlug) && hasRealBlogTitle(title) ? slugifyContentTitle(title) : incomingSlug || slugifyContentTitle(title);
   incomingFrontmatter.updatedAt = todayIsoDate();
   await writeMarkdownFile(resolved.absolutePath, incomingFrontmatter, String((_c = body.body) != null ? _c : ""));
   return {
@@ -30,6 +31,14 @@ const save_post = defineEventHandler(async (event) => {
     }
   };
 });
+function isStaleBlogSlug(value) {
+  const slug = String(value || "").trim();
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+}
+function hasRealBlogTitle(value) {
+  const slug = slugifyContentTitle(String(value || ""));
+  return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
+}
 
 export { save_post as default };
 //# sourceMappingURL=save.post.mjs.map
