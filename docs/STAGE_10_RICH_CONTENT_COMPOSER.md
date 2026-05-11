@@ -110,6 +110,16 @@ The Blog Composer received a focused UI/product pass before real content populat
 - `ArticleHero` now keeps more breathing room between description copy and byline metadata.
 - For Text Sections, `block.title` is internal/editor-only; public rendering uses optional `block.data.heading` and `block.data.body`.
 
+## Block Semantics Normalization
+
+- `block.title` is an internal editor label for composer cards, Page Outline, inspector context, and content organization.
+- `block.title` must not render publicly as article copy, kicker, heading, image label, caption, or fallback text.
+- Text Blocks render visible content from `block.data.body`.
+- `block.data.heading` remains a legacy optional visible heading until a dedicated Heading/Title Block is added.
+- Image Blocks render only `imageUrl`, `alt`, `caption`, and `layout`; their internal title is not used as public alt text or visible copy.
+- Empty `block.title` values can show UI-only fallbacks such as `Untitled text block`, but those fallbacks are not saved as content.
+- Heading Block / Title Block remains pending for the next micro-fix.
+
 ## Public Rendering
 
 `ContentBlockRenderer` renders blocks publicly for:

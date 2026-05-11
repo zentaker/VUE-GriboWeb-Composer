@@ -56,12 +56,12 @@ async function copyCode(code?: string) {
     <section v-for="block in visibleBlocks" :key="block.id || block.title" class="rich-block" :class="`block-${block.type || 'text'}`">
       <template v-if="(block.type || 'text') === 'text'">
         <h2 v-if="block.data?.heading">{{ block.data.heading }}</h2>
-        <p class="block-copy">{{ block.data?.body }}</p>
+        <p v-if="block.data?.body" class="block-copy">{{ block.data.body }}</p>
       </template>
 
       <template v-else-if="block.type === 'image'">
         <figure :class="['image-figure', imageLayout(block)]">
-          <img v-if="block.data?.imageUrl" :src="block.data.imageUrl" :alt="block.data?.alt || block.title || ''">
+          <img v-if="block.data?.imageUrl" :src="block.data.imageUrl" :alt="block.data?.alt || ''">
           <div v-else class="image-placeholder">Image block</div>
           <figcaption v-if="block.data?.caption">{{ block.data.caption }}</figcaption>
         </figure>

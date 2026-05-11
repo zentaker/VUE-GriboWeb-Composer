@@ -107,6 +107,17 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Captions stay centered.
 - [x] Save feedback appears.
 
+## Block Semantics Normalization
+
+- [x] `block.title` appears in editor/Page Outline only.
+- [x] `block.title` does not render publicly for text blocks.
+- [x] `block.title` does not render publicly for image blocks.
+- [x] Text block with heading renders heading + body.
+- [x] Text block without heading renders only body.
+- [x] Empty `block.title` is not auto-filled on save.
+- [x] Image caption persists after save and refresh.
+- [x] Image caption renders publicly.
+
 ## No Regression
 
 - [x] Home Composer remains separate.

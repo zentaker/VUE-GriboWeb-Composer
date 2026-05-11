@@ -157,7 +157,7 @@ function blockId() {
 
 function defaultBlockTitle(type: RichContentBlock['type']) {
   const titles: Record<RichContentBlock['type'], string> = {
-    text: 'Text Section',
+    text: 'Text Block',
     image: 'Image Block',
     code: 'Code Block',
     callout: 'Callout Block',
@@ -863,7 +863,7 @@ onBeforeUnmount(() => {
                 @click="addBlock(type)"
               >
                 <span class="block-icon">{{ defaultBlockTitle(type).charAt(0) }}</span>
-                <span><strong>{{ defaultBlockTitle(type) }}</strong><small>{{ type === 'text' ? 'Heading + rich text' : type === 'image' ? 'Media Library + caption' : type === 'code' ? 'Language + title' : type === 'callout' ? 'Info, warning, note' : type === 'table' ? 'Rows + columns' : 'Color + message' }}</small></span>
+                <span><strong>{{ defaultBlockTitle(type) }}</strong><small>{{ type === 'text' ? 'Rich text body' : type === 'image' ? 'Media Library + caption' : type === 'code' ? 'Language + title' : type === 'callout' ? 'Info, warning, note' : type === 'table' ? 'Rows + columns' : 'Color + message' }}</small></span>
               </button>
               <button v-for="type in laterBlockTypes" :key="type" class="block-button disabled" type="button" disabled>
                 <span class="block-icon">{{ defaultBlockTitle(type).charAt(0) }}</span>
@@ -923,7 +923,7 @@ onBeforeUnmount(() => {
 
               <article v-if="!editableBlocks.length" class="empty-canvas">
                 <strong>No blocks yet.</strong>
-                <p>Add a Text Section, Image Block, Code Block, Callout, Table or Banner from the block library.</p>
+                <p>Add a Text Block, Image Block, Code Block, Callout, Table or Banner from the block library.</p>
               </article>
 
               <article
@@ -960,8 +960,8 @@ onBeforeUnmount(() => {
 
                     <template v-if="block.type === 'text'">
                       <label>
-                        Heading
-                        <input v-model="block.data.heading" type="text">
+                        Heading <small>(optional legacy)</small>
+                        <input v-model="block.data.heading" type="text" placeholder="Optional visible heading">
                       </label>
                       <label class="span-2">
                         Body

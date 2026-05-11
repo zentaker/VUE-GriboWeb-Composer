@@ -3069,7 +3069,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "blog": "v3.5.0--8lTHdpM4p-UU1uJdki0s4ysQliAYimllTRTnjrs2NtE",
+  "blog": "v3.5.0--7iDokvRAZj8pNnUXeoLcIfczBheBvepYavTLsxBZwMY",
   "projects": "v3.5.0--K-_qTlYY7fs1cktyvhcWeTfJBkgvU4uwHC7ooe7F_TM",
   "docs": "v3.5.0--kZH6Mb4GN4oPi-f9PDiaWR6b3or89_H2-GGRJgvAjng",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",
