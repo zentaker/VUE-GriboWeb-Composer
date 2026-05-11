@@ -5656,19 +5656,37 @@ A draft note for the Gribo archive. Shape the argument, keep the friction visibl
 `;
 }
 function isStaleBlogSlug$1(value) {
-  const slug = String(value).trim();
-  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+  const slug = String(value || "").trim();
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug) || slug === "untitled-blog-entry" || slug === "untitled-draft" || slug === "untitled" || slug === "draft";
 }
 function hasRealBlogTitle$1(value) {
-  const slug = slugifyContentTitle(String(value || ""));
+  const slug = slugifyBlogTitle$1(String(value || ""));
   return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
+}
+function slugTimestamp$1() {
+  return (/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "").slice(0, 14);
+}
+function slugifyBlogTitle$1(value, fallback = "") {
+  const words = String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").split("-").filter(Boolean).slice(0, 8);
+  const selected = [];
+  for (const word of words) {
+    const candidate = [...selected, word].join("-");
+    if (candidate.length > 72) break;
+    selected.push(word);
+  }
+  return selected.join("-") || fallback;
+}
+function resolveBlogCreateSlug(providedSlug, title) {
+  if (providedSlug && !isStaleBlogSlug$1(providedSlug)) return slugifyBlogTitle$1(providedSlug);
+  if (hasRealBlogTitle$1(title)) return slugifyBlogTitle$1(title);
+  return `untitled-blog-entry-${slugTimestamp$1()}`;
 }
 const create_post$2 = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const contentType = assertAdminContentType(body.contentType);
   const title = String(body.title || "Untitled draft");
-  const providedSlug = slugifyContentTitle(String(body.slug || title));
-  const slug = contentType === "blog" && isStaleBlogSlug$1(providedSlug) && hasRealBlogTitle$1(title) ? slugifyContentTitle(title) : providedSlug;
+  const providedSlug = contentType === "blog" ? slugifyBlogTitle$1(String(body.slug || "")) : slugifyContentTitle(String(body.slug || title));
+  const slug = contentType === "blog" ? resolveBlogCreateSlug(providedSlug, title) : providedSlug;
   const resolved = resolveAdminCreatePath(contentType, slug, body.docsFolder || body.folder);
   try {
     await access(resolved.absolutePath);
@@ -5836,27 +5854,65 @@ const save_post$2 = defineEventHandler(async (event) => {
   const resolved = resolveAdminContentFile(body.contentType, body.filePath);
   const incomingFrontmatter = { ...(_a = body.frontmatter) != null ? _a : {} };
   const title = String((_b = incomingFrontmatter.title) != null ? _b : "Untitled");
+  let targetResolved = resolved;
   incomingFrontmatter.title = title;
   const incomingSlug = String(incomingFrontmatter.slug || "");
-  incomingFrontmatter.slug = resolved.contentType === "blog" && isStaleBlogSlug(incomingSlug) && hasRealBlogTitle(title) ? slugifyContentTitle(title) : incomingSlug || slugifyContentTitle(title);
+  incomingFrontmatter.slug = resolved.contentType === "blog" ? resolveBlogSaveSlug(incomingSlug, title) : incomingSlug || slugifyContentTitle(title);
   incomingFrontmatter.updatedAt = todayIsoDate();
-  await writeMarkdownFile(resolved.absolutePath, incomingFrontmatter, String((_c = body.body) != null ? _c : ""));
+  if (resolved.contentType === "blog") {
+    const desiredSlug = String(incomingFrontmatter.slug || "");
+    const currentSlug = resolved.filePath.replace(/^blog\//, "").replace(/\.md$/, "").split("/").pop() || "";
+    if (desiredSlug && desiredSlug !== currentSlug) {
+      targetResolved = resolveAdminContentFile("blog", `${desiredSlug}.md`);
+      try {
+        await access(targetResolved.absolutePath);
+        if (targetResolved.absolutePath !== resolved.absolutePath) {
+          throw createError({
+            statusCode: 409,
+            statusMessage: "A blog entry with this slug already exists"
+          });
+        }
+      } catch (error) {
+        if ((error == null ? void 0 : error.statusCode) === 409) throw error;
+      }
+      await rename(resolved.absolutePath, targetResolved.absolutePath);
+    }
+  }
+  await writeMarkdownFile(targetResolved.absolutePath, incomingFrontmatter, String((_c = body.body) != null ? _c : ""));
   return {
     ok: true,
     item: {
-      contentType: resolved.contentType,
-      filePath: resolved.filePath,
-      publicPath: getContentPublicPath(resolved.contentType, incomingFrontmatter, resolved.filePath),
+      contentType: targetResolved.contentType,
+      filePath: targetResolved.filePath,
+      publicPath: getContentPublicPath(targetResolved.contentType, incomingFrontmatter, targetResolved.filePath),
       frontmatter: incomingFrontmatter
     }
   };
 });
+function slugTimestamp() {
+  return (/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "").slice(0, 14);
+}
+function slugifyBlogTitle(value, fallback = "") {
+  const words = String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").split("-").filter(Boolean).slice(0, 8);
+  const selected = [];
+  for (const word of words) {
+    const candidate = [...selected, word].join("-");
+    if (candidate.length > 72) break;
+    selected.push(word);
+  }
+  return selected.join("-") || fallback;
+}
+function resolveBlogSaveSlug(incomingSlug, title) {
+  if (isStaleBlogSlug(incomingSlug) && hasRealBlogTitle(title)) return slugifyBlogTitle(title);
+  if (incomingSlug) return slugifyBlogTitle(incomingSlug);
+  return slugifyBlogTitle(title) || `draft-${slugTimestamp()}`;
+}
 function isStaleBlogSlug(value) {
   const slug = String(value || "").trim();
-  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug) || slug === "untitled-blog-entry" || slug === "untitled-draft" || slug === "untitled" || slug === "draft";
 }
 function hasRealBlogTitle(value) {
-  const slug = slugifyContentTitle(String(value || ""));
+  const slug = slugifyBlogTitle(String(value || ""));
   return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
 }
 

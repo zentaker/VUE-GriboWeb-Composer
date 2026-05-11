@@ -88,7 +88,7 @@ Files expected:
 Status:
 - Pending implementation.
 
-## Pending - Blog Composer Preview Should Show Hero Only
+## Completed - Blog Composer Preview Shows Hero Only
 
 Problem:
 - The Blog Composer Frontend Preview currently tries to show hero plus body blocks, which makes the inspector noisy and too tall.
@@ -96,19 +96,25 @@ Problem:
 Decision:
 - The right-side Frontend Preview should focus only on the public blog hero/header preview.
 
-Expected behavior:
-- Show title, description, metadata/status and hero visual style.
-- Do not render body blocks in the right preview.
-- Keep it as a faithful miniature of the public hero.
+Implementation summary:
+- Removed body block rendering from `BlogComposerPreview`.
+- Kept `ArticleHero` as the only preview surface.
+- Left body rendering to the public article page.
+- Kept the existing `blocks` prop for compatibility with the composer call site, but it is no longer used for preview rendering.
 
-Files expected:
+Files changed:
 - `app/components/admin/BlogComposerPreview.vue`
-- `app/pages/admin/content/edit.vue`
 - `docs/STAGE_10_COMPOSER_QA_CHANGELOG.md`
 - `docs/STAGE_10_UI_ACCEPTANCE.md`
 
+Acceptance:
+- Blog Composer preview shows only hero/header.
+- No Text Block appears under the hero in the right preview.
+- No Image Block appears under the hero in the right preview.
+- Public blog page still renders body blocks normally.
+
 Status:
-- Pending implementation.
+- Completed.
 
 ## Pending - Blog Hero Preview Miniaturization
 

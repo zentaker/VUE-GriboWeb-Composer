@@ -39,10 +39,6 @@ withDefaults(defineProps<{
       :cover-style="coverStyle"
       :accent-color="accentColor"
     />
-    <div v-if="blocks.length" class="blog-preview-blocks">
-      <ContentBlockRenderer :blocks="blocks.slice(0, 2)" context="blog" />
-    </div>
-    <p v-else class="blog-preview-empty">No visible blocks yet. The public article will use the markdown fallback until blocks are added.</p>
   </div>
 </template>
 
@@ -119,39 +115,6 @@ withDefaults(defineProps<{
 .blog-preview-surface :deep(.byline strong),
 .blog-preview-surface :deep(.byline span) {
   font-size: 10px;
-}
-
-.blog-preview-blocks {
-  max-height: 360px;
-  overflow: hidden;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--paper-soft);
-}
-
-.blog-preview-blocks :deep(.rich-blocks) {
-  gap: 14px;
-}
-
-.blog-preview-blocks :deep(.rich-block h2) {
-  font-size: 24px;
-}
-
-.blog-preview-blocks :deep(.block-copy),
-.blog-preview-blocks :deep(.callout-block p),
-.blog-preview-blocks :deep(.banner-block p) {
-  font-size: 13px;
-}
-
-.blog-preview-empty {
-  margin: 0;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--paper-soft);
-  color: var(--muted);
-  font-size: 13px;
 }
 
 @media (max-width: 420px) {
