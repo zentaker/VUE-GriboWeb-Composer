@@ -118,6 +118,17 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Image caption persists after save and refresh.
 - [x] Image caption renders publicly.
 
+## Heading Block
+
+- [x] Heading Block appears in the block library.
+- [x] Heading Block renders a visible heading.
+- [x] Heading Block optional subheading renders.
+- [x] Heading Block level `h2` / `h3` / `h4` works.
+- [x] Heading Block optional kicker renders as an eyebrow.
+- [x] `block.title` does not render publicly for Heading Block.
+- [x] Text Block remains intended for rich text body.
+- [x] Page Outline uses internal title or UI-only fallback correctly.
+
 ## No Regression
 
 - [x] Home Composer remains separate.

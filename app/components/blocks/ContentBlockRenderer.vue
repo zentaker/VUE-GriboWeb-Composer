@@ -45,6 +45,11 @@ function imageLayout(block: RichBlock) {
   return 'contained'
 }
 
+function headingLevel(block: RichBlock) {
+  const level = String(block.data?.level || 'h2')
+  return ['h2', 'h3', 'h4'].includes(level) ? level : 'h2'
+}
+
 async function copyCode(code?: string) {
   if (!code || !import.meta.client) return
   await navigator.clipboard?.writeText(code)
@@ -54,7 +59,15 @@ async function copyCode(code?: string) {
 <template>
   <div v-if="visibleBlocks.length" class="rich-blocks" :data-context="context">
     <section v-for="block in visibleBlocks" :key="block.id || block.title" class="rich-block" :class="`block-${block.type || 'text'}`">
-      <template v-if="(block.type || 'text') === 'text'">
+      <template v-if="block.type === 'heading'">
+        <div class="heading-block">
+          <p v-if="block.data?.kicker" class="block-kicker">{{ block.data.kicker }}</p>
+          <component :is="headingLevel(block)" v-if="block.data?.heading">{{ block.data.heading }}</component>
+          <p v-if="block.data?.subheading" class="heading-subtitle">{{ block.data.subheading }}</p>
+        </div>
+      </template>
+
+      <template v-else-if="(block.type || 'text') === 'text'">
         <h2 v-if="block.data?.heading">{{ block.data.heading }}</h2>
         <p v-if="block.data?.body" class="block-copy">{{ block.data.body }}</p>
       </template>
@@ -163,6 +176,38 @@ async function copyCode(code?: string) {
   font-size: clamp(30px, 4vw, 46px);
   line-height: 0.98;
   letter-spacing: -0.06em;
+}
+
+.heading-block {
+  display: grid;
+  gap: 12px;
+}
+
+.heading-block h2,
+.heading-block h3,
+.heading-block h4 {
+  margin: 0;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.heading-block h2 {
+  font-size: clamp(32px, 4vw, 52px);
+}
+
+.heading-block h3 {
+  font-size: clamp(26px, 3vw, 38px);
+}
+
+.heading-block h4 {
+  font-size: clamp(22px, 2.4vw, 30px);
+}
+
+.heading-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.55;
 }
 
 .block-copy {

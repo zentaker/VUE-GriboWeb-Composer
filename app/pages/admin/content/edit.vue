@@ -7,7 +7,7 @@ definePageMeta({
 
 type RichContentBlock = {
   id: string
-  type: 'text' | 'image' | 'code' | 'callout' | 'table' | 'banner' | 'steps' | 'gallery' | 'split'
+  type: 'heading' | 'text' | 'image' | 'code' | 'callout' | 'table' | 'banner' | 'steps' | 'gallery' | 'split'
   title: string
   visible: boolean
   data: Record<string, any>
@@ -157,6 +157,7 @@ function blockId() {
 
 function defaultBlockTitle(type: RichContentBlock['type']) {
   const titles: Record<RichContentBlock['type'], string> = {
+    heading: 'Heading Block',
     text: 'Text Block',
     image: 'Image Block',
     code: 'Code Block',
@@ -200,6 +201,12 @@ function normalizeImageLayout(value: unknown) {
 
 function createBlock(type: RichContentBlock['type']): RichContentBlock {
   const defaults: Record<RichContentBlock['type'], Record<string, any>> = {
+    heading: {
+      kicker: '',
+      heading: '',
+      subheading: '',
+      level: 'h2'
+    },
     text: {
       heading: '',
       body: ''
@@ -253,7 +260,7 @@ function createBlock(type: RichContentBlock['type']): RichContentBlock {
   return {
     id: blockId(),
     type,
-    title: ['text', 'image'].includes(type) ? '' : defaultBlockTitle(type),
+    title: ['heading', 'text', 'image'].includes(type) ? '' : defaultBlockTitle(type),
     visible: true,
     data: { ...defaults[type] }
   }
@@ -262,7 +269,7 @@ function createBlock(type: RichContentBlock['type']): RichContentBlock {
 const editableBlocks = ref<RichContentBlock[]>([])
 const visibleBlocks = computed(() => editableBlocks.value.filter((block) => block.visible !== false))
 const selectedBlock = computed(() => editableBlocks.value.find((block) => block.id === selectedBlockId.value))
-const implementedBlockTypes = ['text', 'image', 'code', 'callout', 'table', 'banner'] as const
+const implementedBlockTypes = ['heading', 'text', 'image', 'code', 'callout', 'table', 'banner'] as const
 const laterBlockTypes = ['steps', 'gallery', 'split'] as const
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const pickerFileInput = ref<HTMLInputElement | null>(null)
@@ -273,6 +280,10 @@ const maxUploadBytes = 5 * 1024 * 1024
 function blockUiTitle(block: RichContentBlock) {
   const title = String(block.title || '').trim()
   if (title) return title
+  if (block.type === 'heading') {
+    const heading = String(block.data?.heading || '').trim()
+    if (heading) return heading
+  }
   return `Untitled ${block.type} block`
 }
 
@@ -863,7 +874,7 @@ onBeforeUnmount(() => {
                 @click="addBlock(type)"
               >
                 <span class="block-icon">{{ defaultBlockTitle(type).charAt(0) }}</span>
-                <span><strong>{{ defaultBlockTitle(type) }}</strong><small>{{ type === 'text' ? 'Rich text body' : type === 'image' ? 'Media Library + caption' : type === 'code' ? 'Language + title' : type === 'callout' ? 'Info, warning, note' : type === 'table' ? 'Rows + columns' : 'Color + message' }}</small></span>
+                <span><strong>{{ defaultBlockTitle(type) }}</strong><small>{{ type === 'heading' ? 'Title + optional subheading' : type === 'text' ? 'Rich text body' : type === 'image' ? 'Media Library + caption' : type === 'code' ? 'Language + title' : type === 'callout' ? 'Info, warning, note' : type === 'table' ? 'Rows + columns' : 'Color + message' }}</small></span>
               </button>
               <button v-for="type in laterBlockTypes" :key="type" class="block-button disabled" type="button" disabled>
                 <span class="block-icon">{{ defaultBlockTitle(type).charAt(0) }}</span>
@@ -923,7 +934,7 @@ onBeforeUnmount(() => {
 
               <article v-if="!editableBlocks.length" class="empty-canvas">
                 <strong>No blocks yet.</strong>
-                <p>Add a Text Block, Image Block, Code Block, Callout, Table or Banner from the block library.</p>
+                <p>Add a Heading Block, Text Block, Image Block, Code Block, Callout, Table or Banner from the block library.</p>
               </article>
 
               <article
@@ -958,7 +969,30 @@ onBeforeUnmount(() => {
                       <input v-model="block.title" type="text" placeholder="Optional internal title">
                     </label>
 
-                    <template v-if="block.type === 'text'">
+                    <template v-if="block.type === 'heading'">
+                      <label>
+                        Kicker
+                        <input v-model="block.data.kicker" type="text" placeholder="Optional eyebrow">
+                      </label>
+                      <label>
+                        Level
+                        <select v-model="block.data.level">
+                          <option value="h2">H2</option>
+                          <option value="h3">H3</option>
+                          <option value="h4">H4</option>
+                        </select>
+                      </label>
+                      <label class="span-2">
+                        Heading
+                        <input v-model="block.data.heading" type="text" placeholder="Visible heading">
+                      </label>
+                      <label class="span-2">
+                        Subheading
+                        <textarea v-model="block.data.subheading" rows="3" placeholder="Optional supporting text" />
+                      </label>
+                    </template>
+
+                    <template v-else-if="block.type === 'text'">
                       <label>
                         Heading <small>(optional legacy)</small>
                         <input v-model="block.data.heading" type="text" placeholder="Optional visible heading">

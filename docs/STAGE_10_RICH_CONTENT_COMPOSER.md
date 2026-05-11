@@ -115,10 +115,18 @@ The Blog Composer received a focused UI/product pass before real content populat
 - `block.title` is an internal editor label for composer cards, Page Outline, inspector context, and content organization.
 - `block.title` must not render publicly as article copy, kicker, heading, image label, caption, or fallback text.
 - Text Blocks render visible content from `block.data.body`.
-- `block.data.heading` remains a legacy optional visible heading until a dedicated Heading/Title Block is added.
+- `block.data.heading` remains a legacy optional visible heading on Text Blocks for existing content; new visible titles should use Heading Block.
 - Image Blocks render only `imageUrl`, `alt`, `caption`, and `layout`; their internal title is not used as public alt text or visible copy.
 - Empty `block.title` values can show UI-only fallbacks such as `Untitled text block`, but those fallbacks are not saved as content.
-- Heading Block / Title Block remains pending for the next micro-fix.
+
+## Heading Block
+
+- Heading Block was added for visible article, project, and docs titles inside the block flow.
+- Heading Block fields are `block.title` for the internal editor label, plus `data.kicker`, `data.heading`, `data.subheading`, and `data.level`.
+- `data.level` supports `h2`, `h3`, and `h4`.
+- Public rendering shows optional kicker, visible heading, and optional subheading.
+- `block.title` remains internal/editor-only and is never rendered publicly by Heading Block.
+- Text Block is now intended for rich text body; its `data.heading` field remains only as a legacy optional visible heading for existing content.
 
 ## Public Rendering
 
