@@ -46,10 +46,10 @@ withDefaults(defineProps<{
 
 <style scoped>
 .blog-preview-surface {
-  --preview-scale: 0.5;
+  --preview-scale: 0.44;
   position: relative;
   width: 100%;
-  height: 245px;
+  height: 250px;
   overflow: hidden;
 }
 
@@ -131,8 +131,8 @@ withDefaults(defineProps<{
 
 @media (max-width: 420px) {
   .blog-preview-surface {
-    --preview-scale: 0.46;
-    height: 225px;
+    --preview-scale: 0.4;
+    height: 232px;
   }
 }
 </style>

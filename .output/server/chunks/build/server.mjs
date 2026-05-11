@@ -650,7 +650,7 @@ const _routes = [
     name: "admin-content-edit",
     path: "/admin/content/edit",
     meta: __nuxt_page_meta$e || {},
-    component: () => import('./edit-5a9XwWOS.mjs')
+    component: () => import('./edit-CeXBYk9Z.mjs')
   },
   {
     name: "admin-content-new",

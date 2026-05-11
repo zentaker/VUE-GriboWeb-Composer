@@ -2261,15 +2261,15 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"38d0d-uUvrHYaNbp5VGipwZCEdYqzla28\"",
-    "mtime": "2026-05-11T19:16:39.272Z",
+    "etag": "\"38d0d-lHrgcnHfR0IWdjIefO8MsXCuwrY\"",
+    "mtime": "2026-05-11T19:26:07.593Z",
     "size": 232717,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
     "etag": "\"d8740-Ix886r86LnHjOfuoFzbZBylzMSc\"",
-    "mtime": "2026-05-11T19:16:39.273Z",
+    "mtime": "2026-05-11T19:26:07.598Z",
     "size": 886592,
     "path": "index.mjs.map"
   }
@@ -3084,7 +3084,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "blog": "v3.5.0--n2a9If0LylrWSOch_iaqxXzWJ-GTwBPcfSQJlNTlEsE",
+  "blog": "v3.5.0--aWI4AkFzZaztv3oCM0EM_QPDJzH8frkXeCFgJ9kmhgo",
   "projects": "v3.5.0--K-_qTlYY7fs1cktyvhcWeTfJBkgvU4uwHC7ooe7F_TM",
   "docs": "v3.5.0--kZH6Mb4GN4oPi-f9PDiaWR6b3or89_H2-GGRJgvAjng",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",

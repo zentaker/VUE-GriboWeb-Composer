@@ -144,6 +144,24 @@ Acceptance:
 Status:
 - Completed.
 
+## Completed - Blog Composer Hero Preview Scale Refined
+
+Problem:
+- The preview-only hero was already miniaturized, but it still rendered slightly too large and the lower section was clipped.
+
+Implementation summary:
+- Reduced preview-only hero scale slightly more.
+- Adjusted preview container height so the full hero remains visible.
+- Kept the public hero unchanged.
+
+Acceptance:
+- Full hero visible in preview.
+- No bottom clipping.
+- Public hero unchanged.
+
+Status:
+- Completed.
+
 ## Pending - Quote / Citation Block
 
 Problem:

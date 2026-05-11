@@ -17,7 +17,7 @@ tags:
   - imperative
   - modern
   - businesses
-coverStyle: editorial-gradient
+coverStyle: soft-magazine
 accentColor: coral
 mediaRefs:
   - /uploads/digicore1-60b82b69.webp
