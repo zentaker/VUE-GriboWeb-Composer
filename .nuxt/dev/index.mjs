@@ -2258,7 +2258,22 @@ _e5vYReqAi6vcqyQ4DzTe2IF8C36pmdhxwRdfq_2XBM,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"38d0d-uUvrHYaNbp5VGipwZCEdYqzla28\"",
+    "mtime": "2026-05-11T19:16:39.272Z",
+    "size": 232717,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"d8740-Ix886r86LnHjOfuoFzbZBylzMSc\"",
+    "mtime": "2026-05-11T19:16:39.273Z",
+    "size": 886592,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3069,7 +3084,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "blog": "v3.5.0--GteaSvwYHKyxD5EEDobClniGadVeIWaaOC1UrMqvbGI",
+  "blog": "v3.5.0--n2a9If0LylrWSOch_iaqxXzWJ-GTwBPcfSQJlNTlEsE",
   "projects": "v3.5.0--K-_qTlYY7fs1cktyvhcWeTfJBkgvU4uwHC7ooe7F_TM",
   "docs": "v3.5.0--kZH6Mb4GN4oPi-f9PDiaWR6b3or89_H2-GGRJgvAjng",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",

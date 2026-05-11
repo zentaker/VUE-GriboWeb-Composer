@@ -116,28 +116,33 @@ Acceptance:
 Status:
 - Completed.
 
-## Pending - Blog Hero Preview Miniaturization
+## Completed - Blog Composer Hero Preview Miniaturized
 
 Problem:
-- The Blog Composer hero preview resembles the public hero but still looks squeezed, stretched or disproportionate inside the inspector.
+- The Blog Composer preview used the public `ArticleHero` but did not scale it down properly, causing oversized text and squeezed visual areas.
 
 Decision:
-- The preview should behave as a miniature of the public hero. Text can be smaller if necessary.
+- The preview should behave as a small thumbnail of the public hero, prioritizing visual proportion over full text readability.
 
-Expected behavior:
-- Preserve two-column composition.
-- Avoid vertical reflow unless absolutely necessary.
-- Avoid stretched visual area.
-- Keep proportions close to the public article hero.
+Implementation summary:
+- Added a preview-only scale wrapper around `ArticleHero`.
+- Kept the two-column hero composition in the preview.
+- Reduced preview-only typography and spacing.
+- Left the public `ArticleHero` unchanged.
 
-Files expected:
+Files changed:
 - `app/components/admin/BlogComposerPreview.vue`
-- `app/components/blocks/ArticleHero.vue`, only if a compact variant is required.
 - `docs/STAGE_10_COMPOSER_QA_CHANGELOG.md`
 - `docs/STAGE_10_UI_ACCEPTANCE.md`
 
+Acceptance:
+- Preview shows only the hero.
+- Preview keeps two-column composition.
+- Preview looks like a miniaturized public hero.
+- Public blog page hero remains unchanged.
+
 Status:
-- Pending implementation.
+- Completed.
 
 ## Pending - Quote / Citation Block
 

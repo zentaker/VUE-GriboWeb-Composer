@@ -30,102 +30,109 @@ withDefaults(defineProps<{
 
 <template>
   <div class="blog-preview-surface">
-    <ArticleHero
-      :title="title"
-      :description="description"
-      :category="category"
-      :date="date"
-      :status="status"
-      :cover-style="coverStyle"
-      :accent-color="accentColor"
-    />
+    <div class="blog-preview-scale">
+      <ArticleHero
+        :title="title"
+        :description="description"
+        :category="category"
+        :date="date"
+        :status="status"
+        :cover-style="coverStyle"
+        :accent-color="accentColor"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .blog-preview-surface {
-  display: grid;
-  gap: 14px;
+  --preview-scale: 0.5;
+  position: relative;
+  width: 100%;
+  height: 245px;
+  overflow: hidden;
+}
+
+.blog-preview-scale {
+  width: calc(100% / var(--preview-scale));
+  transform: scale(var(--preview-scale));
+  transform-origin: top left;
 }
 
 .blog-preview-surface :deep(.article-hero) {
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 24px;
   box-shadow: none;
 }
 
 .blog-preview-surface :deep(.article-hero-grid) {
-  grid-template-columns: 1.05fr 0.95fr;
-  min-height: 260px;
+  grid-template-columns: 1.05fr 0.95fr !important;
+  min-height: 480px;
 }
 
 .blog-preview-surface :deep(.hero-copy) {
-  gap: 18px;
-  padding: 16px;
+  gap: 28px;
+  padding: 32px;
 }
 
 .blog-preview-surface :deep(.hero-art) {
-  min-height: 260px;
-  border-top: 0;
-  border-left: 1px solid var(--line);
+  min-height: 480px;
+  border-top: 0 !important;
+  border-left: 1px solid var(--line) !important;
 }
 
 .blog-preview-surface :deep(h1) {
-  margin-top: 10px;
-  font-size: clamp(24px, 2.4vw, 32px);
+  margin-top: 22px;
+  font-size: 48px;
   letter-spacing: -0.06em;
+  line-height: 0.92;
 }
 
 .blog-preview-surface :deep(.dek) {
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: 16px;
+  font-size: 16px;
   line-height: 1.35;
 }
 
 .blog-preview-surface :deep(.byline) {
-  gap: 10px;
+  gap: 18px;
 }
 
 .blog-preview-surface :deep(.terminal-window) {
-  left: 12px;
-  right: 12px;
-  top: 20px;
-  border-radius: 14px;
+  left: 28px;
+  right: 28px;
+  top: 48px;
+  border-radius: 18px;
 }
 
 .blog-preview-surface :deep(.terminal-header) {
-  padding: 9px 10px;
+  padding: 11px 12px;
 }
 
 .blog-preview-surface :deep(.terminal-body) {
-  padding: 10px;
-  font-size: 10px;
-  line-height: 1.6;
+  padding: 14px;
+  font-size: 11px;
+  line-height: 1.7;
 }
 
 .blog-preview-surface :deep(.floating-note) {
-  right: 12px;
-  bottom: 12px;
-  max-width: 150px;
-  padding: 10px;
-  font-size: 10px;
+  right: 30px;
+  bottom: 28px;
+  max-width: 210px;
+  padding: 13px;
+  font-size: 11px;
 }
 
 .blog-preview-surface :deep(.eyebrow),
 .blog-preview-surface :deep(.byline strong),
 .blog-preview-surface :deep(.byline span) {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 @media (max-width: 420px) {
-  .blog-preview-surface :deep(.article-hero-grid) {
-    grid-template-columns: 1fr;
-  }
-
-  .blog-preview-surface :deep(.hero-art) {
-    min-height: 190px;
-    border-top: 1px solid var(--line);
-    border-left: 0;
+  .blog-preview-surface {
+    --preview-scale: 0.46;
+    height: 225px;
   }
 }
 </style>

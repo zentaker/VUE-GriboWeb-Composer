@@ -138,7 +138,7 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Image Block renders image and caption without exposing internal block title.
 - [ ] Blog slug updates from title and renames markdown file.
 - [x] Blog Composer preview shows hero only.
-- [ ] Blog Composer preview is a faithful miniaturized hero.
+- [x] Blog Composer preview is a faithful miniaturized hero.
 - [ ] Quote / Citation Block can be added.
 - [ ] Blog Entries list shows updated timestamp.
 
@@ -146,6 +146,9 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 
 - [x] Blog Composer Frontend Preview shows only the article hero.
 - [x] Blog Composer Frontend Preview does not render body blocks.
+- [x] Blog Composer preview keeps hero in two-column miniature mode.
+- [x] Blog Composer preview prioritizes visual fidelity over text readability.
+- [x] Public ArticleHero remains unchanged.
 - [x] Public blog page still renders body blocks.
 
 ## Blog Slug Generation
