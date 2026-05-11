@@ -119,19 +119,37 @@ A draft note for the Gribo archive. Shape the argument, keep the friction visibl
 `;
 }
 function isStaleBlogSlug(value) {
-  const slug = String(value).trim();
-  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug);
+  const slug = String(value || "").trim();
+  return !slug || /^untitled-blog-entry-\d+$/.test(slug) || /^untitled-draft-\d+$/.test(slug) || /^draft-\d+$/.test(slug) || slug === "untitled-blog-entry" || slug === "untitled-draft" || slug === "untitled" || slug === "draft";
 }
 function hasRealBlogTitle(value) {
-  const slug = slugifyContentTitle(String(value || ""));
+  const slug = slugifyBlogTitle(String(value || ""));
   return Boolean(slug) && slug !== "untitled-blog-entry" && slug !== "untitled-draft" && slug !== "untitled" && slug !== "draft";
+}
+function slugTimestamp() {
+  return (/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "").slice(0, 14);
+}
+function slugifyBlogTitle(value, fallback = "") {
+  const words = String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").split("-").filter(Boolean).slice(0, 8);
+  const selected = [];
+  for (const word of words) {
+    const candidate = [...selected, word].join("-");
+    if (candidate.length > 72) break;
+    selected.push(word);
+  }
+  return selected.join("-") || fallback;
+}
+function resolveBlogCreateSlug(providedSlug, title) {
+  if (providedSlug && !isStaleBlogSlug(providedSlug)) return slugifyBlogTitle(providedSlug);
+  if (hasRealBlogTitle(title)) return slugifyBlogTitle(title);
+  return `untitled-blog-entry-${slugTimestamp()}`;
 }
 const create_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const contentType = assertAdminContentType(body.contentType);
   const title = String(body.title || "Untitled draft");
-  const providedSlug = slugifyContentTitle(String(body.slug || title));
-  const slug = contentType === "blog" && isStaleBlogSlug(providedSlug) && hasRealBlogTitle(title) ? slugifyContentTitle(title) : providedSlug;
+  const providedSlug = contentType === "blog" ? slugifyBlogTitle(String(body.slug || "")) : slugifyContentTitle(String(body.slug || title));
+  const slug = contentType === "blog" ? resolveBlogCreateSlug(providedSlug, title) : providedSlug;
   const resolved = resolveAdminCreatePath(contentType, slug, body.docsFolder || body.folder);
   try {
     await access(resolved.absolutePath);

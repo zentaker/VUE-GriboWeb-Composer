@@ -132,7 +132,11 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 ## Blog Slug Generation
 
 - [x] Blog slug auto-updates from title before manual override.
+- [x] Blog slug is limited by words and length.
 - [x] Timestamp fallback slug is replaced on save when the blog title is real.
+- [x] Saving a blog with a changed auto slug renames the markdown file.
+- [x] Editor route updates to the new filePath after save.
+- [x] Public View opens the clean slug URL.
 - [x] Manual slug override is respected after title changes.
 - [x] Project, docs, and labs slug behavior is unaffected.
 
