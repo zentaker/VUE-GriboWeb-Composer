@@ -231,28 +231,36 @@ Acceptance:
 Status:
 - Completed.
 
-## Pending - Quote / Citation Block
+## Completed - Quote / Citation Block Added
 
 Problem:
-- The composer does not yet have a block for editorial quote/citation fragments, such as a short italic sentence with a vertical rule on the left.
+- The Rich Composer did not include a dedicated block for editorial quotes or citation-style fragments.
 
 Decision:
-- Add a Quote Block / Citation Block later.
+- Add a Quote Block for short emphasized editorial fragments with a left vertical rule and optional attribution.
 
-Expected behavior:
-- Left vertical rule.
-- Italic or emphasized quote text.
-- Optional attribution.
-- Optional visual variant.
+Implementation summary:
+- Added Quote Block to the block library.
+- Added editor fields for quote text, optional attribution and variant.
+- Added public rendering for quote blocks.
+- Kept `block.title` internal/editor-only.
 
-Files expected:
+Files changed:
 - `app/pages/admin/content/edit.vue`
 - `app/components/blocks/ContentBlockRenderer.vue`
 - `docs/STAGE_10_COMPOSER_QA_CHANGELOG.md`
 - `docs/STAGE_10_UI_ACCEPTANCE.md`
 
+Acceptance:
+- Quote Block can be added from the block library.
+- Quote text renders publicly.
+- Optional attribution renders when present.
+- `block.title` does not render publicly.
+- Page Outline shows the quote block.
+- Existing blocks remain unaffected.
+
 Status:
-- Pending implementation.
+- Completed.
 
 ## Pending - Blog Entries List Updated Timestamp
 

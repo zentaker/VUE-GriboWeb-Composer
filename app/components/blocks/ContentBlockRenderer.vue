@@ -58,7 +58,13 @@ async function copyCode(code?: string) {
 
 <template>
   <div v-if="visibleBlocks.length" class="rich-blocks" :data-context="context">
-    <section v-for="block in visibleBlocks" :key="block.id || block.title" class="rich-block" :class="`block-${block.type || 'text'}`">
+    <section
+      v-for="block in visibleBlocks"
+      v-show="block.type !== 'quote' || block.data?.quote"
+      :key="block.id || block.title"
+      class="rich-block"
+      :class="`block-${block.type || 'text'}`"
+    >
       <template v-if="block.type === 'heading'">
         <div class="heading-block">
           <p v-if="block.data?.kicker" class="block-kicker">{{ block.data.kicker }}</p>
@@ -70,6 +76,13 @@ async function copyCode(code?: string) {
       <template v-else-if="(block.type || 'text') === 'text'">
         <h2 v-if="block.data?.heading">{{ block.data.heading }}</h2>
         <p v-if="block.data?.body" class="block-copy">{{ block.data.body }}</p>
+      </template>
+
+      <template v-else-if="block.type === 'quote'">
+        <blockquote v-if="block.data?.quote" class="content-quote-block" :data-variant="block.data?.variant || 'editorial'">
+          <p>{{ block.data.quote }}</p>
+          <cite v-if="block.data?.attribution">{{ block.data.attribution }}</cite>
+        </blockquote>
       </template>
 
       <template v-else-if="block.type === 'image'">
@@ -216,6 +229,40 @@ async function copyCode(code?: string) {
   font-size: 17px;
   line-height: 1.7;
   white-space: pre-line;
+}
+
+.content-quote-block {
+  margin: 4px 0;
+  padding: 8px 0 8px 22px;
+  border-left: 3px solid var(--coral);
+  color: var(--ink);
+}
+
+.content-quote-block[data-variant='subtle'] {
+  border-left-color: var(--line);
+}
+
+.content-quote-block[data-variant='pullquote'] {
+  border-left-color: var(--lavender);
+}
+
+.content-quote-block p {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 34px);
+  font-style: italic;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.content-quote-block cite {
+  display: block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .image-figure {

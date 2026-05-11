@@ -650,7 +650,7 @@ const _routes = [
     name: "admin-content-edit",
     path: "/admin/content/edit",
     meta: __nuxt_page_meta$e || {},
-    component: () => import('./edit-DEtuYYh8.mjs')
+    component: () => import('./edit-BNZADx8b.mjs')
   },
   {
     name: "admin-content-new",
@@ -727,7 +727,7 @@ const _routes = [
   {
     name: "blog-slug",
     path: "/blog/:slug()",
-    component: () => import('./_slug_-Ca97Fs1-.mjs')
+    component: () => import('./_slug_-D8f8i3MQ.mjs')
   },
   {
     name: "labs-slug",
@@ -737,13 +737,13 @@ const _routes = [
   {
     name: "repository-slug",
     path: "/repository/:slug()",
-    component: () => import('./_slug_-BXYsH3vR.mjs')
+    component: () => import('./_slug_-CgcHR2QQ.mjs')
   },
   {
     name: "docs-slug",
     path: "/docs/:slug(.*)*",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./_...slug_-B9MUtKqU.mjs')
+    component: () => import('./_...slug_-CDAOQU70.mjs')
   },
   {
     name: "admin",

@@ -1,1 +1,0 @@
-import{_ as t}from"./-9NM_9E8.js";import{_ as a,o as n,c as r,b as c,a as s,M as _}from"./D9wwSW1o.js";import"./D5yuZxw5.js";import"./A8Kds4cX.js";import"./Co-wtCm4.js";const l={};function m(e,i){const o=t;return n(),r("div",null,[c(o),s("main",null,[_(e.$slots,"default")])])}const B=a(l,[["render",m]]);export{B as default};

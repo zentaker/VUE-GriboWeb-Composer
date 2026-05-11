@@ -139,7 +139,12 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [ ] Blog slug updates from title and renames markdown file.
 - [x] Blog Composer preview shows hero only.
 - [x] Blog Composer preview is a faithful miniaturized hero.
-- [ ] Quote / Citation Block can be added.
+- [x] Quote / Citation Block can be added.
+- [x] Quote Block renders quote text publicly.
+- [x] Quote Block supports optional attribution.
+- [x] Quote Block does not expose `block.title` publicly.
+- [x] Page Outline lists Quote Block.
+- [x] Existing Heading/Text/Image blocks remain stable.
 - [ ] Blog Entries list shows updated timestamp.
 
 ## Blog Composer Frontend Preview

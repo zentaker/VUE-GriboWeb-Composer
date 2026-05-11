@@ -7,7 +7,7 @@ definePageMeta({
 
 type RichContentBlock = {
   id: string
-  type: 'heading' | 'text' | 'image' | 'code' | 'callout' | 'table' | 'banner' | 'steps' | 'gallery' | 'split'
+  type: 'heading' | 'text' | 'quote' | 'image' | 'code' | 'callout' | 'table' | 'banner' | 'steps' | 'gallery' | 'split'
   title: string
   visible: boolean
   data: Record<string, any>
@@ -160,6 +160,7 @@ function defaultBlockTitle(type: RichContentBlock['type']) {
   const titles: Record<RichContentBlock['type'], string> = {
     heading: 'Heading Block',
     text: 'Text Block',
+    quote: 'Quote Block',
     image: 'Image Block',
     code: 'Code Block',
     callout: 'Callout Block',
@@ -170,6 +171,23 @@ function defaultBlockTitle(type: RichContentBlock['type']) {
     split: 'Split Layout'
   }
   return titles[type]
+}
+
+function blockDescription(type: RichContentBlock['type']) {
+  const descriptions: Record<RichContentBlock['type'], string> = {
+    heading: 'Title + optional subheading',
+    text: 'Rich text body',
+    quote: 'Editorial quote / citation',
+    image: 'Media Library + caption',
+    code: 'Language + title',
+    callout: 'Info, warning, note',
+    table: 'Rows + columns',
+    banner: 'Color + message',
+    steps: 'Later',
+    gallery: 'Later',
+    split: 'Later'
+  }
+  return descriptions[type]
 }
 
 function normalizeBlocks(value: unknown): RichContentBlock[] {
@@ -211,6 +229,11 @@ function createBlock(type: RichContentBlock['type']): RichContentBlock {
     text: {
       heading: '',
       body: ''
+    },
+    quote: {
+      quote: '',
+      attribution: '',
+      variant: 'editorial'
     },
     image: {
       imageUrl: '',
@@ -261,7 +284,7 @@ function createBlock(type: RichContentBlock['type']): RichContentBlock {
   return {
     id: blockId(),
     type,
-    title: ['heading', 'text', 'image'].includes(type) ? '' : defaultBlockTitle(type),
+    title: ['heading', 'text', 'quote', 'image'].includes(type) ? '' : defaultBlockTitle(type),
     visible: true,
     data: { ...defaults[type] }
   }
@@ -270,7 +293,7 @@ function createBlock(type: RichContentBlock['type']): RichContentBlock {
 const editableBlocks = ref<RichContentBlock[]>([])
 const visibleBlocks = computed(() => editableBlocks.value.filter((block) => block.visible !== false))
 const selectedBlock = computed(() => editableBlocks.value.find((block) => block.id === selectedBlockId.value))
-const implementedBlockTypes = ['heading', 'text', 'image', 'code', 'callout', 'table', 'banner'] as const
+const implementedBlockTypes = ['heading', 'text', 'quote', 'image', 'code', 'callout', 'table', 'banner'] as const
 const laterBlockTypes = ['steps', 'gallery', 'split'] as const
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const pickerFileInput = ref<HTMLInputElement | null>(null)
@@ -950,7 +973,7 @@ onBeforeUnmount(() => {
                 @click="addBlock(type)"
               >
                 <span class="block-icon">{{ defaultBlockTitle(type).charAt(0) }}</span>
-                <span><strong>{{ defaultBlockTitle(type) }}</strong><small>{{ type === 'heading' ? 'Title + optional subheading' : type === 'text' ? 'Rich text body' : type === 'image' ? 'Media Library + caption' : type === 'code' ? 'Language + title' : type === 'callout' ? 'Info, warning, note' : type === 'table' ? 'Rows + columns' : 'Color + message' }}</small></span>
+                <span><strong>{{ defaultBlockTitle(type) }}</strong><small>{{ blockDescription(type) }}</small></span>
               </button>
               <button v-for="type in laterBlockTypes" :key="type" class="block-button disabled" type="button" disabled>
                 <span class="block-icon">{{ defaultBlockTitle(type).charAt(0) }}</span>
@@ -1029,7 +1052,7 @@ onBeforeUnmount(() => {
 
               <article v-if="!editableBlocks.length" class="empty-canvas">
                 <strong>No blocks yet.</strong>
-                <p>Add a Heading Block, Text Block, Image Block, Code Block, Callout, Table or Banner from the block library.</p>
+                <p>Add a Heading Block, Text Block, Quote Block, Image Block, Code Block, Callout, Table or Banner from the block library.</p>
               </article>
 
               <article
@@ -1095,6 +1118,25 @@ onBeforeUnmount(() => {
                       <label class="span-2">
                         Body
                         <textarea v-model="block.data.body" rows="6" />
+                      </label>
+                    </template>
+
+                    <template v-else-if="block.type === 'quote'">
+                      <label>
+                        Variant
+                        <select v-model="block.data.variant">
+                          <option value="editorial">Editorial</option>
+                          <option value="subtle">Subtle</option>
+                          <option value="pullquote">Pullquote</option>
+                        </select>
+                      </label>
+                      <label class="span-2">
+                        Quote text
+                        <textarea v-model="block.data.quote" rows="4" placeholder="Embed directly into business operations" />
+                      </label>
+                      <label class="span-2">
+                        Attribution <small>(optional)</small>
+                        <input v-model="block.data.attribution" type="text" placeholder="Gribo notes">
                       </label>
                     </template>
 
