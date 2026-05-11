@@ -262,6 +262,33 @@ Acceptance:
 Status:
 - Completed.
 
+## Completed - Quote Block Visual Scale Adjusted
+
+Problem:
+- The Quote / Citation Block was functionally correct, but visually oversized and too close to a heading.
+
+Decision:
+- Reduce the visual scale and weight of the Quote Block so it behaves like an editorial quotation, closer to a Medium-style blockquote.
+
+Implementation summary:
+- Reduced quote text scale.
+- Kept left vertical rule.
+- Preserved optional attribution.
+- Preserved block semantics and rendering logic.
+
+Refinement:
+- Reduced Quote Block visual scale one more level after UI review.
+
+Acceptance:
+- Quote Block remains functional.
+- Quote text appears smaller and more editorial.
+- Quote no longer resembles a heading.
+- Attribution remains optional.
+- Existing blocks remain unaffected.
+
+Status:
+- Completed.
+
 ## Pending - Blog Entries List Updated Timestamp
 
 Problem:

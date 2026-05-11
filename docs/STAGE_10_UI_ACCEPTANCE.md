@@ -143,6 +143,9 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Quote Block renders quote text publicly.
 - [x] Quote Block supports optional attribution.
 - [x] Quote Block does not expose `block.title` publicly.
+- [x] Quote Block renders with editorial quote scale.
+- [x] Quote Block no longer appears as a large heading.
+- [x] Quote Block keeps left rule and optional attribution.
 - [x] Page Outline lists Quote Block.
 - [x] Existing Heading/Text/Image blocks remain stable.
 - [ ] Blog Entries list shows updated timestamp.

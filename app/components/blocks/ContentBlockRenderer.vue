@@ -232,9 +232,9 @@ async function copyCode(code?: string) {
 }
 
 .content-quote-block {
-  margin: 4px 0;
-  padding: 8px 0 8px 22px;
-  border-left: 3px solid var(--coral);
+  margin: 2px 0;
+  padding: 4px 0 4px 16px;
+  border-left: 2px solid var(--coral);
   color: var(--ink);
 }
 
@@ -248,17 +248,18 @@ async function copyCode(code?: string) {
 
 .content-quote-block p {
   margin: 0;
-  font-size: clamp(22px, 3vw, 34px);
+  font-size: clamp(17px, 1.35vw, 20px);
+  font-weight: 400;
   font-style: italic;
-  line-height: 1.3;
-  letter-spacing: -0.025em;
+  line-height: 1.6;
+  letter-spacing: 0;
 }
 
 .content-quote-block cite {
   display: block;
-  margin-top: 12px;
+  margin-top: 10px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 800;
   letter-spacing: 0.08em;
