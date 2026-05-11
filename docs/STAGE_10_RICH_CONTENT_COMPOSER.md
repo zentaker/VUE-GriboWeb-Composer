@@ -128,6 +128,17 @@ The Blog Composer received a focused UI/product pass before real content populat
 - `block.title` remains internal/editor-only and is never rendered publicly by Heading Block.
 - Text Block is now intended for rich text body; its `data.heading` field remains only as a legacy optional visible heading for existing content.
 
+## QA Documentation Policy
+
+Every composer micro-fix must be documented in `STAGE_10_COMPOSER_QA_CHANGELOG.md` with:
+
+- problem;
+- decision;
+- implementation summary;
+- files changed;
+- acceptance checks;
+- status.
+
 ## Public Rendering
 
 `ContentBlockRenderer` renders blocks publicly for:

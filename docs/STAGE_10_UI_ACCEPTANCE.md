@@ -129,15 +129,28 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Text Block remains intended for rich text body.
 - [x] Page Outline uses internal title or UI-only fallback correctly.
 
+## Composer QA / Rich Blocks
+
+- [x] `block.title` is internal and does not render publicly for Text/Image blocks.
+- [x] Heading Block / Title Block can be added.
+- [x] Heading Block renders visible heading content.
+- [x] Text Block can render body without visible heading.
+- [x] Image Block renders image and caption without exposing internal block title.
+- [ ] Blog slug updates from title and renames markdown file.
+- [ ] Blog Composer preview shows hero only.
+- [ ] Blog Composer preview is a faithful miniaturized hero.
+- [ ] Quote / Citation Block can be added.
+- [ ] Blog Entries list shows updated timestamp.
+
 ## Blog Slug Generation
 
 - [x] Blog slug auto-updates from title before manual override.
 - [x] Blog slug is limited by words and length.
-- [x] Timestamp fallback slug is replaced on save when the blog title is real.
-- [x] Saving a blog with a changed auto slug renames the markdown file.
-- [x] Editor route updates to the new filePath after save.
-- [x] Public View opens the clean slug URL.
-- [x] Manual slug override is respected after title changes.
+- [ ] Timestamp fallback slug is replaced on save when the blog title is real.
+- [ ] Saving a blog with a changed auto slug renames the markdown file.
+- [ ] Editor route updates to the new filePath after save.
+- [ ] Public View opens the clean slug URL.
+- [ ] Manual slug override is respected after title changes.
 - [x] Project, docs, and labs slug behavior is unaffected.
 
 ## No Regression
