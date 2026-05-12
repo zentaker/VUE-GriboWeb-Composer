@@ -23,7 +23,10 @@ const { data: previewProject } = await useAsyncData(`project-preview-${slug.valu
     return null
   }
 })
-const displayProject = computed(() => project.value ?? previewProject.value?.frontmatter)
+const displayProject = computed(() => route.query.preview === 'true'
+  ? previewProject.value?.frontmatter ?? project.value
+  : project.value ?? previewProject.value?.frontmatter
+)
 const previewBody = computed(() => previewProject.value?.body ?? '')
 const previewHtml = computed(() => previewBody.value
   .split(/\n{2,}/)
@@ -73,6 +76,24 @@ const attachedDocs = computed(() => {
     .sort((a: any, b: any) => Number(a.order ?? 99) - Number(b.order ?? 99) || docPath(a).localeCompare(docPath(b)))
 })
 const firstDocPath = computed(() => attachedDocs.value[0] ? docPath(attachedDocs.value[0]) : explicitDocPaths.value[0] || '')
+const attachedDocLinks = computed(() => attachedDocs.value.map((doc: any) => ({
+  label: doc.title || docPath(doc),
+  title: doc.title || docPath(doc),
+  to: docPath(doc)
+})))
+function parseRichOverviewPayload(value: unknown) {
+  if (!value) return null
+
+  try {
+    const payload = typeof value === 'string' ? JSON.parse(value) : value
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return null
+    const typedPayload = payload as Record<string, any>
+    return typedPayload.template === 'rich-project-overview-v1' ? typedPayload : null
+  } catch {
+    return null
+  }
+}
+const richOverviewPayload = computed(() => parseRichOverviewPayload(displayProject.value?.overviewPayload))
 const explicitRelatedArticles = computed(() => {
   const projectValue = displayProject.value
   if (!projectValue) return []
@@ -168,7 +189,14 @@ useGriboSeo(() => ({
 <template>
   <div class="project-docs-shell">
     <template v-if="displayProject">
-      <div class="project-docs-layout">
+      <ProjectOverviewRenderer
+        v-if="richOverviewPayload"
+        :project="displayProject"
+        :payload="richOverviewPayload"
+        :doc-links="attachedDocLinks"
+      />
+
+      <div v-else class="project-docs-layout">
         <aside class="docs-sidebar" aria-label="Project documentation sidebar">
           <div class="side-title">Start</div>
           <NuxtLink class="side-link active" :to="`/repository/${displayProject.slug}`">Overview</NuxtLink>

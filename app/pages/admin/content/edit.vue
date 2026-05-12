@@ -40,6 +40,8 @@ const stackText = ref('')
 const relatedTagsText = ref('')
 const roadmapText = ref('')
 const openQuestionsText = ref('')
+const overviewPayloadText = ref('')
+const overviewPayloadError = ref('')
 const isAttachingDocs = ref(false)
 const selectedAttachmentDocs = ref<string[]>([])
 const activeTab = ref<'content' | 'metadata' | 'seo' | 'media' | 'preview'>('content')
@@ -627,11 +629,42 @@ function syncTextFields() {
   relatedTagsText.value = toText(frontmatter.value.relatedTags)
   roadmapText.value = toLines(frontmatter.value.roadmap)
   openQuestionsText.value = toLines(frontmatter.value.openQuestions)
+  overviewPayloadText.value = frontmatter.value.overviewPayload
+    ? JSON.stringify(frontmatter.value.overviewPayload, null, 2)
+    : ''
+  overviewPayloadError.value = ''
   selectedAttachmentDocs.value = [
     frontmatter.value.docsPath,
     ...(Array.isArray(frontmatter.value.relatedDocs) ? frontmatter.value.relatedDocs : []),
     ...(Array.isArray(frontmatter.value.docsPaths) ? frontmatter.value.docsPaths : [])
   ].map((item) => String(item)).filter((item, index, list) => item && list.indexOf(item) === index)
+}
+
+function applyOverviewPayload() {
+  overviewPayloadError.value = ''
+
+  if (!overviewPayloadText.value.trim()) {
+    frontmatter.value.overviewPayload = undefined
+    statusMessage.value = 'Overview payload cleared. Save changes to persist.'
+    return
+  }
+
+  try {
+    const parsed = JSON.parse(overviewPayloadText.value)
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      overviewPayloadError.value = 'Overview payload must be a JSON object.'
+      return
+    }
+    if (parsed.template !== 'rich-project-overview-v1') {
+      overviewPayloadError.value = 'Payload template must be rich-project-overview-v1.'
+      return
+    }
+    frontmatter.value.overviewPayload = parsed
+    overviewPayloadText.value = JSON.stringify(parsed, null, 2)
+    statusMessage.value = 'Overview payload applied. Save changes to publish it.'
+  } catch {
+    overviewPayloadError.value = 'Invalid JSON payload. Fix the syntax before applying.'
+  }
 }
 
 function normalizeFrontmatter() {
@@ -1700,6 +1733,63 @@ onBeforeUnmount(() => {
         </AdminPanel>
 
         <AdminPanel v-if="contentType === 'projects'" title="Project dossier fields" eyebrow="Structured overview">
+          <details class="advanced-doc-fields" open>
+            <summary>Project overview style and import</summary>
+            <div class="field-grid">
+              <label>
+                Hero / background style
+                <select v-model="frontmatter.overviewHeroStyle">
+                  <option value="">Use payload/default</option>
+                  <option value="dark-gradient">Dark gradient</option>
+                  <option value="warm-paper">Warm paper</option>
+                  <option value="midnight-lab">Midnight lab</option>
+                </select>
+              </label>
+              <label>
+                Background mode
+                <select v-model="frontmatter.overviewBackgroundMode">
+                  <option value="">Use payload/default</option>
+                  <option value="warm-to-dark">Warm to dark</option>
+                  <option value="dark">Dark</option>
+                  <option value="paper">Paper</option>
+                </select>
+              </label>
+              <label>
+                Accent color
+                <select v-model="frontmatter.overviewAccentColor">
+                  <option value="">Use payload/default</option>
+                  <option value="coral">Coral</option>
+                  <option value="lavender">Lavender</option>
+                  <option value="cream">Cream</option>
+                  <option value="graphite">Graphite</option>
+                  <option value="soft-red">Soft red</option>
+                  <option value="muted-violet">Muted violet</option>
+                </select>
+              </label>
+              <label>
+                Secondary accent
+                <select v-model="frontmatter.overviewSecondaryAccent">
+                  <option value="">Use payload/default</option>
+                  <option value="lavender">Lavender</option>
+                  <option value="coral">Coral</option>
+                  <option value="blue">Blue</option>
+                  <option value="mint">Mint</option>
+                  <option value="yellow">Yellow</option>
+                </select>
+              </label>
+              <label class="span-2">
+                Overview payload JSON
+                <textarea v-model="overviewPayloadText" class="code-textarea payload-textarea" rows="14" placeholder="{ &quot;template&quot;: &quot;rich-project-overview-v1&quot;, &quot;sections&quot;: [] }" />
+              </label>
+            </div>
+            <div class="doc-actions">
+              <button class="studio-btn" type="button" @click="applyOverviewPayload">Apply overview payload</button>
+              <button class="ghost-btn" type="button" @click="overviewPayloadText = frontmatter.overviewPayload ? JSON.stringify(frontmatter.overviewPayload, null, 2) : ''">Reload from saved state</button>
+            </div>
+            <p v-if="overviewPayloadError" class="status-copy" data-state="error">{{ overviewPayloadError }}</p>
+            <p class="muted">Payload import is structured JSON only. Raw HTML and scripts are not executed.</p>
+          </details>
+
           <div class="field-grid">
             <label class="span-2">
               Project overview title
@@ -3076,6 +3166,12 @@ textarea {
   background: var(--code-bg);
   color: var(--code-ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.payload-textarea {
+  min-height: 360px;
+  font-size: 12px;
+  line-height: 1.55;
 }
 
 .markdown-fallback {

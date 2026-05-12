@@ -411,6 +411,73 @@ Acceptance:
 Status:
 - Completed.
 
+## Completed - Project Composer Structured Fields Sync With Public Overview
+
+Problem:
+- Project Composer exposed structured dossier fields, but the public project page continued to show default fallback copy because fields were not available through the Nuxt Content project collection schema and preview mode could prefer stale `queryCollection` data.
+
+Decision:
+- Ensure structured project frontmatter fields are declared in the project collection schema and used by `/repository/[slug]`, and make preview mode prioritize fresh admin-read content.
+
+Implementation summary:
+- Verified Project Composer fields persist into markdown frontmatter.
+- Added structured project fields to the Nuxt Content `projects` schema.
+- Added the fields to markdown frontmatter ordering for stable saves.
+- Updated public project route to prioritize `previewProject` when `?preview=true` is active.
+- Ensured project overview, memory, index, documentation empty state and build log read structured fields with safe fallbacks.
+
+Files changed:
+- `content.config.ts`
+- `server/utils/markdownContent.ts`
+- `app/pages/repository/[slug].vue`
+- `docs/STAGE_10_COMPOSER_QA_CHANGELOG.md`
+- `docs/STAGE_10_UI_ACCEPTANCE.md`
+
+Acceptance:
+- Project Composer edits appear in public project view.
+- Structured fields persist in `content/projects` markdown.
+- Preview mode uses fresh saved data.
+- Empty fields fall back safely.
+- Blog/Docs Composer remain unaffected.
+
+Status:
+- Completed.
+
+## Prototype - Project Overview Rich Renderer And Import Payload
+
+Problem:
+- Manual block editing works for blog posts but does not scale well for dense project overviews and technical documentation generated with AI assistance.
+
+Decision:
+- Introduce a structured Project Overview payload and renderer.
+- Project Composer controls style/import, while the public project page renders a rich overview from structured data.
+
+Implementation summary:
+- Added a Project Overview renderer for structured `rich-project-overview-v1` payloads.
+- Added minimal Project Composer controls for overview style and JSON import.
+- Added a seeded Astronomical Impact Trajectory Analysis overview payload.
+- Kept fallback rendering for projects without payload.
+- Avoided raw unsafe HTML execution.
+
+Files changed:
+- `app/components/projects/ProjectOverviewRenderer.vue`
+- `app/pages/admin/content/edit.vue`
+- `app/pages/repository/[slug].vue`
+- `content.config.ts`
+- `server/utils/markdownContent.ts`
+- `content/projects/astronomical-impact-trajectory-analysis.md`
+
+Acceptance:
+- Project with `overviewPayload` renders rich overview.
+- Project without payload still renders fallback.
+- Payload is structured JSON-like data, not arbitrary executed HTML.
+- Left sidebar shows project-level navigation.
+- Right rail shows current page section outline.
+- Blog/Docs Composer remain unaffected.
+
+Status:
+- Prototype completed.
+
 ## Pending - Blog Entries List Updated Timestamp
 
 Problem:

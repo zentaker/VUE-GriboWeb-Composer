@@ -1,1 +1,0 @@
-import{e,o as a,c as s,t as n}from"./vvWP7rtm.js";const o={class:"status-badge"},_=e({__name:"StatusBadge",props:{label:{}},setup(t){return(c,p)=>(a(),s("span",o,n(t.label),1))}}),l=Object.assign(_,{__name:"StatusBadge"});export{l as _};

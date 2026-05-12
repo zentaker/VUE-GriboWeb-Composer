@@ -216,6 +216,23 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [x] Build log / decision trace can use project fields.
 - [x] Empty fields use safe fallbacks.
 - [x] Blog/Docs Composer remain unaffected.
+- [x] Project structured fields persist to markdown frontmatter.
+- [x] Public Project Overview reads structured project fields.
+- [x] Project preview prioritizes fresh admin-read content.
+- [x] Empty project fields use safe fallbacks.
+- [x] Blog/Docs Composer remain stable.
+
+## Project Overview Rich Renderer
+
+- [x] Project Composer exposes overview style/import controls.
+- [x] Valid overview payload can be applied for saving.
+- [x] Invalid JSON payload shows a safe error.
+- [x] Public project page renders rich overview when payload exists.
+- [x] Public project page keeps fallback when payload does not exist.
+- [x] Astronomical Impact Trajectory Analysis uses the provided mockup as the visual reference.
+- [x] Left sidebar shows project-level navigation.
+- [x] Right rail shows current page sections.
+- [x] Blog/Docs Composer remain stable.
 
 ## Repository Project Cleanup
 

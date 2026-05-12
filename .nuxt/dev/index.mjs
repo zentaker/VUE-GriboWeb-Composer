@@ -2258,7 +2258,22 @@ _e5vYReqAi6vcqyQ4DzTe2IF8C36pmdhxwRdfq_2XBM,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"39445-gQ7jSBEC+mlE4Va5hjN4DNs7Tgc\"",
+    "mtime": "2026-05-12T05:03:26.003Z",
+    "size": 234565,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"da9c1-6gLaOAbVX9WM/dfm0NGOidUmDbg\"",
+    "mtime": "2026-05-12T05:03:26.003Z",
+    "size": 895425,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3070,7 +3085,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 
 const checksums = {
   "blog": "v3.5.0--OtZY6lak3tcinV1-Ph_-UkIcOt2XKJnpvAW5deby6Qc",
-  "projects": "v3.5.0--2cD7BU4_7cHap0C0I42idwlhRvrjaL3kjUsDFz04mlY",
+  "projects": "v3.5.0--eAxVmLMTUPEHWbppvY6enu_B-lPJEcfeihP5dkxRA4w",
   "docs": "v3.5.0--o5DA0mIqL_TXxQYwX5LOoXnDuiEBxPh67_CLCVZrG8Y",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",
   "home": "v3.5.0--6rGrv_50488GBaS_204B3ISzDX9dQgleInb1ky9gRJo",
@@ -3078,7 +3093,7 @@ const checksums = {
 };
 const checksumsStructure = {
   "blog": "HgiavfbRY-6HTrcyV6bFUbVpHh0Fu8-bBSQgJaL1Eok",
-  "projects": "Ya1fIzksAjPnUJ5lymykYpfUYupMis1Zksv70SXpYiU",
+  "projects": "ghGh8LWlReOvx3tQoFGDsw7wwKMuPKW7BWKoGMmY2jo",
   "docs": "ikhwkEO43qpXZKvFHiSSKrkBOvOqnzybQBnJjInMINk",
   "labs": "IA7318SIMAnuJVIwwKXY6-D649IlKXot3TzcLsBVdR8",
   "home": "mk-tLIReAPgs28M1s8MdR795Twcc4eXp3Dv3oYnGS4E",
@@ -3144,6 +3159,8 @@ const contentManifest = {
       "accentColor": "string",
       "blocks": "json",
       "body": "json",
+      "buildLogIntro": "string",
+      "buildLogNote": "string",
       "canonical": "string",
       "coverAlt": "string",
       "coverCaption": "string",
@@ -3151,10 +3168,15 @@ const contentManifest = {
       "coverPosition": "string",
       "coverStyle": "string",
       "date": "string",
+      "decisionTraceBody": "string",
+      "decisionTraceTitle": "string",
       "description": "string",
       "docsFolder": "string",
       "docsPath": "string",
       "docsPaths": "json",
+      "documentationIntro": "string",
+      "emptyDocumentationBody": "string",
+      "emptyDocumentationTitle": "string",
       "extension": "string",
       "lab": "string",
       "mediaRefs": "json",
@@ -3164,8 +3186,24 @@ const contentManifest = {
       "ogDescription": "string",
       "ogImage": "string",
       "ogTitle": "string",
+      "overviewAccentColor": "string",
+      "overviewBackgroundMode": "string",
+      "overviewHeroStyle": "string",
+      "overviewPayload": "json",
+      "overviewSecondaryAccent": "string",
       "path": "string",
+      "projectHoldsBody": "string",
+      "projectHoldsTitle": "string",
+      "projectIndex": "string",
+      "projectIndexIntro": "string",
+      "projectMemory": "string",
+      "projectMemoryBody": "string",
+      "projectMemoryIntro": "string",
+      "projectMemoryTitle": "string",
+      "projectOverviewBody": "string",
+      "projectOverviewTitle": "string",
       "relatedArticles": "json",
+      "relatedArticlesNote": "string",
       "relatedBlogSlugs": "json",
       "relatedDocs": "json",
       "relatedPosts": "json",
@@ -3180,6 +3218,7 @@ const contentManifest = {
       "tags": "json",
       "type": "string",
       "updatedAt": "string",
+      "workingStackNote": "string",
       "year": "number"
     }
   },
@@ -3698,6 +3737,30 @@ const frontmatterOrder = [
   "docsFolder",
   "docsPaths",
   "relatedDocs",
+  "projectOverviewTitle",
+  "projectOverviewBody",
+  "projectMemoryIntro",
+  "projectMemoryTitle",
+  "projectMemoryBody",
+  "projectMemory",
+  "projectIndexIntro",
+  "projectHoldsTitle",
+  "projectHoldsBody",
+  "projectIndex",
+  "workingStackNote",
+  "documentationIntro",
+  "emptyDocumentationTitle",
+  "emptyDocumentationBody",
+  "buildLogIntro",
+  "buildLogNote",
+  "decisionTraceTitle",
+  "decisionTraceBody",
+  "relatedArticlesNote",
+  "overviewHeroStyle",
+  "overviewBackgroundMode",
+  "overviewAccentColor",
+  "overviewSecondaryAccent",
+  "overviewPayload",
   "readingTime",
   "seoTitle",
   "seoDescription",

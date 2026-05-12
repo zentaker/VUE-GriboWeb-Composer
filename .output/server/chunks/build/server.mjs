@@ -650,7 +650,7 @@ const _routes = [
     name: "admin-content-edit",
     path: "/admin/content/edit",
     meta: __nuxt_page_meta$e || {},
-    component: () => import('./edit-DUzenUKT.mjs')
+    component: () => import('./edit-DA9dYA-A.mjs')
   },
   {
     name: "admin-content-new",
@@ -727,23 +727,23 @@ const _routes = [
   {
     name: "blog-slug",
     path: "/blog/:slug()",
-    component: () => import('./_slug_-0_9_dHJi.mjs')
+    component: () => import('./_slug_-Cjv3jbSt.mjs')
   },
   {
     name: "labs-slug",
     path: "/labs/:slug()",
-    component: () => import('./_slug_--eSTZR74.mjs')
+    component: () => import('./_slug_-DZaq7ZoN.mjs')
   },
   {
     name: "repository-slug",
     path: "/repository/:slug()",
-    component: () => import('./_slug_-CAwADiMY.mjs')
+    component: () => import('./_slug_-_kBinmAo.mjs')
   },
   {
     name: "docs-slug",
     path: "/docs/:slug(.*)*",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./_...slug_-DgFkw0wH.mjs')
+    component: () => import('./_...slug_-CWi83SSm.mjs')
   },
   {
     name: "admin",
@@ -754,22 +754,22 @@ const _routes = [
   {
     name: "blog",
     path: "/blog",
-    component: () => import('./index-Ct3fjKR1.mjs')
+    component: () => import('./index-VrIFRnax.mjs')
   },
   {
     name: "labs",
     path: "/labs",
-    component: () => import('./index-2dVqC1kL.mjs')
+    component: () => import('./index-JrnwiAUb.mjs')
   },
   {
     name: "repository",
     path: "/repository",
-    component: () => import('./index-BzXwLdhe.mjs')
+    component: () => import('./index-BQ-Kg48R.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-BE0UC3og.mjs')
+    component: () => import('./index-BVreuNMr.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1262,7 +1262,7 @@ const plugins = [
 const layouts = {
   admin: defineAsyncComponent(() => import('./admin-DjcUabkv.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-BZtoNuNQ.mjs').then((m) => m.default || m)),
-  docs: defineAsyncComponent(() => import('./docs-BrIw5MSz.mjs').then((m) => m.default || m))
+  docs: defineAsyncComponent(() => import('./docs-BBhrj5h5.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
 const LayoutLoader = defineComponent({

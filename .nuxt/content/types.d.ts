@@ -48,9 +48,35 @@ declare module '@nuxt/content' {
     docsFolder?: string
     docsPaths: string[]
     relatedDocs: string[]
+    projectOverviewTitle?: string
+    projectOverviewBody?: string
+    projectMemoryIntro?: string
+    projectMemoryTitle?: string
+    projectMemoryBody?: string
+    projectMemory?: string
+    projectIndexIntro?: string
+    projectHoldsTitle?: string
+    projectHoldsBody?: string
+    projectIndex?: string
+    workingStackNote?: string
+    documentationIntro?: string
+    emptyDocumentationTitle?: string
+    emptyDocumentationBody?: string
+    buildLogIntro?: string
+    buildLogNote?: string
+    decisionTraceTitle?: string
+    decisionTraceBody?: string
+    relatedArticlesNote?: string
     relatedPosts: string[]
     relatedArticles: string[]
     relatedBlogSlugs: string[]
+    overviewHeroStyle?: string
+    overviewBackgroundMode?: string
+    overviewAccentColor?: string
+    overviewSecondaryAccent?: string
+    overviewPayload?: {
+    [k: string]: unknown
+    }
     tags: string[]
     stack: string[]
     coverImage?: string

@@ -55,6 +55,7 @@ interface _GlobalComponents {
   DocsToc: typeof import("../../app/components/docs/DocsToc.vue")['default']
   PublicNav: typeof import("../../app/components/layout/PublicNav.vue")['default']
   SiteFooter: typeof import("../../app/components/layout/SiteFooter.vue")['default']
+  ProjectOverviewRenderer: typeof import("../../app/components/projects/ProjectOverviewRenderer.vue")['default']
   ProseA: typeof import("../../node_modules/@nuxtjs/mdc/dist/runtime/components/prose/ProseA.vue")['default']
   ProseBlockquote: typeof import("../../node_modules/@nuxtjs/mdc/dist/runtime/components/prose/ProseBlockquote.vue")['default']
   ProseCode: typeof import("../../node_modules/@nuxtjs/mdc/dist/runtime/components/prose/ProseCode.vue")['default']
@@ -150,6 +151,7 @@ interface _GlobalComponents {
   LazyDocsToc: LazyComponent<typeof import("../../app/components/docs/DocsToc.vue")['default']>
   LazyPublicNav: LazyComponent<typeof import("../../app/components/layout/PublicNav.vue")['default']>
   LazySiteFooter: LazyComponent<typeof import("../../app/components/layout/SiteFooter.vue")['default']>
+  LazyProjectOverviewRenderer: LazyComponent<typeof import("../../app/components/projects/ProjectOverviewRenderer.vue")['default']>
   LazyProseA: LazyComponent<typeof import("../../node_modules/@nuxtjs/mdc/dist/runtime/components/prose/ProseA.vue")['default']>
   LazyProseBlockquote: LazyComponent<typeof import("../../node_modules/@nuxtjs/mdc/dist/runtime/components/prose/ProseBlockquote.vue")['default']>
   LazyProseCode: LazyComponent<typeof import("../../node_modules/@nuxtjs/mdc/dist/runtime/components/prose/ProseCode.vue")['default']>
