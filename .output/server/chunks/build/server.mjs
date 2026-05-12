@@ -650,13 +650,13 @@ const _routes = [
     name: "admin-content-edit",
     path: "/admin/content/edit",
     meta: __nuxt_page_meta$e || {},
-    component: () => import('./edit-Ch04FGBV.mjs')
+    component: () => import('./edit-DUzenUKT.mjs')
   },
   {
     name: "admin-content-new",
     path: "/admin/content/new",
     meta: __nuxt_page_meta$d || {},
-    component: () => import('./new-CCTLpwu1.mjs')
+    component: () => import('./new-CVtKoTrF.mjs')
   },
   {
     name: "admin-backups",
@@ -668,13 +668,13 @@ const _routes = [
     name: "admin-blog",
     path: "/admin/blog",
     meta: __nuxt_page_meta$b || {},
-    component: () => import('./index-BnJH1hqd.mjs')
+    component: () => import('./index-DbXcg948.mjs')
   },
   {
     name: "admin-docs",
     path: "/admin/docs",
     meta: __nuxt_page_meta$a || {},
-    component: () => import('./index-gc8TY1pQ.mjs')
+    component: () => import('./index-C6N-Kzkx.mjs')
   },
   {
     name: "admin-home",
@@ -692,7 +692,7 @@ const _routes = [
     name: "admin-labs",
     path: "/admin/labs",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-DPGv0tTJ.mjs')
+    component: () => import('./index-BYAwTZ-r.mjs')
   },
   {
     name: "admin-login",
@@ -710,7 +710,7 @@ const _routes = [
     name: "admin-projects",
     path: "/admin/projects",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-Ddx4RhwA.mjs')
+    component: () => import('./index-krmSScAR.mjs')
   },
   {
     name: "admin-queue",
@@ -727,23 +727,23 @@ const _routes = [
   {
     name: "blog-slug",
     path: "/blog/:slug()",
-    component: () => import('./_slug_-CVTWKuIj.mjs')
+    component: () => import('./_slug_-0_9_dHJi.mjs')
   },
   {
     name: "labs-slug",
     path: "/labs/:slug()",
-    component: () => import('./_slug_-DWSgWBBN.mjs')
+    component: () => import('./_slug_--eSTZR74.mjs')
   },
   {
     name: "repository-slug",
     path: "/repository/:slug()",
-    component: () => import('./_slug_-DTrXq6M8.mjs')
+    component: () => import('./_slug_-CAwADiMY.mjs')
   },
   {
     name: "docs-slug",
     path: "/docs/:slug(.*)*",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./_...slug_-DyCOHAUX.mjs')
+    component: () => import('./_...slug_-DgFkw0wH.mjs')
   },
   {
     name: "admin",
@@ -754,22 +754,22 @@ const _routes = [
   {
     name: "blog",
     path: "/blog",
-    component: () => import('./index-BnYgWvNM.mjs')
+    component: () => import('./index-Ct3fjKR1.mjs')
   },
   {
     name: "labs",
     path: "/labs",
-    component: () => import('./index-joeZIc74.mjs')
+    component: () => import('./index-2dVqC1kL.mjs')
   },
   {
     name: "repository",
     path: "/repository",
-    component: () => import('./index-CHZDi2t0.mjs')
+    component: () => import('./index-BzXwLdhe.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-A-IdQ6F9.mjs')
+    component: () => import('./index-BE0UC3og.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1262,7 +1262,7 @@ const plugins = [
 const layouts = {
   admin: defineAsyncComponent(() => import('./admin-DjcUabkv.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-BZtoNuNQ.mjs').then((m) => m.default || m)),
-  docs: defineAsyncComponent(() => import('./docs-CFIXnN98.mjs').then((m) => m.default || m))
+  docs: defineAsyncComponent(() => import('./docs-BrIw5MSz.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
 const LayoutLoader = defineComponent({

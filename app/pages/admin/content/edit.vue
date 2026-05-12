@@ -24,7 +24,7 @@ const normalizeType = (value: string): AdminContentType | '' => {
 const routeType = normalizeType(String(route.query.type || ''))
 const contentType: AdminContentType = allowedTypes.includes(routeType as AdminContentType) ? routeType as AdminContentType : 'blog'
 const filePath = ref(String(route.query.file || ''))
-const { listContent, readContent, saveContent, archiveContent, deleteBlogContent } = useAdminContent()
+const { listContent, readContent, saveContent, archiveContent, deleteBlogContent, deleteProjectContent } = useAdminContent()
 
 const frontmatter = ref<Record<string, any>>({})
 const markdownBody = ref('')
@@ -149,7 +149,7 @@ const composerPreviewDate = computed(() => {
     ? new Date(value).toLocaleDateString('en', { month: 'long', day: '2-digit', year: 'numeric' })
     : 'Draft'
 })
-const isRichComposer = computed(() => contentType !== 'labs')
+const isRichComposer = computed(() => ['blog', 'docs'].includes(contentType))
 const secondaryDocText = (doc: AdminContentListItem) => `${doc.publicPath} · folder: ${getDocFolder(doc)}`
 
 function blockId() {
@@ -837,6 +837,23 @@ async function deleteBlogEntry() {
   }
 }
 
+async function deleteProjectEntry() {
+  if (contentType !== 'projects') return
+
+  isDeleting.value = true
+  statusMessage.value = ''
+
+  try {
+    const response = await deleteProjectContent(filePath.value, deleteConfirmation.value)
+    statusMessage.value = `Project moved to ${response.item.trashPath}.`
+    await router.push('/admin/projects')
+  } catch (error: any) {
+    statusMessage.value = error?.data?.statusMessage || error?.message || 'Delete failed.'
+  } finally {
+    isDeleting.value = false
+  }
+}
+
 function handleComposerSave() {
   save()
 }
@@ -1419,6 +1436,36 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </section>
+
+          <section v-if="contentType === 'projects'" class="panel danger-zone">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Protected action</p>
+                <h2>Danger Zone</h2>
+              </div>
+              <span class="status-badge">Repository project</span>
+            </div>
+            <p class="muted">
+              Permanently remove this project file from <code>content/projects</code>. This does not delete attached docs, media, blogs or labs.
+            </p>
+            <div class="danger-summary">
+              <span>Title</span>
+              <strong>{{ frontmatter.title || 'Untitled Project' }}</strong>
+              <span>Slug</span>
+              <strong>{{ frontmatter.slug || 'untitled' }}</strong>
+              <span>File</span>
+              <strong>{{ filePath }}</strong>
+            </div>
+            <div class="delete-confirm">
+              <label>
+                Type DELETE PROJECT to remove this project file
+                <input v-model="deleteConfirmation" type="text" placeholder="DELETE PROJECT">
+              </label>
+              <button class="danger-btn" type="button" :disabled="isDeleting || deleteConfirmation !== 'DELETE PROJECT'" @click="deleteProjectEntry">
+                {{ isDeleting ? 'Deleting...' : 'Delete project' }}
+              </button>
+            </div>
+          </section>
         </template>
 
         <template v-else-if="activeTab === 'seo'">
@@ -1582,13 +1629,15 @@ onBeforeUnmount(() => {
     <AdminHero
       v-if="!filePath || !isRichComposer"
       eyebrow="Content Editor"
-      :title="frontmatter.title || 'Missing content file'"
-      :description="`Editing ${filePath || 'no file selected'} inside Nuxt Content.`"
+      :title="contentType === 'projects' ? frontmatter.title || 'Project dossier editor' : frontmatter.title || 'Missing content file'"
+      :description="contentType === 'projects'
+        ? `Editing structured repository fields for ${filePath || 'no file selected'}.`
+        : `Editing ${filePath || 'no file selected'} inside Nuxt Content.`"
     />
 
     <section v-if="filePath && !isRichComposer" class="editor-grid">
       <div class="editor-main">
-        <AdminPanel title="Core metadata" eyebrow="Frontmatter">
+        <AdminPanel :title="contentType === 'projects' ? 'Project basics' : 'Core metadata'" eyebrow="Frontmatter">
           <div class="field-grid">
             <label>
               Title
@@ -1633,7 +1682,7 @@ onBeforeUnmount(() => {
           </div>
         </AdminPanel>
 
-        <AdminPanel v-if="contentType === 'projects'" title="Project fields" eyebrow="Repository">
+        <AdminPanel v-if="contentType === 'projects'" title="Taxonomy and stack" eyebrow="Repository">
           <div class="field-grid">
             <label>
               Type
@@ -1648,6 +1697,99 @@ onBeforeUnmount(() => {
               <input v-model="stackText" type="text" placeholder="Nuxt, Python">
             </label>
           </div>
+        </AdminPanel>
+
+        <AdminPanel v-if="contentType === 'projects'" title="Project dossier fields" eyebrow="Structured overview">
+          <div class="field-grid">
+            <label class="span-2">
+              Project overview title
+              <input v-model="frontmatter.projectOverviewTitle" type="text" placeholder="Project overview">
+            </label>
+            <label class="span-2">
+              Project overview body
+              <textarea v-model="frontmatter.projectOverviewBody" rows="4" placeholder="Short note for the Project overview callout." />
+            </label>
+          </div>
+          <details class="advanced-doc-fields" open>
+            <summary>Project memory</summary>
+            <div class="field-grid">
+              <label class="span-2">
+                Memory intro
+                <textarea v-model="frontmatter.projectMemoryIntro" rows="3" placeholder="Intro copy for the Project memory section." />
+              </label>
+              <label class="span-2">
+                Memory title
+                <input v-model="frontmatter.projectMemoryTitle" type="text" placeholder="Project memory title">
+              </label>
+              <label class="span-2">
+                Memory body
+                <textarea v-model="frontmatter.projectMemoryBody" rows="5" placeholder="What should the overview remember about this project?" />
+              </label>
+            </div>
+          </details>
+          <details class="advanced-doc-fields" open>
+            <summary>Project index</summary>
+            <div class="field-grid">
+              <label class="span-2">
+                Index intro
+                <textarea v-model="frontmatter.projectIndexIntro" rows="3" placeholder="Intro copy for the Project index section." />
+              </label>
+              <label>
+                What this project holds - title
+                <input v-model="frontmatter.projectHoldsTitle" type="text" placeholder="What this project holds">
+              </label>
+              <label>
+                Working stack note
+                <textarea v-model="frontmatter.workingStackNote" rows="3" placeholder="How should the stack be described publicly?" />
+              </label>
+              <label class="span-2">
+                What this project holds - body
+                <textarea v-model="frontmatter.projectHoldsBody" rows="4" placeholder="Structured project map or dossier explanation." />
+              </label>
+            </div>
+          </details>
+          <details class="advanced-doc-fields">
+            <summary>Documentation and build log copy</summary>
+            <div class="field-grid">
+              <label class="span-2">
+                Documentation intro
+                <textarea v-model="frontmatter.documentationIntro" rows="3" placeholder="Shown above attached docs or the empty documentation state." />
+              </label>
+              <label>
+                Empty documentation title
+                <input v-model="frontmatter.emptyDocumentationTitle" type="text" placeholder="No documentation attached yet">
+              </label>
+              <label>
+                Decision trace title
+                <input v-model="frontmatter.decisionTraceTitle" type="text" placeholder="Decision trace">
+              </label>
+              <label class="span-2">
+                Empty documentation body
+                <textarea v-model="frontmatter.emptyDocumentationBody" rows="3" placeholder="What should visitors see when this project has no docs yet?" />
+              </label>
+              <label class="span-2">
+                Build log intro
+                <textarea v-model="frontmatter.buildLogIntro" rows="3" placeholder="Intro copy for the Build log section." />
+              </label>
+              <label class="span-2">
+                Decision trace body
+                <textarea v-model="frontmatter.decisionTraceBody" rows="3" placeholder="Short note about decisions or build history." />
+              </label>
+              <label class="span-2">
+                Related articles note
+                <textarea v-model="frontmatter.relatedArticlesNote" rows="3" placeholder="Shown when there are no related articles." />
+              </label>
+            </div>
+          </details>
+          <div v-if="Array.isArray(frontmatter.blocks) && frontmatter.blocks.length" class="legacy-block-note">
+            <strong>Legacy project body preserved</strong>
+            <p>This project has {{ frontmatter.blocks.length }} saved rich blocks. They are preserved in frontmatter, but the Project Composer now prioritizes structured dossier fields.</p>
+          </div>
+          <details v-if="markdownBody" class="advanced-doc-fields">
+            <summary>Advanced legacy markdown body</summary>
+            <p class="muted">This markdown body is preserved for compatibility, but it is no longer the main Project Composer surface.</p>
+            <textarea v-model="markdownBody" class="body-editor legacy-body-editor" />
+          </details>
         </AdminPanel>
 
         <AdminPanel v-if="contentType === 'projects'" title="Documentation" eyebrow="Project docs">
@@ -1742,6 +1884,31 @@ onBeforeUnmount(() => {
           </details>
         </AdminPanel>
 
+        <AdminPanel v-if="contentType === 'projects'" title="Danger Zone" eyebrow="Protected action">
+          <div class="danger-zone compact-danger">
+            <p class="muted">
+              Permanently remove this project file from <code>content/projects</code>. This does not delete attached docs, media, blogs or labs.
+            </p>
+            <div class="danger-summary">
+              <span>Title</span>
+              <strong>{{ frontmatter.title || 'Untitled Project' }}</strong>
+              <span>Slug</span>
+              <strong>{{ frontmatter.slug || 'untitled' }}</strong>
+              <span>File</span>
+              <strong>{{ filePath }}</strong>
+            </div>
+            <div class="delete-confirm">
+              <label>
+                Type DELETE PROJECT to remove this project file
+                <input v-model="deleteConfirmation" type="text" placeholder="DELETE PROJECT">
+              </label>
+              <button class="danger-btn" type="button" :disabled="isDeleting || deleteConfirmation !== 'DELETE PROJECT'" @click="deleteProjectEntry">
+                {{ isDeleting ? 'Deleting...' : 'Delete project' }}
+              </button>
+            </div>
+          </div>
+        </AdminPanel>
+
         <AdminPanel v-if="contentType === 'docs'" title="Docs fields" eyebrow="Project documentation">
           <div class="field-grid">
             <label>
@@ -1796,12 +1963,35 @@ onBeforeUnmount(() => {
           </div>
         </AdminPanel>
 
-        <AdminPanel title="Markdown body" eyebrow="Content">
+        <AdminPanel v-if="contentType !== 'projects'" title="Markdown body" eyebrow="Content">
           <textarea v-model="markdownBody" class="body-editor" />
         </AdminPanel>
       </div>
 
       <aside class="editor-side">
+        <AdminPanel v-if="contentType === 'projects'" title="Project outline" eyebrow="Dossier">
+          <div class="outline-list structured-outline">
+            <div class="outline-item">
+              <strong>Project basics</strong><span>Title, summary, lab, status</span>
+            </div>
+            <div class="outline-item">
+              <strong>Project memory</strong><span>Structured dossier field</span>
+            </div>
+            <div class="outline-item">
+              <strong>Project index</strong><span>Public overview map</span>
+            </div>
+            <div class="outline-item">
+              <strong>Documentation</strong><span>{{ attachedDocs.length ? `${attachedDocs.length} attached` : 'No docs attached' }}</span>
+            </div>
+            <div class="outline-item">
+              <strong>Build log</strong><span>Summary note</span>
+            </div>
+            <div class="outline-item">
+              <strong>Danger Zone</strong><span>Protected delete flow</span>
+            </div>
+          </div>
+        </AdminPanel>
+
         <AdminPanel title="Save" eyebrow="Stage 4">
           <div class="actions">
             <button class="studio-btn" type="button" :disabled="isSaving" @click="save">
@@ -1975,6 +2165,11 @@ textarea {
 .danger-zone {
   border-color: color-mix(in srgb, var(--coral), var(--line) 54%);
   background: color-mix(in srgb, var(--paper-soft), var(--coral) 7%);
+}
+
+.compact-danger {
+  padding: 16px;
+  border-radius: 18px;
 }
 
 .danger-zone .eyebrow {
@@ -2170,6 +2365,26 @@ textarea {
 .advanced-doc-fields {
   display: grid;
   gap: 14px;
+}
+
+.legacy-block-note {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--paper-soft), var(--yellow) 8%);
+}
+
+.legacy-block-note p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.legacy-body-editor {
+  min-height: 220px;
 }
 
 .empty-doc-state,
@@ -2984,6 +3199,10 @@ textarea {
 
 .outline-item.active {
   border-color: color-mix(in srgb, var(--coral), var(--line) 40%);
+}
+
+.structured-outline .outline-item {
+  cursor: default;
 }
 
 .outline-item span {

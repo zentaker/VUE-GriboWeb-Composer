@@ -289,6 +289,128 @@ Acceptance:
 Status:
 - Completed.
 
+## Completed - Blog Block Contract Propagated To Project/Docs Composer
+
+Problem:
+- Project Composer and Docs Composer share similar editing surfaces with Blog Composer and could repeat the same block semantics bugs.
+
+Decision:
+- Propagate the accepted Blog Composer block contract to Project/Docs without a broad refactor.
+
+Implementation summary:
+- Verified that Blog, Project and Docs use the shared rich composer surface in `app/pages/admin/content/edit.vue`.
+- Verified that Project and Docs public pages use the shared `ContentBlockRenderer`.
+- Ensured `block.title` remains internal/editor-only in the shared public renderer.
+- Ensured Heading Block is available where rich blocks are used.
+- Ensured Text Block remains body-focused.
+- Ensured Quote Block is available where rich blocks are used.
+- Ensured Image Block caption/layout behavior remains handled by the shared renderer.
+- Removed remaining public `block.title` fallbacks from code, callout and banner rendering.
+- Preserved contextual differences between Blog, Project and Docs.
+
+Acceptance:
+- Project Composer supports the accepted block contract.
+- Docs Composer supports the accepted block contract.
+- `block.title` does not render publicly.
+- Heading/Text/Quote/Image blocks persist through the shared composer state.
+- Heading/Text/Quote/Image blocks render through the shared public renderer.
+- Blog Composer remains stable.
+- `npm run build` passes.
+
+Status:
+- Completed.
+
+## Completed - Repository Project Delete Flow And Test Cleanup
+
+Problem:
+- Repository Projects did not expose a clear delete action, and the project list contained many temporary CRUD test entries.
+
+Decision:
+- Add a safe delete flow for projects and clean only temporary/test project files before deeper Project/Docs Composer QA.
+
+Implementation summary:
+- Added a delete/danger action in the Repository Project editor.
+- Reused the protected admin content delete endpoint.
+- Added textual confirmation before project deletion.
+- Redirected back to the Repository Projects list after deletion.
+- Moved clearly temporary/test project files from `content/projects` to `server/data/trash/projects`.
+- Preserved blogs, docs, labs, media, backups and real seed projects.
+
+Acceptance:
+- Project can be deleted from the edit screen.
+- Delete requires confirmation.
+- Project list refreshes after deletion.
+- Temporary/test projects are removed.
+- Real/seed projects remain.
+- Blogs/docs/labs/media remain unaffected.
+
+Status:
+- Completed.
+
+## Completed - Project Composer Structured Dossier Editor
+
+Problem:
+- Project Composer reused the Blog/Docs free rich-block surface, making project overview editing behave like an article/document composer.
+
+Decision:
+- Project Composer should be a structured dossier editor.
+- Blog and Docs remain free block composers.
+
+Implementation summary:
+- Gated the free block composer to Blog/Docs.
+- Made Project Composer focus on structured project fields.
+- Added simple structured dossier fields for project memory, project index and build log note.
+- Kept existing `project.blocks` as preserved legacy data.
+- Elevated documentation management inside the project editor.
+- Preserved Blog and Docs composer behavior.
+
+Files changed:
+- `app/pages/admin/content/edit.vue`
+- `docs/STAGE_10_COMPOSER_QA_CHANGELOG.md`
+- `docs/STAGE_10_UI_ACCEPTANCE.md`
+
+Acceptance:
+- Project Composer no longer appears as a free article canvas.
+- Project Basics are the primary editing surface.
+- Documentation Manager is visible in Project Composer.
+- Existing project relationships are preserved.
+- Existing project blocks are not deleted.
+- Blog Composer remains unchanged.
+- Docs Composer remains unchanged.
+
+Status:
+- Completed.
+
+## Completed - Project Composer Fields Connected To Public Overview
+
+Problem:
+- Project Composer began moving toward a structured dossier editor, but the public Project Overview still rendered hardcoded/default copy in several sections.
+
+Decision:
+- Expose structured project overview fields in Project Composer and make `/repository/[slug]` use those fields with safe fallbacks.
+
+Implementation summary:
+- Added structured frontmatter fields for project overview, memory, index, documentation empty state and build log.
+- Updated the public repository page to read those fields.
+- Preserved default fallback text for older projects.
+- Preserved legacy `project.blocks` without making them the primary Project Overview model.
+
+Files changed:
+- `app/pages/admin/content/edit.vue`
+- `app/pages/repository/[slug].vue`
+- `docs/STAGE_10_COMPOSER_QA_CHANGELOG.md`
+- `docs/STAGE_10_UI_ACCEPTANCE.md`
+
+Acceptance:
+- Project Composer fields update the public Project Overview.
+- Empty fields fall back safely.
+- Blog Composer remains unchanged.
+- Docs Composer remains unchanged.
+- Existing projects do not break.
+
+Status:
+- Completed.
+
 ## Pending - Blog Entries List Updated Timestamp
 
 Problem:

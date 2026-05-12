@@ -4,7 +4,8 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 
 ## Visual Composer
 
-- [x] Project Composer follows the `gribo-project-content-composer.html` structure: hero, tabs, basics, taxonomy, block library, canvas, cover area, and inspector.
+- [x] Blog/Docs Composer follows the `gribo-project-content-composer.html` rich-block structure: hero, tabs, basics, taxonomy, block library, canvas, cover area, and inspector.
+- [x] Project Composer now uses a structured dossier editor instead of the free block canvas.
 - [x] Composer uses the existing Gribo Studio visual system.
 - [x] Content, Metadata, SEO, Media, and Preview tabs are available.
 - [x] Tabs are not dead: each tab shows a visible panel.
@@ -179,6 +180,51 @@ Stage 10 closes only through UI-first validation: visual fidelity, save persiste
 - [ ] Public View opens the clean slug URL.
 - [ ] Manual slug override is respected after title changes.
 - [x] Project, docs, and labs slug behavior is unaffected.
+
+## Project/Docs Composer Propagation
+
+- [x] Existing Project blocks are preserved as legacy data.
+- [x] Project Composer no longer uses blocks as the main editing surface.
+- [x] Project Composer keeps `block.title` internal.
+- [x] Docs Composer supports Heading Block.
+- [x] Docs Composer supports Text Block as body content.
+- [x] Docs Composer supports Quote Block.
+- [x] Docs Composer supports Image Block captions/layouts.
+- [x] Docs Composer keeps `block.title` internal.
+- [x] Public Project rendering uses the shared `ContentBlockRenderer`.
+- [x] Public Docs rendering uses the shared `ContentBlockRenderer`.
+- [x] Blog Composer remains stable after propagation.
+
+## Project Composer Structured Dossier
+
+- [x] Project Composer does not use the free Blog/Docs block canvas as its main surface.
+- [x] Project Basics are visible and editable.
+- [x] Project Dossier fields are visible or prepared.
+- [x] Documentation Manager is visible.
+- [x] Existing attached docs are preserved on save.
+- [x] Project blocks are not deleted.
+- [x] Blog Composer remains block-based.
+- [x] Docs Composer remains block-based.
+
+## Project Composer Public Overview Sync
+
+- [x] Project overview body can be edited from Project Composer.
+- [x] Project memory fields appear on public project page.
+- [x] Project index fields appear on public project page.
+- [x] Working stack note appears on public project page.
+- [x] Documentation empty state can use project fields.
+- [x] Build log / decision trace can use project fields.
+- [x] Empty fields use safe fallbacks.
+- [x] Blog/Docs Composer remain unaffected.
+
+## Repository Project Cleanup
+
+- [x] Repository Project editor exposes a delete project action.
+- [x] Delete project requires confirmation.
+- [x] Deleted project is removed from the project list.
+- [x] Temporary/test project files are cleaned conservatively.
+- [x] Real/seed projects are preserved.
+- [x] Blogs/docs/labs/media are unaffected.
 
 ## No Regression
 

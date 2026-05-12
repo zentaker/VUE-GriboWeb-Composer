@@ -2258,22 +2258,7 @@ _e5vYReqAi6vcqyQ4DzTe2IF8C36pmdhxwRdfq_2XBM,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"38d0d-lbFUoZrpketEazeuxKZ7bF0wuy4\"",
-    "mtime": "2026-05-11T21:29:12.473Z",
-    "size": 232717,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"d8740-Ix886r86LnHjOfuoFzbZBylzMSc\"",
-    "mtime": "2026-05-11T21:29:12.474Z",
-    "size": 886592,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3084,9 +3069,9 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "blog": "v3.5.0--h2z3dg03q1Vnuzt1mf42Xh_kIUVA6aXKnscvbrK3crw",
-  "projects": "v3.5.0--K-_qTlYY7fs1cktyvhcWeTfJBkgvU4uwHC7ooe7F_TM",
-  "docs": "v3.5.0--kZH6Mb4GN4oPi-f9PDiaWR6b3or89_H2-GGRJgvAjng",
+  "blog": "v3.5.0--OtZY6lak3tcinV1-Ph_-UkIcOt2XKJnpvAW5deby6Qc",
+  "projects": "v3.5.0--2cD7BU4_7cHap0C0I42idwlhRvrjaL3kjUsDFz04mlY",
+  "docs": "v3.5.0--o5DA0mIqL_TXxQYwX5LOoXnDuiEBxPh67_CLCVZrG8Y",
   "labs": "v3.5.0--VWvAkOp_4kqF5bcNfOE9H0Wka9wlKvxhLz4sORA_iyE",
   "home": "v3.5.0--6rGrv_50488GBaS_204B3ISzDX9dQgleInb1ky9gRJo",
   "settings": "v3.5.0--7NdHW3U4wwSq3Ia4uCr0UVNrNwsOoJSUDSevpNoDzt0"
@@ -5743,20 +5728,33 @@ const delete_post = defineEventHandler(async (event) => {
   }
   const resolved = resolveAdminContentFile(body.contentType, body.filePath);
   if (mode === "delete") {
-    if (resolved.contentType !== "blog") {
+    const deleteConfig = {
+      blog: {
+        confirmation: "DELETE BLOG ENTRY",
+        trashDir: "blog",
+        prefix: "blog/"
+      },
+      projects: {
+        confirmation: "DELETE PROJECT",
+        trashDir: "projects",
+        prefix: "projects/"
+      }
+    };
+    const config = deleteConfig[resolved.contentType];
+    if (!config) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Physical delete is only enabled for blog entries."
+        statusMessage: "Physical delete is only enabled for blog entries and repository projects."
       });
     }
-    if (String(body.confirmation || "") !== "DELETE BLOG ENTRY") {
+    if (String(body.confirmation || "") !== config.confirmation) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Type DELETE BLOG ENTRY to confirm permanent removal."
+        statusMessage: `Type ${config.confirmation} to confirm permanent removal.`
       });
     }
-    const trashRoot = resolve(process.cwd(), "server/data/trash/blog");
-    const filename = resolved.filePath.replace(/^blog\//, "").replace(/\//g, "__");
+    const trashRoot = resolve(process.cwd(), `server/data/trash/${config.trashDir}`);
+    const filename = resolved.filePath.replace(new RegExp(`^${config.prefix}`), "").replace(/\//g, "__");
     const trashName = `${(/* @__PURE__ */ new Date()).toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z")}-${filename}`;
     const trashPath = resolve(trashRoot, trashName);
     await mkdir(trashRoot, { recursive: true });
@@ -5768,7 +5766,7 @@ const delete_post = defineEventHandler(async (event) => {
       item: {
         contentType: resolved.contentType,
         filePath: resolved.filePath,
-        trashPath: `server/data/trash/blog/${trashName}`
+        trashPath: `server/data/trash/${config.trashDir}/${trashName}`
       }
     };
   }

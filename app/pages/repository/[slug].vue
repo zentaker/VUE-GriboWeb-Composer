@@ -87,15 +87,57 @@ const explicitRelatedArticles = computed(() => {
   }))
 })
 const projectDescription = computed(() => displayProject.value?.summary ?? displayProject.value?.description ?? 'A living project dossier from the Gribo repository.')
-const projectBlocks = computed(() => Array.isArray(displayProject.value?.blocks)
-  ? displayProject.value.blocks.filter((block: any) => block?.visible !== false)
-  : []
-)
+const projectField = (key: string, fallback = '') => {
+  const value = displayProject.value?.[key]
+  return typeof value === 'string' && value.trim() ? value.trim() : fallback
+}
 const stackLine = computed(() => {
   const stack = displayProject.value?.stack
   if (Array.isArray(stack)) return stack.join(', ')
   return stack || 'Not set'
 })
+const projectOverviewTitle = computed(() => projectField('projectOverviewTitle', 'Project overview'))
+const projectOverviewBody = computed(() => projectField(
+  'projectOverviewBody',
+  'This overview is generated from the project record. Attached documentation appears as technical pages around it, using the same reading surface.'
+))
+const projectMemoryIntro = computed(() => projectField(
+  'projectMemoryIntro',
+  'The overview holds the public state of the project: what it is, what it is becoming, and which technical documents belong to it.'
+))
+const projectMemoryTitle = computed(() => projectField('projectMemoryTitle', displayProject.value?.title ?? 'Project memory'))
+const projectMemoryBody = computed(() => projectField('projectMemoryBody', projectField('projectMemory', '')))
+const hasStructuredProjectMemory = computed(() => Boolean(projectMemoryBody.value || projectField('projectMemoryTitle', '')))
+const projectIndexIntro = computed(() => projectField(
+  'projectIndexIntro',
+  'Signals, fields and decisions that make this project legible as a living dossier.'
+))
+const projectHoldsTitle = computed(() => projectField('projectHoldsTitle', 'What this project holds'))
+const projectHoldsBody = computed(() => projectField(
+  'projectHoldsBody',
+  projectField('projectIndex', displayProject.value?.description ?? displayProject.value?.summary ?? 'A repository entry for notes, decisions and technical direction.')
+))
+const workingStackNote = computed(() => projectField('workingStackNote', stackLine.value))
+const documentationIntro = computed(() => projectField('documentationIntro', attachedDocs.value.length
+  ? 'Technical pages attached to this project from Gribo Studio.'
+  : 'No technical documentation is attached to this project yet.'
+))
+const emptyDocumentationTitle = computed(() => projectField('emptyDocumentationTitle', 'No documentation attached yet'))
+const emptyDocumentationBody = computed(() => projectField(
+  'emptyDocumentationBody',
+  'Technical pages can be connected later from Gribo Studio without changing the project overview.'
+))
+const buildLogIntro = computed(() => projectField('buildLogIntro', projectField('buildLogNote', 'No explicit build log entries are attached to this project yet.')))
+const decisionTraceTitle = computed(() => projectField('decisionTraceTitle', 'Decision trace'))
+const decisionTraceBody = computed(() => projectField(
+  'decisionTraceBody',
+  'Use explicit project fields or related documents when this project needs a public build log.'
+))
+const relatedArticlesNote = computed(() => projectField('relatedArticlesNote', 'No related articles are configured for this project.'))
+const projectBlocks = computed(() => Array.isArray(displayProject.value?.blocks)
+  ? displayProject.value.blocks.filter((block: any) => block?.visible !== false)
+  : []
+)
 const metaItems = computed(() => [
   { label: 'Status', value: displayProject.value?.status ?? 'Draft' },
   { label: 'Lab / Track', value: displayProject.value?.lab ?? 'Unassigned' },
@@ -172,22 +214,20 @@ useGriboSeo(() => ({
           <section class="callout">
             <div class="callout-icon">i</div>
             <div>
-              <h3>Project overview</h3>
-              <p>
-                This overview is generated from the project record. Attached documentation appears
-                as technical pages around it, using the same reading surface.
-              </p>
+              <h3>{{ projectOverviewTitle }}</h3>
+              <p>{{ projectOverviewBody }}</p>
             </div>
           </section>
 
           <section id="project-memory" class="doc-section">
             <h2>Project memory</h2>
-            <p>
-              The overview holds the public state of the project: what it is, what it is becoming,
-              and which technical documents belong to it.
-            </p>
+            <p>{{ projectMemoryIntro }}</p>
             <article class="doc-body-card">
-              <ContentBlockRenderer v-if="projectBlocks.length" id="content" :blocks="projectBlocks" context="project" />
+              <div v-if="hasStructuredProjectMemory" id="content" class="content-prose structured-project-copy">
+                <h3 v-if="projectMemoryTitle">{{ projectMemoryTitle }}</h3>
+                <p v-if="projectMemoryBody">{{ projectMemoryBody }}</p>
+              </div>
+              <ContentBlockRenderer v-else-if="projectBlocks.length" id="content" :blocks="projectBlocks" context="project" />
               <ContentRenderer v-else-if="project" id="content" class="content-prose" :value="project" />
               <div v-else id="content" class="content-prose" v-html="previewHtml" />
             </article>
@@ -195,23 +235,22 @@ useGriboSeo(() => ({
 
           <section id="project-index" class="doc-section">
             <h2>Project index</h2>
-            <p>Signals, fields and decisions that make this project legible as a living dossier.</p>
+            <p>{{ projectIndexIntro }}</p>
             <div class="cards-2">
               <article class="info-card">
-                <h3>What this project holds</h3>
-                <p>{{ displayProject.description ?? displayProject.summary ?? 'A repository entry for notes, decisions and technical direction.' }}</p>
+                <h3>{{ projectHoldsTitle }}</h3>
+                <p>{{ projectHoldsBody }}</p>
               </article>
               <article class="info-card">
                 <h3>Working stack</h3>
-                <p>{{ stackLine }}</p>
+                <p>{{ workingStackNote }}</p>
               </article>
             </div>
           </section>
 
           <section id="documentation" class="doc-section">
             <h2>Documentation</h2>
-            <p v-if="attachedDocs.length">Technical pages attached to this project from Gribo Studio.</p>
-            <p v-else>No technical documentation is attached to this project yet.</p>
+            <p>{{ documentationIntro }}</p>
             <div v-if="attachedDocs.length" class="cards-2">
               <NuxtLink v-for="doc in attachedDocs" :key="docPath(doc)" class="info-card linked-card" :to="docPath(doc)">
                 <h3>{{ doc.title }}</h3>
@@ -220,22 +259,22 @@ useGriboSeo(() => ({
               </NuxtLink>
             </div>
             <div v-else class="info-card empty-docs">
-              <h3>No documentation attached yet</h3>
-              <p>Technical pages can be connected later from Gribo Studio without changing the project overview.</p>
+              <h3>{{ emptyDocumentationTitle }}</h3>
+              <p>{{ emptyDocumentationBody }}</p>
             </div>
           </section>
 
           <section id="build-log" class="doc-section">
             <h2>Build log</h2>
-            <p>No explicit build log entries are attached to this project yet.</p>
+            <p>{{ buildLogIntro }}</p>
             <div class="cards-2">
               <article class="info-card">
-                <h3>Decision trace</h3>
-                <p>Use explicit project fields or related documents when this project needs a public build log.</p>
+                <h3>{{ decisionTraceTitle }}</h3>
+                <p>{{ decisionTraceBody }}</p>
               </article>
               <article class="info-card">
                 <h3>Related articles</h3>
-                <p v-if="!explicitRelatedArticles.length">No related articles are configured for this project.</p>
+                <p v-if="!explicitRelatedArticles.length">{{ relatedArticlesNote }}</p>
                 <NuxtLink v-for="article in explicitRelatedArticles" v-else :key="article.to" :to="article.to">
                   {{ article.title }}
                 </NuxtLink>
@@ -563,6 +602,10 @@ h1 {
   border-radius: 26px;
   background: var(--paper);
   box-shadow: var(--shadow);
+}
+
+.structured-project-copy p {
+  white-space: pre-line;
 }
 
 .cards-2 {

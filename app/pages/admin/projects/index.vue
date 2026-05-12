@@ -55,7 +55,7 @@ const previewLink = (project: { publicPath: string, status: string }) => project
             { label: 'Collection', value: 'content/projects' },
             { label: 'Items', value: String(projects.length) },
             { label: 'Docs bridge', value: 'docsPath field' },
-            { label: 'Delete', value: 'Soft archive only' }
+            { label: 'Delete', value: 'Danger Zone in editor' }
           ]"
         />
         <AdminPreviewPanel />

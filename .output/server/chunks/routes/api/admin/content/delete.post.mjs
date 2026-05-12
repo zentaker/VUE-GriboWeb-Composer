@@ -21,20 +21,33 @@ const delete_post = defineEventHandler(async (event) => {
   }
   const resolved = resolveAdminContentFile(body.contentType, body.filePath);
   if (mode === "delete") {
-    if (resolved.contentType !== "blog") {
+    const deleteConfig = {
+      blog: {
+        confirmation: "DELETE BLOG ENTRY",
+        trashDir: "blog",
+        prefix: "blog/"
+      },
+      projects: {
+        confirmation: "DELETE PROJECT",
+        trashDir: "projects",
+        prefix: "projects/"
+      }
+    };
+    const config = deleteConfig[resolved.contentType];
+    if (!config) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Physical delete is only enabled for blog entries."
+        statusMessage: "Physical delete is only enabled for blog entries and repository projects."
       });
     }
-    if (String(body.confirmation || "") !== "DELETE BLOG ENTRY") {
+    if (String(body.confirmation || "") !== config.confirmation) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Type DELETE BLOG ENTRY to confirm permanent removal."
+        statusMessage: `Type ${config.confirmation} to confirm permanent removal.`
       });
     }
-    const trashRoot = resolve(process.cwd(), "server/data/trash/blog");
-    const filename = resolved.filePath.replace(/^blog\//, "").replace(/\//g, "__");
+    const trashRoot = resolve(process.cwd(), `server/data/trash/${config.trashDir}`);
+    const filename = resolved.filePath.replace(new RegExp(`^${config.prefix}`), "").replace(/\//g, "__");
     const trashName = `${(/* @__PURE__ */ new Date()).toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z")}-${filename}`;
     const trashPath = resolve(trashRoot, trashName);
     await mkdir(trashRoot, { recursive: true });
@@ -46,7 +59,7 @@ const delete_post = defineEventHandler(async (event) => {
       item: {
         contentType: resolved.contentType,
         filePath: resolved.filePath,
-        trashPath: `server/data/trash/blog/${trashName}`
+        trashPath: `server/data/trash/${config.trashDir}/${trashName}`
       }
     };
   }

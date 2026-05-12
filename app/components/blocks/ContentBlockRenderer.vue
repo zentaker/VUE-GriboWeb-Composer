@@ -96,7 +96,7 @@ async function copyCode(code?: string) {
       <template v-else-if="block.type === 'code'">
         <div class="code-panel">
           <div class="code-head">
-            <span>{{ block.data?.title || block.title || 'Code block' }}</span>
+            <span>{{ block.data?.title || 'Code block' }}</span>
             <button v-if="block.data?.copyEnabled" type="button" @click="copyCode(block.data?.code)">Copy</button>
           </div>
           <pre><code>{{ block.data?.code }}</code></pre>
@@ -107,7 +107,7 @@ async function copyCode(code?: string) {
         <aside class="callout-block" :data-variant="block.data?.variant || 'info'">
           <span class="callout-mark">{{ block.data?.icon || 'i' }}</span>
           <div>
-            <h3>{{ block.data?.title || block.title || 'Callout' }}</h3>
+            <h3 v-if="block.data?.title">{{ block.data.title }}</h3>
             <p>{{ block.data?.body }}</p>
           </div>
         </aside>
@@ -132,7 +132,7 @@ async function copyCode(code?: string) {
 
       <template v-else-if="block.type === 'banner'">
         <aside class="banner-block" :data-accent="block.data?.accent || 'coral'">
-          <h2>{{ block.data?.title || block.title }}</h2>
+          <h2 v-if="block.data?.title">{{ block.data.title }}</h2>
           <p>{{ block.data?.body }}</p>
         </aside>
       </template>

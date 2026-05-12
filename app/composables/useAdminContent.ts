@@ -80,12 +80,20 @@ export function useAdminContent() {
       body: { contentType: 'blog', filePath, mode: 'delete', confirmation }
     })
 
+  const deleteProjectContent = (filePath: string, confirmation: string) =>
+    $fetch<{ ok: boolean, deleted: boolean, item: { trashPath: string } }>(adminApiUrl('/api/admin/content/delete'), {
+      method: 'POST',
+      headers: adminFetchHeaders,
+      body: { contentType: 'projects', filePath, mode: 'delete', confirmation }
+    })
+
   return {
     listContent,
     readContent,
     saveContent,
     createContent,
     archiveContent,
-    deleteBlogContent
+    deleteBlogContent,
+    deleteProjectContent
   }
 }
